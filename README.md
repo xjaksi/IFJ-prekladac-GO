@@ -1,5 +1,5 @@
 # IFJ-prekladac-GO
-**Povinná hlavička - vložit do každého souboru!!!**
+**Povinná hlavička - vložit do každého souboru!!!** </br>
 	/* ----------------------------------------------
 	  	IFJ prekladac jazyka IFJ20
 		Tým XX:
