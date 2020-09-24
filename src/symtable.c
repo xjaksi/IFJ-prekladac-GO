@@ -171,5 +171,16 @@ void BSTContActual (tBSTNodePtr *RootPtr, char* K, dataType type, int params)
 /*                 Vypisovani pro testy                 */
 
 
+/**
+ * Vypsani konkretni polozky z tabulky
+ */
+
+
+/**
+ * Vypsani vsech polozek a jejich hodnot
+ */
+
+
+
 /*                Konec kontrolnich vypisu              */
 /* ---------------------------------------------------- */
