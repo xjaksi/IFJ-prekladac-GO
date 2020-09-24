@@ -12,8 +12,8 @@
  	----------------------------------------------*/ 
 ### Další instrukce
 1. komentáře píšeme v češtině BEZ diakritiky
-- u deklarace proměnné vždy přidat na řádek komentář s informací, co tato proměnná dělá
-- v .h souboru před deklaraci funkce přidat komentář s detailním, výstižným popisem co funkce dělá
+	- u deklarace proměnné vždy přidat na řádek komentář s informací, co tato proměnná dělá
+	- v .h souboru před deklaraci funkce přidat komentář s detailním, výstižným popisem co funkce dělá
 2. kód (proměnné, funkce, ...) pojmenováváme anglicky
 3. pojmenováváme celými slovy, výstižně
 4. ladící hlášky, chybové návratové hodnoty (včetně 0) jdou na stderr
