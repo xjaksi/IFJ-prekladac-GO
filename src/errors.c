@@ -1,12 +1,11 @@
 /* ----------------------------------------------
-	Předmět: IFJ
-	Tým:
+	  IFJ prekladac jazyka IFJ20
+	Tým XX:
+		Jaksik, Ales (xjaksi01)
 		Vlasakova, Nela (xvlasa14)
-        Jaksik, Ales (xjaksi01)
-		Belohlavek, Honza
+		Belohlavek, Jan (xbeloh8)
 -------------------------------------------------
- Datum: 24.9. 2020
- Účel: Chyby
+ Ucel: Chyby
  Popis:  Seznam chyb
  ----------------------------------------------*/
 
