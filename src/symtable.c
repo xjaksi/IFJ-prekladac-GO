@@ -182,5 +182,8 @@ void BSTContActual (tBSTNodePtr *RootPtr, char* K, dataType type, int params)
 
 
 
+
+
+
 /*                Konec kontrolnich vypisu              */
 /* ---------------------------------------------------- */
