@@ -47,6 +47,7 @@ typedef struct nodeCont
 {
     nodeType nType;                 // jedna se o funkci nebo promennou
     int noParams;                   // pocet parametru teto funkce
+    struct tBSTNode *localFrame;    // localni tabulka funkce
     bool defined;                   // bylo jiz definovano?
     dataType dType;                 // nazev datoveho typu
 } *nodeInfCont;
