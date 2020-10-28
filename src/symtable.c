@@ -1,13 +1,13 @@
 /* ----------------------------------------------
 	Předmět: IFJ
-	Tým: 
+	Tým: 101
 	Autor:
 		Jaksik, Ales (xjaksi01)
 -------------------------------------------------
         Vlasakova, Nela (xvlasa14)
 		Belohlavek, Honza
+		Mraz, Filip (xmrazf00)
 -------------------------------------------------
- Datum: 24.9. 2020
  Účel: Tabulka symbolů
  Popis: Tabulka symbolů
  ----------------------------------------------*/
