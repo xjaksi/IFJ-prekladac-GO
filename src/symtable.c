@@ -79,7 +79,7 @@ int BSTInsert (tBSTNodePtr* RootPtr, char* K, nodeInfCont Content)
 		*RootPtr = (tBSTNodePtr) malloc(sizeof(struct tBSTNode));
 		if (*RootPtr == NULL)
 		{
-			return ERROR_COMPILATOR;
+			return ERROR_COMPILER;
 		}
 
 		// vlozeni hodnot
@@ -88,13 +88,13 @@ int BSTInsert (tBSTNodePtr* RootPtr, char* K, nodeInfCont Content)
 		(*RootPtr)->LPtr = NULL;
 		(*RootPtr)->RPtr = NULL;
 
-		return NOERROR_OK;
+		return OK;
 	}
 
 	// pokud se klice shoduji, redefinace odchazim
 	else if (strcmp(K, ((*RootPtr)->Key)) == 0)
 	{
-		return ERROR_SEM_VAR;
+		return ERROR_REDEFINITION;
 	}
 
 	// v jinem pripade se posunuji stromem
@@ -104,14 +104,14 @@ int BSTInsert (tBSTNodePtr* RootPtr, char* K, nodeInfCont Content)
 	{
 		// opetovne volam funkci pro levy podstrom
 		BSTInsert(&((*RootPtr)->LPtr), K, Content);
-		return NOERROR_OK;
+		return OK;
 	}
 
 	// v jinem pripade jdu v pravo
 	else
 	{
 		BSTInsert(&((*RootPtr)->RPtr), K, Content);
-		return NOERROR_OK;
+		return OK;
 	}
 }
 
