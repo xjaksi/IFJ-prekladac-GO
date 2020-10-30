@@ -4,9 +4,9 @@
 	Autor:
 		Jaksik, Ales (xjaksi01)
 -------------------------------------------------
-        Vlasakova, Nela (xvlasa14)
-        Belohlavek, Honza
-        Mraz, Filip (xmrazf00)
+        	Vlasakova, Nela (xvlasa14)
+        	Belohlavek, Honza
+        	Mraz, Filip (xmrazf00)
 -------------------------------------------------
  Účel: Tabulka symbolů
  Popis: Hlavičkový soubor pro tabulku symbolů
