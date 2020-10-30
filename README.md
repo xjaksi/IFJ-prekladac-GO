@@ -3,6 +3,8 @@
 	/* ----------------------------------------------
 	 	IFJ prekladac jazyka IFJ20
 		Tým 101:
+			Ty jako autor
+	-------------------------------------------------
 			Jaksik, Ales (xjaksi01)
 			Vlasakova, Nela (xvlasa14)
 			Belohlavek, Jan (xbeloh8)
