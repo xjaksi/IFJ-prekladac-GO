@@ -1,13 +1,13 @@
 /* ----------------------------------------------
 	Předmět: IFJ
-	Tým: 
+	Tým: 101
 	Autor:
 		Jaksik, Ales (xjaksi01)
 -------------------------------------------------
-        Vlasakova, Nela (xvlasa14)
-        Belohlavek, Honza
+        	Vlasakova, Nela (xvlasa14)
+        	Belohlavek, Honza
+        	Mraz, Filip (xmrazf00)
 -------------------------------------------------
- Datum: 24.9. 2020
  Účel: Tabulka symbolů
  Popis: Hlavičkový soubor pro tabulku symbolů
  ----------------------------------------------*/
@@ -38,7 +38,7 @@ typedef enum datatype
 {
     typeNo,
     typeInt,
-    typeFloat,
+    typeDouble,
     typeString,
 } dataType;
 
@@ -47,6 +47,7 @@ typedef struct nodeCont
 {
     nodeType nType;                 // jedna se o funkci nebo promennou
     int noParams;                   // pocet parametru teto funkce
+    struct tBSTNode *localFrame;    // localni tabulka funkce
     bool defined;                   // bylo jiz definovano?
     dataType dType;                 // nazev datoveho typu
 } *nodeInfCont;

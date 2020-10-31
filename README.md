@@ -2,10 +2,13 @@
 ### Povinná hlavička - vložit do každého souboru!!!
 	/* ----------------------------------------------
 	 	IFJ prekladac jazyka IFJ20
-		Tým XX:
+		Tým 101:
+			Ty jako autor
+	-------------------------------------------------
 			Jaksik, Ales (xjaksi01)
 			Vlasakova, Nela (xvlasa14)
 			Belohlavek, Jan (xbeloh8)
+			Mraz, Filip (xmrazf00)
 	-------------------------------------------------
  	Ucel: co dela tento soubor
  	Popis:  jak funguje tento soubor

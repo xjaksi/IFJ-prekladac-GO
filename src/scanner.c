@@ -1,13 +1,10 @@
 /* ----------------------------------------------
  	IFJ prekladac jazyka IFJ20
-	Tým 101:
-		Vlasakova, Nela (xvlasa14)
+	Tým XX:
 		Jaksik, Ales (xjaksi01)
+		Vlasakova, Nela (xvlasa14)
 		Belohlavek, Jan (xbeloh8)
-		Mraz, Filip (xmrazf00)
 -------------------------------------------------
-Ucel: precedencni analyza vyrazu
-Popis:  TODO
-----------------------------------------------*/
-
-#include expression.h
+Ucel: co dela tento soubor
+Popis:  jak funguje tento soubor
+----------------------------------------------*/ 
