@@ -11,5 +11,23 @@
  * @brief precedencni analyza vyrazu
  * -----------------------------------------------*/ 
 
-#include "expression.h"
+// #include "expression.h"
+#include "stack.h"
+
+int main(int argc, char const *argv[]) {
+	stack stackOne;
+	stackInit(&stackOne);
+	push(&stackOne, PT_PLUS, DT_NONE);
+		printf("PT TYPE: %d \t DATA TYPE: %d \n", stackOne.top->ptType, stackOne.top->dType);
+	push(&stackOne, PT_MINUS, DT_INT);
+		printf("PT TYPE: %d \t DATA TYPE: %d \n", stackOne.top->ptType, stackOne.top->dType);
+		
+		pop(&stackOne);
+	sElem* stackTemp = getTop(&stackOne);
+	printf("stack temp type: %d \t stack temp data type: %d \n", stackTemp->ptType, stackTemp->dType);
+
+	
+
+}
+
 

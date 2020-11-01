@@ -11,4 +11,36 @@
  * @brief struktury, definice funkci
  * -----------------------------------------------*/ 
 
-#include "global.h"
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+
+#include "errors.h"
+
+
+
+/**
+ *  @brief typy symbolu v precedencni tabulce
+ */
+typedef enum {
+    PT_PLUS,
+    PT_MINUS,
+    PT_TIMES,
+    PT_DIV,
+    PT_ID,
+    PT_EXP,
+    PT_INT,
+    PT_STRING,
+} PtType;
+
+/**
+ * @brief datove typy 
+ * 
+ */
+typedef enum {
+    DT_INT,
+    DT_STRING,
+    DT_FLOAT,
+    DT_NONE,
+} DataType;
