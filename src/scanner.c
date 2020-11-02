@@ -21,7 +21,7 @@ return 0;
 
 int index_in_input_data = 0; //ukazatel kde se nachazim v nactenych input datech
 
-void get_token(){ //fuknce pro precteni noveho tokenu z input data , DKA
+void get_token(){ //fuknce pro precteni dat ze std. vstupu a ulozeni do seznamu , DKA
 	s_token loaded_token; //token ktery se bude vracet
 	loaded_token.type = if;
 	loaded_token.value = "";
