@@ -26,7 +26,7 @@
 			void myFunc(int i);
 	- v případě popisu proměnné na řádku budeme využívat následujícího doxygen zápisu:
 	
-			int i; ///< popis proměnné
+			int i; // popis proměnné
 2. kód píšeme v angličtině, celými slovy, výstižně
 	- funkce: myFunction
 	- proměnné: myVariable
