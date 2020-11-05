@@ -49,9 +49,9 @@ typedef enum {
 
 } TokenType;
 
-struct s_token {
+typedef struct s_token {
 	TokenType type;
 	char value[50];
-}s_token;
+} s_token;
 
 void get_token();
