@@ -19,7 +19,7 @@
 	- v .h souboru bude podrobný popis funkce s využitím doxygen zápisu:
 	
 			/**
-			 * Popis funkce.
+			 * @brief Popis funkce.
 			 * @param [název proměnné] [co proměnná dělá]
 			 * @return [co vrací]
 			*/
