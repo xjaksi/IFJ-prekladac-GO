@@ -1,4 +1,4 @@
-/* ------------------------------------------------
+/** -----------------------------------------------
  * @file expression.h
  *	IFJ prekladac jazyka IFJ20
  *	Tým 101:
@@ -16,12 +16,12 @@
 #include <stdlib.h>
 #include <ctype.h>
 
+
 #include "errors.h"
-
-
+#define PT_SIZE 6
 
 /**
- *  @brief typy symbolu v precedencni tabulce
+ * @brief typy symbolu v precedencni tabulce
  */
 typedef enum {
     PT_PLUS,
@@ -36,7 +36,6 @@ typedef enum {
 
 /**
  * @brief datove typy 
- * 
  */
 typedef enum {
     DT_INT,
@@ -44,3 +43,7 @@ typedef enum {
     DT_FLOAT,
     DT_NONE,
 } DataType;
+
+void printStuff();
+
+int tokenToSymbol (int tokenTemp);

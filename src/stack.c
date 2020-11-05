@@ -1,4 +1,4 @@
-/* ------------------------------------------------
+/** -----------------------------------------------
  * @file expression.c
  *	IFJ prekladac jazyka IFJ20
  *	Tým 101:
@@ -35,6 +35,7 @@ sElem* getTop(stack* s) {
 
 int pop(stack* s) {
     if (s->top != NULL) {
+        printf("got here \n");
         sElem* tempToPop = s->top;
         s->top = tempToPop->next;
         free(tempToPop);

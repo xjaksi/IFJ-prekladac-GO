@@ -10,6 +10,7 @@
  * ------------------------------------------------
  * @brief funkce pro pouzivani zasobniku
  * -----------------------------------------------*/ 
+
 #include <stdio.h>
 #include <stdlib.h>
 
