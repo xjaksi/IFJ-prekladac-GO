@@ -30,6 +30,16 @@
 2. kód píšeme v angličtině, celými slovy, výstižně
 	- funkce: myFunction
 	- proměnné: myVariable
+	- styl enum: 
+	
+			typedef enum {
+				ENUM_ELEMENT	///< popis elementu
+			} PtType;
+	- styl struktr:
+	
+			typedef struct MyStructure {
+				...
+			} myStruct;
 4. ladící hlášky, chybové návratové hodnoty (včetně 0) jdou na stderr
 
 
