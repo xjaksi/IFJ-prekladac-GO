@@ -9,10 +9,7 @@ Ucel: rozpoznani a klasifikace lexemu, reprezentace lexemu pomoci tokenu
 Popis:  jak funguje tento soubor
 ----------------------------------------------*/ 
 
-struct s_token {
-	TokenType type;
-	char value[50];
-}s_token;
+
 
 /**
  * @brief Typy tokenu a klicova slova
@@ -25,7 +22,7 @@ typedef enum {
 	tADD,		// +
 	tSUB,		// -
 	tDIV,		// /
-	tSUB,		// *
+	tMUL,		// *
 	tASSIGN,	// :=
 	tLT,		// <
 	tLEQ,		// <=
@@ -49,3 +46,10 @@ typedef enum {
 	kwINT
 
 } TokenType;
+
+struct s_token {
+	TokenType type;
+	char value[50];
+}s_token;
+
+void get_token();
