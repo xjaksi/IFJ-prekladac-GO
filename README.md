@@ -1,7 +1,7 @@
 
 # IFJ-prekladac-GO
 ### Povinná hlavička - vložit do každého souboru!!!
-	/* ------------------------------------------------
+	/** -----------------------------------------------
 	 * @file file.c/file.h
 	 *	IFJ prekladac jazyka IFJ20
 	 *	Tým 101:
