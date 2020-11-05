@@ -10,29 +10,42 @@ Popis:  jak funguje tento soubor
 ----------------------------------------------*/ 
 
 struct s_token {
-	enum s_type type;
+	TokenType type;
 	char value[50];
 }s_token;
 
+/**
+ * @brief Typy tokenu a klicova slova
+ */
 typedef enum {
-	id,//identifikator nazev promene, funkce 
-	int,// integer
-	add,// +
-	sub,// -
-	div,// /
-	sub,// *
-	,// =
-	,//<
-	leq,//<=
-	neco,// >
-	neco2,// >=
-	neco3,// (
-	neco4,// )
-	;,// ;
-	if,
-	else,
-	case,
-	while,
-	for,
-	return
-}s_type;
+	tID,		// typ ID 
+	tINT,		// integer
+	tFLOAT,		// float
+	tSTRING,	// string
+	tADD,		// +
+	tSUB,		// -
+	tDIV,		// /
+	tSUB,		// *
+	tASSIGN,	// :=
+	tLT,		// <
+	tLEQ,		// <=
+	tGT,		// >
+	tGEQ,		// >=
+	tRBRACKET,	// (
+	tLBRACKET,	// )
+	tRBRACE,	// {
+	tLBRACE,	// }
+	tSEMICOLON,	// ;
+	tDEVNULL,	// _
+
+	// klicove slova
+	kwIF,		
+	kwELSE,
+	kwFOR,
+	kwRETURN,
+	kwFLOAT64,
+	kwFUNC,
+	kwSTRING,
+	kwINT
+
+} TokenType;
