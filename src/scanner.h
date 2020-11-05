@@ -28,10 +28,10 @@ typedef enum {
 	tLEQ,		// <=
 	tGT,		// >
 	tGEQ,		// >=
-	tRBRACKET,	// (
-	tLBRACKET,	// )
-	tRBRACE,	// {
-	tLBRACE,	// }
+	tLBRACKET,	// (
+	tRBRACKET,	// )
+	tLBRACE,	// {
+	tRBRACE,	// }
 	tSEMICOLON,	// ;
 	tDEVNULL,	// _
 
