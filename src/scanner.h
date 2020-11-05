@@ -28,6 +28,8 @@ typedef enum {
 	tLEQ,		// <=
 	tGT,		// >
 	tGEQ,		// >=
+	tEQ,		// ==
+	tNEQ,		// !=
 	tLBRACKET,	// (
 	tRBRACKET,	// )
 	tLBRACE,	// {
