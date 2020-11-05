@@ -33,9 +33,9 @@
 	- názvy enum: MyEnum
 	- názvy struktr:
 	
-		typedef struct MyStructure {
-			...
-		} myStruct;
+			typedef struct MyStructure {
+				...
+			} myStruct;
 4. ladící hlášky, chybové návratové hodnoty (včetně 0) jdou na stderr
 
 
