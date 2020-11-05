@@ -16,9 +16,9 @@ Popis:  jak funguje tento soubor
  */
 typedef enum {
 	tID,		// typ ID 
-	tINT,		// integer
-	tFLOAT,		// float
-	tSTRING,	// string
+	tINT,		// typ integer
+	tFLOAT,		// typ float
+	tSTRING,	// typ string
 	tADD,		// +
 	tSUB,		// -
 	tDIV,		// /
@@ -38,15 +38,26 @@ typedef enum {
 	tDEVNULL,	// _
 
 	// klicove slova
-	kwIF,		
-	kwELSE,
-	kwFOR,
-	kwRETURN,
-	kwFLOAT64,
-	kwFUNC,
-	kwSTRING,
-	kwINT
+	kwIF,		// if
+	kwELSE,		// else
+	kwFOR,		// for
+	kwRETURN,	// return
+	kwFLOAT64,	// float64
+	kwFUNC,		// func
+	kwSTRING,	// string
+	kwINT,		// int
 
+	// vestavene funkce
+	fINPUTS,	// inputs
+	fINPUTI,	// inputi
+	fINPUTF,	// inputf
+	fPRINT,		// print
+	fINT2FLOAT, // int2float
+	fFLOAT2INT, // float2int
+	fLEN,		// len
+	fSUBSTR,	// substr
+	fORD,		// ord
+	fCHR		// chr
 } TokenType;
 
 typedef struct s_token {
