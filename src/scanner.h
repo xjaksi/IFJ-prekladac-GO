@@ -57,7 +57,9 @@ typedef enum {
 	fLEN,		///< len
 	fSUBSTR,	///< substr
 	fORD,		///< ord
-	fCHR		///< chr
+	fCHR,		///< chr
+
+	fMAIN		///< main
 } TokenType;
 
 typedef struct s_token {
