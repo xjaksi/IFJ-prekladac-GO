@@ -62,9 +62,11 @@ typedef enum {
 	fMAIN		///< main
 } TokenType;
 
-typedef struct s_token {
+typedef struct Token {
 	TokenType type;
 	char value[50];
-} s_token;
+	struct Token *next;
+	struct Token *prev;
+} *token;
 
 void get_token();
