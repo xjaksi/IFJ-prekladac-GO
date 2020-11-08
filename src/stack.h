@@ -17,47 +17,51 @@
 #include "expression.h"
 
 /**
- * @struct struktura reprezentujici jednu polozku zasobniku
- * @brief obsahuje datovy typ, symbol v PT a odkaz na nasledujici polozku
+ * @struct struktura reprezentujici jednu polozku v obousmerne vazanem seznamu
+ * @brief obsahuje hodnotu, datovy typ, symbol v PT a odkaz na nasledujici a predchozi polozku
  */
-typedef struct StackElement {
+typedef struct ListItem {
+    char value[50];
     PtType ptType;
     DataType dType;
-    struct StackElement *next;
-} sElem;
+    struct ListItem *next;
+    struct ListItem *prev;
+} *item;
+
 
 /**
- * @struct struktura reprezentujici zasobnik
- * @brief obsahuje ukazatel na vrchol zasobniku
+ * @struct struktura reprezentujici obousmerne vazany seznam
+ * @brief obsahuje prvni a aktivni prvek
  */
-typedef struct Stack {
-    sElem *top;
-} stack;
+typedef struct ExpressionList {
+    item first;
+    item last;
+    item act;
+} exprList;
+
 
 /**
  * @brief Inicializace zasobniku
- * @param s zasobnik, ktery chceme inicializovat (predavat jako &s)
+ * @param l seznam, ktery chceme inicializovat (predavat jako &l)
  */
-void stackInit(stack* s);
+void listInit(exprList *l);
+
 
 /**
- * @brief vrati polozku na vrcholu zasobniku
- * @param s zasobnik, ktereho vrchol chceme znat
- * @return sElem* vrchol zasobniku
- */
-sElem* getTop(stack* s);
-
-/**
- * @brief vymaze polozku na vrcholu zasobniku a zaroven nastavi novy vrchol
- * @param s zasobnik, ze ktereho chceme dat vrchol pryc
- */
-int pop(stack* s);
-
-/**
- * @brief vytvori novou polozku a vlozi ji na vrchol zasobniku
+ * @brief vytvori novou polozku a vlozi ji do seznamu, bud na zacatek nebo za aktivni
  * 
- * @param s zasobnik, kam chceme vkladat
+ * @param l seznam, kam chceme vkladat
  * @param ptType symbol z precedencni tabulky
  * @param dType datovy typ
+ * @param c hodnota, kterou chceme vkladat
  */
-void push(stack* s, PtType ptType, DataType dType);
+ERROR_CODE insertItem(exprList *l, PtType ptType, DataType dType, char *c);
+
+
+/**
+ * @brief vymaze aktivni polozku v seznamu
+ * 
+ * @param l seznam, ze ktereho chceme odstranit
+ */
+void removeItem(exprList *l);
+

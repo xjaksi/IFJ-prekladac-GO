@@ -18,20 +18,20 @@
 
 
 #include "errors.h"
+#include "scanner.h"
 #define PT_SIZE 6
 
 /**
  * @brief typy symbolu v precedencni tabulce
  */
 typedef enum {
-    PT_PLUS,
-    PT_MINUS,
-    PT_TIMES,
-    PT_DIV,
-    PT_ID,
     PT_EXP,
-    PT_INT,
-    PT_STRING,
+    PT_ADDSUB,
+    PT_MULDIV,
+    PT_CMPS,
+    PT_LBR,
+    PT_RBR,
+    PT_STOP
 } PtType;
 
 /**
