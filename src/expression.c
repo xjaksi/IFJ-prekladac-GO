@@ -11,7 +11,7 @@
  * @brief precedencni analyza vyrazu
  * -----------------------------------------------*/ 
 
-#include "stack.h"
+#include "exprList.h"
 
  char precTable[PT_SIZE][PT_SIZE] = {
   //  +-   */  cmp   (    )    $
@@ -37,8 +37,8 @@ void printStuff() {
 	} 
 }
 
-ptType tokenToSymbol (token t) {
-	switch (token.type) {
+PtType tokenToSymbol (token t) {
+	switch (t->type) {
 	case tID: case tINT: case tFLOAT: case tSTRING:
 		return PT_EXP;
 	
@@ -64,7 +64,7 @@ ptType tokenToSymbol (token t) {
 
 fillMyList(token t) {
 	exprList eList;
-	listInit(&testList);
+	listInit(&eList);
 }
 
 

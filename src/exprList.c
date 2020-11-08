@@ -1,5 +1,5 @@
 /** -----------------------------------------------
- * @file expression.c
+ * @file exprList.c
  *	IFJ prekladac jazyka IFJ20
  *	Tým 101:
  *		@author Vlasakova, Nela <xvlasa14>
@@ -8,10 +8,10 @@
  *		@author Belohlavek, Jan <xbeloh8>
  *		@author Mraz, Filip <xmrazf00>
  * ------------------------------------------------
- * @brief precedencni analyza vyrazu
+ * @brief pomocne funkce pro obousmerny seznam
  * -----------------------------------------------*/ 
 
-#include "stack.h"
+#include "exprList.h"
 
 
 void listInit(exprList *l) {

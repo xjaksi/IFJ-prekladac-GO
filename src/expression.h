@@ -46,4 +46,4 @@ typedef enum {
 
 void printStuff();
 
-int tokenToSymbol (int tokenTemp);
+PtType tokenToSymbol (token t);

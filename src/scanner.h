@@ -62,11 +62,25 @@ typedef enum {
 	fMAIN		///< main
 } TokenType;
 
+/**
+ * @struct token reprezentujici jednu polozku v obousmerne vazanem seznamu
+ * @brief obsahuje odkaz na predesly a nasledujici 
+ */
 typedef struct Token {
 	TokenType type;
 	char value[50];
 	struct Token *next;
 	struct Token *prev;
 } *token;
+
+/**
+ * @struct struktura reprezentujici boboustranne vazany seznam
+ * @brief obsahuje první, poslední a aktivní prvek
+ */
+typedef struct TokenList {
+	token first;
+	token act;
+	token last;
+} tList;
 
 void get_token();

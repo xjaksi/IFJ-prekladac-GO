@@ -1,5 +1,5 @@
-/* ------------------------------------------------
- * @file stack.h
+/** ------------------------------------------------
+ * @file exprList.h
  *	IFJ prekladac jazyka IFJ20
  *	Tým 101:
  *		@author Vlasakova, Nela <xvlasa14>
@@ -8,7 +8,7 @@
  *		@author Belohlavek, Jan <xbeloh8>
  *		@author Mraz, Filip <xmrazf00>
  * ------------------------------------------------
- * @brief funkce pro pouzivani zasobniku
+ * @brief funkce pro pouzivani obousmerneho seznamu
  * -----------------------------------------------*/ 
 
 #include <stdio.h>
