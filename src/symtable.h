@@ -8,7 +8,7 @@
  *		@author Belohlavek, Jan <xbeloh8>
  *		@author Mraz, Filip <xmrazf00>
  * ------------------------------------------------
- * @brief Knihovna pro tabulku symbolu
+ * @brief Knihovna pro tabulka symbolu
  * -----------------------------------------------*/
 
 #ifndef SYMTABLE_H
