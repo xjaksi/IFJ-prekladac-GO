@@ -18,53 +18,133 @@
 	{'R', 'S', 'R', 'S', 'R', 'R'},		// +-
 	{'R', 'S', 'R', 'S', 'R', 'R'},		// */
 	{'S', 'S', 'R', 'S', 'R', 'R'},		// cmp
-	{'S', 'S', 'S', 'S', 'Q', 'E'},		// (
+	{'S', 'S', 'S', 'S', 'S', 'E'},		// (
 	{'R', 'R', 'R', 'E', 'S', 'R'},		// )
 	{'S', 'S', 'S', 'S', 'E', 'A'},		// $ 
 };
 
-void printStuff() {
-	exprList testList;
-	listInit(&testList);
+exprList opStack;
+exprList idStack;
+exprList input;
 
-	insertItem(&testList, PT_EXP, DT_INT, "a");
-	insertItem(&testList, PT_ADDSUB, DT_NONE, "+");
-	insertItem(&testList, PT_EXP, DT_INT, "b");
+bool exprFlag = false;
 
-	while(testList.act != NULL) {
-		printf("VALUE IS: %s\n", testList.act->value);
-		testList.act = testList.act->next;
-	} 
-}
+ERROR_CODE finalError;
 
-PtType tokenToSymbol (token t) {
-	switch (t->type) {
-	case tID: case tINT: case tFLOAT: case tSTRING:
-		return PT_EXP;
-	
-	case tADD: case tSUB:
-		return PT_ADDSUB;
-	
-	case tDIV: case tMUL:
-		return PT_MULDIV;
-	
-	case tLT: case tLEQ: case tGT: case tGEQ: case tEQ: case tNEQ:
-		return PT_CMPS;
-	
-	case tLBRACKET: 
-		return PT_LBR;
+ERROR_CODE parseExp() {
+	// inicializace vsech potrebnych seznamu
+	listInit(&input);
+	listInit(&opStack);
+	insertItem(&opStack, PT_STOP, DT_NONE, "$");
+	listInit(&idStack);
+	insertItem(&idStack, PT_STOP, DT_NONE, "$");
 
-	case tRBRACKET:
-		return PT_RBR;
+	/////////////// M O C K   D A T A ///////////////
+	insertItem(&input, PT_LBR, DT_NONE, "(");
+	insertItem(&input, PT_EXP, DT_INT, "a");
+	insertItem(&input, PT_MULDIV, DT_NONE, "*");
+	insertItem(&input, PT_EXP, DT_INT, "10");
+	insertItem(&input, PT_ADDSUB, DT_NONE, "+");
+	insertItem(&input, PT_EXP, DT_INT, "c");
+	insertItem(&input, PT_RBR, DT_NONE, ")");
+	insertItem(&input, PT_MULDIV, DT_NONE, "/");
+	insertItem(&input, PT_CONST, DT_INT, "0");
+	insertItem(&input, PT_STOP, DT_NONE, "$");
+	/////////////////////////////////////////////////
 
-	default:
-		break;
+	// TO DO sestaveni input seznamu, dohledani datovych typu
+
+	// prochazeni seznamu reprezentujiciho vstupni vyraz
+	while(input.act != NULL) {
+
+		// pokud jde o vyraz, provede se nacteni do vlastniho seznamu
+		if(input.act->ptType == PT_EXP || input.act->ptType == PT_CONST) {
+			exprFlag = true;
+			shift();
+		}
+		
+		// vsechno ostatni je operator a podrobuje se precedencni analyze
+		else {		
+			switch (precTable[opStack.act->ptType][input.act->ptType]) {
+			case 'R': 
+			 	// (E) -> E redukce
+				if (opStack.act->ptType == PT_RBR) {
+					removeItem(&opStack);
+					removeItem(&opStack);
+				}
+				
+				// E [op] E -> E redukce
+				else {		
+					DataType eOne = idStack.act->dType;
+					DataType eTwo = idStack.act->prev->dType;
+					PtType op = opStack.act->ptType;
+
+					// zajisteni stejnych datovych typu
+					if (idStack.act->dType == idStack.act->prev->dType) {
+
+						// overeni deleni nulou v int i float pripadech
+						if ((strcmp(opStack.act->value, "/") == 0) && (idStack.act->ptType == PT_CONST) && (strtof(idStack.act->value, NULL) == 0)) {	
+							return ERROR_ZERO_DIVISION;	
+						}
+
+						removeItem(&idStack);
+						removeItem(&opStack);
+						
+					}
+					else {
+						return ERROR_TYPE_COMPATIBILITY;
+					}
+				}				
+				break;
+			case 'S':
+				shift();
+				break;
+
+			case 'A':
+				// v seznamu ID by melo zustat jen jedno El, po odstraneni by tam mel byt jen $
+				removeItem(&idStack); 	
+				if (idStack.act->ptType != PT_STOP) {
+					return ERROR_SYNTAX;
+				}
+				
+				input.act = input.act->next;
+				return OK;
+
+			case 'E':
+				return ERROR_SYNTAX;
+
+			default:
+				return ERROR_COMPILER;
+			}
+		}
 	}
+	return finalError;
 }
 
-fillMyList(token t) {
-	exprList eList;
-	listInit(&eList);
+ERROR_CODE reduce() {
+	return OK;
+}
+
+void shift() {
+	if (exprFlag) {
+		insertItem(&idStack, input.act->ptType, input.act->dType, input.act->value);
+		idStack.act = idStack.act->next;
+		exprFlag = false;
+	}
+	else {
+		insertItem(&opStack, input.act->ptType, input.act->dType, input.act->value);
+		opStack.act = opStack.act->next;
+	}	
+
+	input.act = input.act->next;
+}
+// TO DO NAPRAVIT
+ERROR_CODE fillMyList(tList *t) {
+	while(t->act != NULL) {
+		fprintf(stderr, "VALUE IS: %s\n", t->act->value);
+		t->act = t->act->next;
+	}
+	return OK;
 }
 
 

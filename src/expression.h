@@ -25,13 +25,15 @@
  * @brief typy symbolu v precedencni tabulce
  */
 typedef enum {
-    PT_EXP,
+    
     PT_ADDSUB,
     PT_MULDIV,
     PT_CMPS,
     PT_LBR,
     PT_RBR,
-    PT_STOP
+    PT_STOP,
+    PT_EXP,
+    PT_CONST,
 } PtType;
 
 /**
@@ -44,6 +46,17 @@ typedef enum {
     DT_NONE,
 } DataType;
 
-void printStuff();
+ERROR_CODE parseExp();
 
-PtType tokenToSymbol (token t);
+
+/**
+ * @brief funkce projde seznam tokenu a z toho naplni globalni seznam
+ * 
+ * @param t seznam tokenu
+ * @return ERROR_CODE pokud se neco nepovede, vrati chybovou hodnotu
+ */
+ERROR_CODE fillMyList(tList *t);
+
+void shift();
+
+ERROR_CODE reduce();

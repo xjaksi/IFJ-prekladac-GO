@@ -53,23 +53,20 @@ void removeItem(exprList *l) {
     // pokud seznam neni prazdny
     if (l->first != NULL) {
 
-        // pokud osledni je aktivni, odstrani se aktivita
-        if (l->last == l->act) {
-            l->act = NULL;
-        }
-
         // pokud seznam obsahuje jeden prvek
         if (l->first == l->last) {
             l->first = NULL;
             l->last = NULL;
+            l->act = NULL;
             free(l->last);
         }
 
-        // pokud je jich tam hodne
+        // pokud je jich tam vice
         else {
             l->last = l->last->prev;
             free(l->last->next);
             l->last->next = NULL;
+            l->act = l->last;
         }
     }
     
