@@ -1,16 +1,15 @@
-/* ----------------------------------------------
-	Předmět: IFJ
-	Tým: 101
-	Autor:
-		Jaksik, Ales (xjaksi01)
--------------------------------------------------
-        	Vlasakova, Nela (xvlasa14)
-        	Belohlavek, Honza
-        	Mraz, Filip (xmrazf00)
--------------------------------------------------
- Účel: Tabulka symbolů
- Popis: Hlavičkový soubor pro tabulku symbolů
- ----------------------------------------------*/
+/** -----------------------------------------------
+ * @file symtable.h
+ *	IFJ prekladac jazyka IFJ20
+ *	Tým 101:
+ *		@author Jaksik, Ales <xjaksi01>
+ * ------------------------------------------------
+ *		@author Vlasakova, Nela <xvlasa14>
+ *		@author Belohlavek, Jan <xbeloh8>
+ *		@author Mraz, Filip <xmrazf00>
+ * ------------------------------------------------
+ * @brief Knihovna pro tabulku symbolu
+ * -----------------------------------------------*/
 
 #ifndef SYMTABLE_H
 #define SYMTABLE_H
