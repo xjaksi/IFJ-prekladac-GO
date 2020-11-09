@@ -31,7 +31,7 @@ void testSymtabSingle (tBSTNodePtr *RootPtr, char* K)
 		// Vypsani informaci funkce
 		if (nnType == ntFunc)
 		{
-			printf("Polozka %s je funkce \n", K);
+			printf("Polozka - %s - je funkce \n", K);
 			if (isDefined)
 			{
 				printf("  Byla definovana \n");
@@ -65,7 +65,7 @@ void testSymtabSingle (tBSTNodePtr *RootPtr, char* K)
 		// informace o promenne
 		else if (nnType == ntVar)
 		{
-			printf("Polozka %s je promenna \n", K);
+			printf("Polozka - %s - je promenna \n", K);
 			if (isDefined)
 			{
 				printf("  Byla definovana \n");
@@ -110,17 +110,74 @@ int main()
 	tBSTNodePtr temp;
 
     BSTInit(&tab);
+	BSTInit(&temp);
 
     value = BSTInsert(&tab, "klic1", createCont(ntVar, 0, NULL, true, typeInt));
 	if (value != OK) 
     {
         BSTDispose(&tab);
+		BSTDispose(&temp);
         return value;
     }
 
-	printf("Vypis\n");
+	value = BSTInsert(&tab, "klic2", createCont(ntVar, 0, NULL, true, typeDouble));
+	if (value != OK) 
+    {
+        BSTDispose(&tab);
+		BSTDispose(&temp);
+        return value;
+    }
+
+	value = BSTInsert(&tab, "klic3", createCont(ntFunc, 0, NULL, false, typeNo));
+	if (value != OK) 
+    {
+        BSTDispose(&tab);
+		BSTDispose(&temp);
+        return value;
+    }
+
+	value = BSTInsert(&temp, "klic4", createCont(ntVar, 0, NULL, true, typeInt));
+	if (value != OK) 
+    {
+        BSTDispose(&tab);
+		BSTDispose(&temp);
+        return value;
+    }
+
+	value = BSTInsert(&temp, "klic5", createCont(ntVar, 0, NULL, true, typeInt));
+	if (value != OK) 
+    {
+        BSTDispose(&tab);
+		BSTDispose(&temp);
+        return value;
+    }
+
+	value = BSTInsert(&tab, "klic3", createCont(ntFunc, 2, temp, true, typeInt));
+	if (value != OK) 
+    {
+        BSTDispose(&tab);
+		BSTDispose(&temp);
+        return value;
+    }
+
+	testSymtabSingle(&tab, "klic1");
+	testSymtabSingle(&tab, "klic2");
+	testSymtabSingle(&tab, "klic3");
 
 
+
+	BSTDispose(&temp);
+
+	testSymtabSingle(&temp, "klic4");
+	testSymtabSingle(&temp, "klic5");
+
+	temp = BSTSearch(&temp, "klic3")->localFrame;
+
+	testSymtabSingle(&temp, "klic4");
+	testSymtabSingle(&temp, "klic5");
+
+
+	BSTDispose(&temp);
     BSTDispose(&tab);
 
     return value;
