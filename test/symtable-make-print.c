@@ -164,6 +164,8 @@ int main()
 	testSymtabSingle(&tab, "klic2");
 	testSymtabSingle(&tab, "klic3");
 
+	testSymtabSingle(&temp, "klic4");
+	testSymtabSingle(&temp, "klic5");
 
 
 	BSTDispose(&temp);
@@ -171,8 +173,8 @@ int main()
 	testSymtabSingle(&temp, "klic4");
 	testSymtabSingle(&temp, "klic5");
 
-	temp = BSTSearch(&temp, "klic3")->localFrame;
-
+	temp = BSTSearch(&tab, "klic3")->localFrame;
+	
 	testSymtabSingle(&temp, "klic4");
 	testSymtabSingle(&temp, "klic5");
 
