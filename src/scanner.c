@@ -17,61 +17,66 @@ Popis:  jak funguje tento soubor
 
 int main(){
 	printf("Hello world!!! \n");
-	get_token();
-	printf("%s\n", tListMain.act.value);
+
+	tListPtr tListMain = initScanner();
+
+	get_token(tListMain);
+	printf("%s\n", tListMain->act->value);
 return 0;
 }
 
 
-tList* initScanner(){
 
-	tList* tListMain = malloc(sizeof(tList)); // hlavni list
-	tListMain.first = NULL;
-	tListMain.act = NULL;
-	tListMain.last = NULL;
-	int numberTokensInList = 0;
+tListPtr initScanner(){
 
-	char tmpString[] = "";
-	return 0;
+	tListPtr tListMain = malloc(sizeof(struct tList)); // hlavni list
+	tListMain->first = NULL;
+	tListMain->act = NULL;
+	tListMain->last = NULL;
+	tListMain->numberTokensInList = 0;
+
+	return tListMain;
 }
 
-void tListAdd(tList *atr){
+void tListAdd(tListPtr atr, TokenType type, char valu[]){
 
-	Token newItetem = malloc(sizeof(struct Token);//zalozi novy prvek listu
-  		if (newItem == NULL) {
-      		return ERROR_COMPILER;
+	TokenPtr newItem = malloc(sizeof(struct Token));//zalozi novy prvek listu
+  	if (newItem == NULL) {
+    	return ERROR_COMPILER;
    	}
-	if(numberTokensInList == 0){
-		tlistMain.first = newItem*;
-		tlistMain.act = newItem*;
-		tlistMain.last = newItem*;
-		numberTokensInList++;
-		newItem.type = atr1 -> type;//uloži do nej hodnoty
-		newItem.value = atr1 -> value;
-		newItem.next = NULL;
-		newItem.prev = NULL;
+
+
+	if(atr->numberTokensInList == 0){
+		atr->first = newItem;
+		atr->act = newItem;
+		atr->last = newItem;
+		atr->numberTokensInList++;
+		newItem->type = type;//uloži do nej hodnoty
+		newItem->value[1000000] = valu;
+		newItem->next = NULL;
+		newItem->prev = NULL;
 		return 0;
 	}
-	newItem.prev = tListMain.act*; // nastaveni predchoziho prvku pro momentalni prvek
-	tListMain.act.next = newItem*; // nastaveni nasledujiciho prvku predchozimu prvku
-	newItem.next = NULL; // nastaveni nasledujiciho prvku
-	tlistMain.act = newItem*; //aktualizace act prvku v seznamu
-	tlistMain.last = newItem*;
-	numberTokensInList++;
-	newItem.type = atr1 -> type;//uloži do nej hodnoty
-	newItem.value = atr1 -> value;
 
+
+
+	newItem->prev = atr->act; // nastaveni predchoziho prvku pro momentalni prvek
+	atr->act->next = newItem; // nastaveni nasledujiciho prvku predchozimu prvku
+	newItem->next = NULL; // nastaveni nasledujiciho prvku
+	atr->act = newItem; //aktualizace act prvku v seznamu 
+	atr->last = newItem; // TODO: dat to jednou na konec 
+	atr->numberTokensInList++;
+	newItem->type =type;//uloži do nej hodnoty
+	newItem->value[1000000] = valu;
 
 	return 0;
-
-
 }
 
 
 
-void get_token(){ //fuknce pro precteni dat ze std. vstupu a ulozeni do seznamu , DKA
-	initScanner(); // zavolani inicializace promenych
+void get_token(tListPtr tListMain){ //fuknce pro precteni dat ze std. vstupu a ulozeni do seznamu , DKA
 
+	char tmpString[] = "";
 
 	char helpString = "a";// v kazdem pruchodu getc dostanu novy
 	strcat (tmpString, helpString);
@@ -79,15 +84,12 @@ void get_token(){ //fuknce pro precteni dat ze std. vstupu a ulozeni do seznamu 
 
 
 	printf("%s\n", tmpString);
-	struct Token helpToken; // token ktery budu ukladat do seznamu
-
-
-	helpToken.TokenType = tID; //nastavení typu tokenu
-	helpToken.value = tmpString; //nastavení hodnoty tokenu
+		
+	tListAdd(tListMain, tID, tmpString);
 
 	//ulozit do oboustranne vazaneho seznamu
 
-	tListAdd(helpToken*);
+
 
 return 0;
 }

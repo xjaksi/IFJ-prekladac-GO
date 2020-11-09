@@ -66,21 +66,23 @@ typedef enum {
  * @struct token reprezentujici jednu polozku v obousmerne vazanem seznamu
  * @brief obsahuje odkaz na predesly a nasledujici
  */
-typedef struct token {
+typedef struct Token {
 	TokenType type;
 	char value[1000000];
 	struct Token *next;
 	struct Token *prev;
-} *Token;
+} *TokenPtr;
 
 /**
  * @struct struktura reprezentujici boboustranne vazany seznam
  * @brief obsahuje první, poslední a aktivní prvek
  */
-typedef struct TokenList {
-	token first;
-	token act;
-	token last;
-} tList;
+typedef struct tList{
+	TokenPtr first;
+	TokenPtr act;
+	TokenPtr last;
+	int numberTokensInList;
+} *tListPtr;
 
-void get_token();
+void get_token(tListPtr tListMain);
+tListPtr initScanner();
