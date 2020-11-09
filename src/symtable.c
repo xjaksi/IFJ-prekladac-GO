@@ -93,7 +93,15 @@ int BSTInsert (tBSTNodePtr* RootPtr, char* K, nodeInfCont Content)
 	// pokud se klice shoduji, redefinace odchazim
 	else if (strcmp(K, ((*RootPtr)->Key)) == 0)
 	{
-		return ERROR_REDEFINITION;
+		if ((*RootPtr)->TBSNodeCont->defined == false)
+		{
+			(*RootPtr)->TBSNodeCont = Content;
+			return OK;
+		}
+		else
+		{
+			return ERROR_REDEFINITION;
+		}
 	}
 
 	// v jinem pripade se posunuji stromem
@@ -127,8 +135,6 @@ void BSTDispose (tBSTNodePtr *RootPtr)
 		BSTDispose(&((*RootPtr)->LPtr));
 		BSTDispose(&((*RootPtr)->RPtr));
 
-		free((*RootPtr)->Key);
-
 		// mazani lokalniho stromu
 		if ((*RootPtr)->TBSNodeCont->localFrame != NULL)
 		{
@@ -157,18 +163,6 @@ nodeInfCont createCont (nodeType nnType, int noParam, struct tBSTNode *localTabl
     data->dType = ddType;
 
     return data;
-}
-
-/**
- * Aktualizace datoveho typu, poctu parametru
- */
-void BSTContActual (tBSTNodePtr *RootPtr, char* K, dataType type, int params)
-{
-	// podle klice najdeme poren v danem binarnim stromu
-	nodeInfCont upDate = BSTSearch(RootPtr, K);
-
-	upDate->dType = type;
-	upDate->noParams = params;
 }
 
 /*                Konec binarniho stromu                */

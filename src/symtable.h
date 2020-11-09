@@ -82,7 +82,6 @@ int BSTInsert (tBSTNodePtr *, char *, nodeInfCont);
 void BSTDispose(tBSTNodePtr *);
 
 nodeInfCont createCont (nodeType nnType, int noParam, struct tBSTNode *localTable, bool isDefined, dataType ddType);
-void BSTContActual (tBSTNodePtr *, char*, dataType, int);
 
 /*                Konec binarniho stromu                */
 /* ---------------------------------------------------- */
