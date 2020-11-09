@@ -132,7 +132,7 @@ void BSTDispose (tBSTNodePtr *RootPtr)
 		// mazani lokalniho stromu
 		if ((*RootPtr)->TBSNodeCont->localFrame != NULL)
 		{
-			BSTDispose(&(*RootPtr)->TBSNodeCont->localFrame));
+			BSTDispose(&(*RootPtr)->TBSNodeCont->localFrame);
 		}
 
 		free((*RootPtr)->TBSNodeCont);
