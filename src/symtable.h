@@ -63,12 +63,25 @@ typedef struct tBSTNode
 
 // prototypy funkci
 
-void BSTInit   (tBSTNodePtr *);
-nodeInfCont BSTSearch  (tBSTNodePtr *, char *);
+/**
+ * @brief Inicializace stromu
+ * @param RootPtr Koren stromu
+ */
+void BSTInit (tBSTNodePtr *RootPtr);
+
+/**
+ * @brief Vyhledani uzlu
+ * 
+ * @param RootPtr Koren stromu
+ * @param K Klic hledaneho uzlu
+ * 
+ * @return Obsah hledaneho uzlu
+ */
+nodeInfCont BSTSearch (tBSTNodePtr *RootPtr, char* K);
 int BSTInsert (tBSTNodePtr *, char *, nodeInfCont);
 void BSTDispose(tBSTNodePtr *);
 
-nodeInfCont createCont (nodeType, int, bool, dataType);
+nodeInfCont createCont (nodeType nnType, int noParam, struct tBSTNode *localTable, bool isDefined, dataType ddType)
 void BSTContActual (tBSTNodePtr *, char*, dataType, int);
 
 /*                Konec binarniho stromu                */
