@@ -127,7 +127,15 @@ void BSTDispose (tBSTNodePtr *RootPtr)
 		BSTDispose(&((*RootPtr)->LPtr));
 		BSTDispose(&((*RootPtr)->RPtr));
 
-		// uvolnovani pameti
+		free((*RootPtr)->Key);
+
+		// mazani lokalniho stromu
+		if ((*RootPtr)->TBSNodeCont->localFrame != NULL)
+		{
+			BSTDispose(&(*RootPtr)->TBSNodeCont->localFrame));
+		}
+
+		free((*RootPtr)->TBSNodeCont);
 		free(*RootPtr);
 
 		// po inicializaci je NULL
