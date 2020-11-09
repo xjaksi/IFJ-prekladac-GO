@@ -7,15 +7,15 @@
 -------------------------------------------------
 Ucel: rozpoznani a klasifikace lexemu, reprezentace lexemu pomoci tokenu
 Popis:  jak funguje tento soubor
-----------------------------------------------*/ 
-
+----------------------------------------------*/
+#include <stdlib.h>
 
 
 /**
  * @brief Typy tokenu a klicova slova
  */
 typedef enum {
-	tID,		///< typ ID 
+	tID,		///< typ ID
 	tINT,		///< typ integer
 	tFLOAT,		///< typ float
 	tSTRING,	///< typ string
@@ -64,14 +64,14 @@ typedef enum {
 
 /**
  * @struct token reprezentujici jednu polozku v obousmerne vazanem seznamu
- * @brief obsahuje odkaz na predesly a nasledujici 
+ * @brief obsahuje odkaz na predesly a nasledujici
  */
-typedef struct Token {
+typedef struct token {
 	TokenType type;
-	char value[50];
+	char value[1000000];
 	struct Token *next;
 	struct Token *prev;
-} *token;
+} *Token;
 
 /**
  * @struct struktura reprezentujici boboustranne vazany seznam
