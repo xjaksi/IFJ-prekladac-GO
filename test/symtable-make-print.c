@@ -19,7 +19,7 @@ void testSymtabSingle (tBSTNodePtr *RootPtr, char* K)
 	// vypsani pokud koren neexistuje
 	if (node == NULL)
 	{
-		printf("Uzel %s nexistuje", K);
+		printf("Uzel %s nexistuje\n", K);
 	}
 	else
 	{
@@ -38,28 +38,28 @@ void testSymtabSingle (tBSTNodePtr *RootPtr, char* K)
 				printf("  Pocet parametru je %d \n", noParam);
 				if (ddType == typeNo)
 				{
-					printf("  Datovy typ neni");
+					printf("  Datovy typ neni\n");
 				}
 				else if (ddType == typeInt)
 				{
-					printf("  Datovy typ je celociselny literal");
+					printf("  Datovy typ je celociselny literal\n");
 				}
 				else if (ddType == typeDouble)
 				{
-					printf("  Datovy typ je desitinny literal");
+					printf("  Datovy typ je desitinny literal\n");
 				}
 				else if (ddType == typeString)
 				{
-					printf("  Datovy typ je retezovy literal");
+					printf("  Datovy typ je retezovy literal\n");
 				}
 				else
 				{
-					printf("  !!! Chybny datovy typ !!!");
+					printf("  !!! Chybny datovy typ !!!\n");
 				}
 			}
 			else
 			{
-				printf("  Zatim nebyla definovana");
+				printf("  Zatim nebyla definovana\n");
 			}
 		}
 		// informace o promenne
@@ -71,33 +71,33 @@ void testSymtabSingle (tBSTNodePtr *RootPtr, char* K)
 				printf("  Byla definovana \n");
 				if (ddType == typeNo)
 				{
-					printf("  Datovy typ neni");
+					printf("  Datovy typ neni\n");
 				}
 				else if (ddType == typeInt)
 				{
-					printf("  Datovy typ je celociselny literal");
+					printf("  Datovy typ je celociselny literal\n");
 				}
 				else if (ddType == typeDouble)
 				{
-					printf("  Datovy typ je desitinny literal");
+					printf("  Datovy typ je desitinny literal\n");
 				}
 				else if (ddType == typeString)
 				{
-					printf("  Datovy typ je retezovy literal");
+					printf("  Datovy typ je retezovy literal\n");
 				}
 				else
 				{
-					printf("  !!! Chybny datovy typ !!!");
+					printf("  !!! Chybny datovy typ !!!\n");
 				}
 			}
 			else
 			{
-				printf("  Zatim nebyla definovana");
+				printf("  Zatim nebyla definovana\n");
 			}
 		}
 		else
 		{
-			printf("!!! Chybny typ uzlu !!!");
+			printf("!!! Chybny typ uzlu !!!\n");
 		}	
 	}
 }
@@ -107,24 +107,21 @@ int main()
     int value = OK;
 
     tBSTNodePtr tab;
+	tBSTNodePtr temp;
 
     BSTInit(&tab);
 
-    value = BSTInsert(tab, "klic1", createCont(ntVar, 0, NULL, true, typeInt));
-    if (value != OK) 
+    value = BSTInsert(&tab, "klic1", createCont(ntVar, 0, NULL, true, typeInt));
+	if (value != OK) 
     {
         BSTDispose(&tab);
         return value;
     }
 
-
-    testSymtabSingle(tab, "klic1");
-
-
-
-
+	printf("Vypis\n");
 
 
     BSTDispose(&tab);
+
     return value;
 }
