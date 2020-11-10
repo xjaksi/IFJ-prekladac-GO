@@ -112,7 +112,7 @@ int main()
     BSTInit(&tab);
 	BSTInit(&temp);
 
-    value = BSTInsert(&tab, "klic1", createCont(ntVar, 0, NULL, true, typeInt));
+    value = BSTInsert(&tab, "klic1", createCont(ntVar, 0, true, typeInt));
 	if (value != OK) 
     {
         BSTDispose(&tab);
@@ -120,7 +120,7 @@ int main()
         return value;
     }
 
-	value = BSTInsert(&tab, "klic2", createCont(ntVar, 0, NULL, true, typeDouble));
+	value = BSTInsert(&tab, "klic2", createCont(ntVar, 0, true, typeDouble));
 	if (value != OK) 
     {
         BSTDispose(&tab);
@@ -128,7 +128,7 @@ int main()
         return value;
     }
 
-	value = BSTInsert(&tab, "klic3", createCont(ntFunc, 0, NULL, false, typeNo));
+	value = BSTInsert(&tab, "klic3", createCont(ntFunc, 0, false, typeNo));
 	if (value != OK) 
     {
         BSTDispose(&tab);
@@ -136,7 +136,7 @@ int main()
         return value;
     }
 
-	value = BSTInsert(&temp, "klic4", createCont(ntVar, 0, NULL, true, typeInt));
+	value = BSTInsert(&temp, "klic4", createCont(ntVar, 0, true, typeInt));
 	if (value != OK) 
     {
         BSTDispose(&tab);
@@ -144,7 +144,7 @@ int main()
         return value;
     }
 
-	value = BSTInsert(&temp, "klic5", createCont(ntVar, 0, NULL, true, typeInt));
+	value = BSTInsert(&temp, "klic5", createCont(ntVar, 0, true, typeInt));
 	if (value != OK) 
     {
         BSTDispose(&tab);
@@ -152,13 +152,14 @@ int main()
         return value;
     }
 
-	value = BSTInsert(&tab, "klic3", createCont(ntFunc, 2, temp, true, typeInt));
+	value = BSTInsert(&tab, "klic3", createCont(ntFunc, 2, true, typeInt));
 	if (value != OK) 
     {
         BSTDispose(&tab);
 		BSTDispose(&temp);
         return value;
     }
+
 
 	testSymtabSingle(&tab, "klic1");
 	testSymtabSingle(&tab, "klic2");
@@ -166,14 +167,6 @@ int main()
 
 	testSymtabSingle(&temp, "klic4");
 	testSymtabSingle(&temp, "klic5");
-
-
-	BSTDispose(&temp);
-
-	testSymtabSingle(&temp, "klic4");
-	testSymtabSingle(&temp, "klic5");
-
-	temp = BSTSearch(&tab, "klic3")->localFrame;
 	
 	testSymtabSingle(&temp, "klic4");
 	testSymtabSingle(&temp, "klic5");
