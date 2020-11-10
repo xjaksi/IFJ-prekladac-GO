@@ -16,12 +16,11 @@ Popis:  jak funguje tento soubor
 #include "errors.h"
 
 int main(){
-	printf("Hello world!!! \n");
 
-	tListPtr tListMain = initScanner();
+	tListPtr tListMain = initScanner();// vytvoří obousměrné vázány list pro tokeny
 
-	get_token(tListMain);
-	printf("%s\n", tListMain->act->value);
+	get_token(tListMain); // naplni obousmerne vazany seznam tokeny z stdin
+	//printf("%s\n", tListMain->act->value);
 return 0;
 }
 
