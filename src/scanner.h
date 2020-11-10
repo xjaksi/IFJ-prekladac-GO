@@ -23,7 +23,8 @@ typedef enum {
 	tSUB,		///< -
 	tDIV,		///< /
 	tMUL,		///< *
-	tASSIGN,	///< :=
+	tDEF,		///< :=
+	tASSIGN,	///< =
 	tLT,		///< <
 	tLEQ,		///< <=
 	tGT,		///< >
