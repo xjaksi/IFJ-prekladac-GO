@@ -37,7 +37,7 @@ typedef enum datatype
 {
     typeNo,
     typeInt,
-    typeDouble,
+    typeFloat,
     typeString,
 } dataType;
 

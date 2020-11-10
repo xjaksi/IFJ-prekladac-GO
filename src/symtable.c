@@ -93,7 +93,7 @@ int BSTInsert (treeNode* RootPtr, char* K, nodeInfCont Content)
 	// pokud se klice shoduji, redefinace odchazim
 	else if (strcmp(K, ((*RootPtr)->Key)) == 0)
 	{
-		if ((*RootPtr)->TBSNodeCont->defined == false)
+		if ((*RootPtr)->TBSNodeCont->dType == Content->dType)
 		{
 			(*RootPtr)->TBSNodeCont = Content;
 			return OK;
