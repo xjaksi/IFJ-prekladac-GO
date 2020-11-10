@@ -46,7 +46,6 @@ typedef struct nodeCont
 {
     nodeType nType;                 // jedna se o funkci nebo promennou
     int noParams;                   // pocet parametru teto funkce
-    struct tBSTNode *localFrame;    // localni tabulka funkce
     bool defined;                   // bylo jiz definovano?
     dataType dType;                 // nazev datoveho typu
 } *nodeInfCont;
@@ -81,7 +80,7 @@ nodeInfCont BSTSearch (tBSTNodePtr *RootPtr, char* K);
 int BSTInsert (tBSTNodePtr *, char *, nodeInfCont);
 void BSTDispose(tBSTNodePtr *);
 
-nodeInfCont createCont (nodeType nnType, int noParam, struct tBSTNode *localTable, bool isDefined, dataType ddType);
+nodeInfCont createCont (nodeType nnType, int noParam,  bool isDefined, dataType ddType);
 
 /*                Konec binarniho stromu                */
 /* ---------------------------------------------------- */

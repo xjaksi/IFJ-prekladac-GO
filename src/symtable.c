@@ -135,12 +135,6 @@ void BSTDispose (tBSTNodePtr *RootPtr)
 		BSTDispose(&((*RootPtr)->LPtr));
 		BSTDispose(&((*RootPtr)->RPtr));
 
-		// mazani lokalniho stromu
-		if ((*RootPtr)->TBSNodeCont->localFrame != NULL)
-		{
-			BSTDispose(&(*RootPtr)->TBSNodeCont->localFrame);
-		}
-
 		free((*RootPtr)->TBSNodeCont);
 		free(*RootPtr);
 
@@ -153,12 +147,11 @@ void BSTDispose (tBSTNodePtr *RootPtr)
  * Vytvareni obsahu
  * nahraje do data obsah pro koren
  */
-nodeInfCont createCont (nodeType nnType, int noParam, struct tBSTNode *localTable, bool isDefined, dataType ddType)
+nodeInfCont createCont (nodeType nnType, int noParam,  bool isDefined, dataType ddType)
 {
     nodeInfCont data = malloc(sizeof(struct nodeCont));
     data->nType = nnType;
     data->noParams = noParam;
-	data->localFrame = &(*localTable);
     data->defined = isDefined;
     data->dType = ddType;
 
