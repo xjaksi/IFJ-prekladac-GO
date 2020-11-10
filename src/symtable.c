@@ -69,7 +69,7 @@ nodeInfCont BSTSearch (treeNode *RootPtr, char* K)
  *
  * Posouvam se pomoci cyklu, abych nezatezoval pamet a zasobnik
  */
-int BSTInsert (treeNode* RootPtr, char* K, nodeInfCont Content)
+int BSTInsert (treeNode* RootPtr, char* K, bool def, nodeInfCont Content)
 {
 	// pokud je strom prazdny vytvorime novy
 	if (*RootPtr == NULL)
@@ -93,7 +93,8 @@ int BSTInsert (treeNode* RootPtr, char* K, nodeInfCont Content)
 	// pokud se klice shoduji, redefinace odchazim
 	else if (strcmp(K, ((*RootPtr)->Key)) == 0)
 	{
-		if ((*RootPtr)->TBSNodeCont->dType == Content->dType)
+
+		if (((*RootPtr)->TBSNodeCont->dType == Content->dType) && def == false)
 		{
 			(*RootPtr)->TBSNodeCont = Content;
 			return OK;
@@ -110,14 +111,14 @@ int BSTInsert (treeNode* RootPtr, char* K, nodeInfCont Content)
 	else if (strcmp(K, ((*RootPtr)->Key)) < 0)
 	{
 		// opetovne volam funkci pro levy podstrom
-		BSTInsert(&((*RootPtr)->LPtr), K, Content);
+		BSTInsert(&((*RootPtr)->LPtr), K, def, Content);
 		return OK;
 	}
 
 	// v jinem pripade jdu v pravo
 	else
 	{
-		BSTInsert(&((*RootPtr)->RPtr), K, Content);
+		BSTInsert(&((*RootPtr)->RPtr), K, def, Content);
 		return OK;
 	}
 }
@@ -147,12 +148,11 @@ void BSTDispose (treeNode *RootPtr)
  * Vytvareni obsahu
  * nahraje do data obsah pro koren
  */
-nodeInfCont createCont (nodeType nnType, int noParam,  bool isDefined, dataType ddType)
+nodeInfCont createCont (nodeType nnType, int noParam, dataType ddType)
 {
     nodeInfCont data = malloc(sizeof(struct nodeCont));
     data->nType = nnType;
     data->noParams = noParam;
-    data->defined = isDefined;
     data->dType = ddType;
 
     return data;

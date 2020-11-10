@@ -46,7 +46,6 @@ typedef struct nodeCont
 {
     nodeType nType;                 // jedna se o funkci nebo promennou
     int noParams;                   // pocet parametru teto funkce
-    bool defined;                   // bylo jiz definovano?
     dataType dType;                 // nazev datoveho typu
 } *nodeInfCont;
 
@@ -77,10 +76,10 @@ void BSTInit (treeNode *RootPtr);
  * @return Obsah hledaneho uzlu
  */
 nodeInfCont BSTSearch (treeNode *RootPtr, char* K);
-int BSTInsert (treeNode *, char *, nodeInfCont);
+int BSTInsert (treeNode *, char *, bool, nodeInfCont);
 void BSTDispose(treeNode *);
 
-nodeInfCont createCont (nodeType nnType, int noParam,  bool isDefined, dataType ddType);
+nodeInfCont createCont (nodeType nnType, int noParam, dataType ddType);
 
 /*                Konec binarniho stromu                */
 /* ---------------------------------------------------- */
