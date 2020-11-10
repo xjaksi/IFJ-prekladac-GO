@@ -37,6 +37,8 @@ typedef enum {
 	tRBRACE,	///< }
 	tSEMICOLON,	///< ;
 	tDEVNULL,	///< _
+	tEOL,		///< EOL
+	tEOF,		///< EOF
 
 	// klicove slova
 	kwIF,		///< if
@@ -47,6 +49,7 @@ typedef enum {
 	kwFUNC,		///< func
 	kwSTRING,	///< string
 	kwINT,		///< int
+	kwPACKAGE,	///< package
 
 	// vestavene funkce
 	fINPUTS,	///< inputs
