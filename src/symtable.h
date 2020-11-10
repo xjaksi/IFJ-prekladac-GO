@@ -52,13 +52,13 @@ typedef struct nodeCont
 
 
 // struktura samotneho uzlu
-typedef struct tBSTNode
+typedef struct BSTNode
 {
 	char * Key;			            // klic/nazev promenne
 	struct nodeCont * TBSNodeCont;  // informace o uzlu
-	struct tBSTNode * LPtr;         // levy podstrom
-	struct tBSTNode * RPtr;         // pravy podstrom
-} *tBSTNodePtr;
+	struct BSTNode * LPtr;         // levy podstrom
+	struct BSTNode * RPtr;         // pravy podstrom
+} *treeNode;
 
 // prototypy funkci
 
@@ -66,7 +66,7 @@ typedef struct tBSTNode
  * @brief Inicializace stromu
  * @param RootPtr Koren stromu
  */
-void BSTInit (tBSTNodePtr *RootPtr);
+void BSTInit (treeNode *RootPtr);
 
 /**
  * @brief Vyhledani uzlu
@@ -76,9 +76,9 @@ void BSTInit (tBSTNodePtr *RootPtr);
  * 
  * @return Obsah hledaneho uzlu
  */
-nodeInfCont BSTSearch (tBSTNodePtr *RootPtr, char* K);
-int BSTInsert (tBSTNodePtr *, char *, nodeInfCont);
-void BSTDispose(tBSTNodePtr *);
+nodeInfCont BSTSearch (treeNode *RootPtr, char* K);
+int BSTInsert (treeNode *, char *, nodeInfCont);
+void BSTDispose(treeNode *);
 
 nodeInfCont createCont (nodeType nnType, int noParam,  bool isDefined, dataType ddType);
 

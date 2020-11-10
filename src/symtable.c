@@ -20,7 +20,7 @@
 /**
  * Inicializace stromu
  */
-void BSTInit (tBSTNodePtr *RootPtr)
+void BSTInit (treeNode *RootPtr)
 {
 	*RootPtr = NULL; //inicializace prazdneho uzlu
 }
@@ -32,7 +32,7 @@ void BSTInit (tBSTNodePtr *RootPtr)
  * pokud jsem nasel klic vratim obsah uzlu
  * jinak vracim NULL
  */
-nodeInfCont BSTSearch (tBSTNodePtr *RootPtr, char* K)
+nodeInfCont BSTSearch (treeNode *RootPtr, char* K)
 {
 	// pokud je root prazdny
 	if (*RootPtr == NULL)
@@ -69,13 +69,13 @@ nodeInfCont BSTSearch (tBSTNodePtr *RootPtr, char* K)
  *
  * Posouvam se pomoci cyklu, abych nezatezoval pamet a zasobnik
  */
-int BSTInsert (tBSTNodePtr* RootPtr, char* K, nodeInfCont Content)
+int BSTInsert (treeNode* RootPtr, char* K, nodeInfCont Content)
 {
 	// pokud je strom prazdny vytvorime novy
 	if (*RootPtr == NULL)
 	{
 		// alokace mista pro koren
-		*RootPtr = (tBSTNodePtr) malloc(sizeof(struct tBSTNode));
+		*RootPtr = (treeNode) malloc(sizeof(struct BSTNode));
 		if (*RootPtr == NULL)
 		{
 			return ERROR_COMPILER;
@@ -126,7 +126,7 @@ int BSTInsert (tBSTNodePtr* RootPtr, char* K, nodeInfCont Content)
 /**
  * Zniceni stromu
  */
-void BSTDispose (tBSTNodePtr *RootPtr)
+void BSTDispose (treeNode *RootPtr)
 {
 	// pokud neni strom prazdny nicim
 	if (*RootPtr != NULL)
