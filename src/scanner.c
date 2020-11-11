@@ -12,6 +12,8 @@ Popis:  jak funguje tento soubor
 #include <stdio.h>
 #include <string.h>
 
+#include "dynamicString.h"
+#include "dynamicString.c"
 #inslude "tokenList.c" // funkce pro praci s tokenlistem
 #inslude "tokenList.h" // protototypy tokenlistu, tokenu, tokentype
 #include "scanner.h"
