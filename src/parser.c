@@ -80,7 +80,6 @@ int cScel(tokenList token, treeNode *funcTab, treeNode *localTab)
 
 int funcSave(tokenList token, treeNode *funcTab)
 {
-    int result;
     int isMain = 0;
 
     while (token.Act != token.Last)
@@ -123,7 +122,9 @@ int cBody(tokenList token, treeNode *funcTab, treeNode *localTab)
     int result = OK;
 
     while (token.Act->t_type != tRBRACE)
-    {
+    {   
+        if (token.Act->t_type == tEOF) return ERROR_SYNTAX;
+
         while (token.Act->t_type == tEOL)
         {
             token.Act = token.Act->rptr;
@@ -169,6 +170,7 @@ int cBody(tokenList token, treeNode *funcTab, treeNode *localTab)
         case fCHR:
             while (token.Act->t_type != tRBRACKET)
             {
+                if (token.Act->t_type == tEOF) return ERROR_SYNTAX;
                 token.Act = token.Act->rptr;
             }
             token.Act = token.Act->rptr;
@@ -218,7 +220,7 @@ int cId(tokenList token, treeNode *funcTab, treeNode *localTab)
         }
         
         result = cExpr(token, &funcTab, &localTab);
-        if (result != OK) return ERROR_SYNTAX;
+        if (result != OK) return result;
         token.Act = token.Act->rptr;
         while (token.Act->t_type == tCOMMA)
         {
@@ -227,12 +229,15 @@ int cId(tokenList token, treeNode *funcTab, treeNode *localTab)
             if (result != OK) return result;
             token.Act = token.Act->rptr;
         }
+        break;
 
     case tDEF:
         token.Act = token.Act->rptr;
         result = cExpr(token, &funcTab, &localTab);
+        if (result != OK) return result;
         token.Act = token.Act->rptr;
-    
+        break;
+           
     default:
         return ERROR_SYNTAX;
     }
@@ -241,6 +246,92 @@ int cId(tokenList token, treeNode *funcTab, treeNode *localTab)
 
     return OK;
 }
+
+
+int cIf(tokenList token, treeNode *funcTab, treeNode *localTab)
+{
+    int result;
+
+    result = cExpr(token, &funcTab, &localTab);
+    if (result != OK) return result;
+
+    if (token.Act->t_type != tLBRACE) return ERROR_SYNTAX;
+    token.Act = token.Act->rptr;
+    if (token.Act->t_type != tEOL) return ERROR_SYNTAX;
+    // telo if
+    result = cBody(token, &funcTab, &localTab);
+    if (result != OK) return result;
+    if (token.Act->t_type != tRBRACE) return ERROR_SYNTAX;
+
+    token.Act = token.Act->rptr;
+    while (token.Act->t_type == tEOL)
+    {
+        token.Act = token.Act->rptr;
+    }
+
+    // prvni ok token je else
+    if (token.Act->t_type != kwELSE) return ERROR_SYNTAX;
+    token.Act = token.Act->rptr;
+    if (token.Act->t_type != tLBRACE) return ERROR_SYNTAX;
+    token.Act = token.Act->rptr;
+    if (token.Act->t_type != tEOL) return ERROR_SYNTAX;
+    // telo else
+    result = cBody(token, &funcTab, &localTab);
+    if (result != OK) return result;
+    if (token.Act->t_type != tRBRACE) return ERROR_SYNTAX;
+
+    token.Act = token.Act->rptr;
+
+    return OK;
+}
+
+int cFor(tokenList token, treeNode *funcTab, treeNode *localTab)
+{
+    int result;
+
+    token.Act = token.Act->rptr;
+    //definice
+    if (token.Act->t_type == tID)
+    {
+        token.Act = token.Act->rptr;
+        if (token.Act->t_type != tDEF) return ERROR_SYNTAX;
+        token.Act = token.Act->rptr;
+        result = cExpr(token, &funcTab, &localTab);
+        if (result != OK) return result;
+    }
+    if (token.Act->t_type != tSEMICOLON) return ERROR_SYNTAX;
+    token.Act = token.Act->rptr;
+
+    // vyraz
+    if (token.Act->t_type != tSEMICOLON)
+    {
+        result = cExpr(token, &funcTab, &localTab);
+        if (result != OK) return result;
+    }
+    if (token.Act->t_type != tSEMICOLON) return ERROR_SYNTAX;
+    token.Act = token.Act->rptr;
+
+    // prirazeni
+    if (token.Act->t_type == tID)
+    {
+        token.Act = token.Act->rptr;
+        if (token.Act->t_type != tASSIGN) return ERROR_SYNTAX;
+        token.Act = token.Act->rptr;
+        result = cExpr(token, &funcTab, &localTab);
+        if (result != OK) return result;
+    }
+    if (token.Act->t_type != tLBRACE) return ERROR_SYNTAX;
+    token.Act = token.Act->rptr;
+    if (token.Act->t_type != tEOL) return ERROR_SYNTAX;
+
+    // telo for
+    result = cBody(token, &funcTab, &localTab);
+    if (result != OK) return result;
+
+    token.Act = token.Act->rptr;
+    return OK;
+}
+
 
 
 int cParams(tokenList token, treeNode *funcTab, char *K)
