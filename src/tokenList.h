@@ -15,10 +15,10 @@
 #ifndef TOKEN_LIST_H
 #define TOKEN_LIST_H
 
-#include<stdio.h>
-#include<stdlib.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include "dynamicString.h"
-#include "scanner.h"
+
 
 #define FALSE 0
 #define TRUE 1
