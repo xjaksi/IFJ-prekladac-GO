@@ -24,7 +24,7 @@
 #define TRUE 1
 
 
-// DELETE
+
 /**
  * @brief Typy tokenu a klicova slova
  */
