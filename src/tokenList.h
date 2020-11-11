@@ -91,7 +91,10 @@ typedef struct Token {
 	struct Token *rptr;
 } *TokenPtr;
 
-
+/**
+ * @struct struktura reprezentujici boboustranne vazany seznam
+ * @brief obsahuje první, poslední a aktivní prvek
+ */
 typedef struct {                        
     TokenPtr First;
     TokenPtr Act;
