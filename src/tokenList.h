@@ -51,6 +51,7 @@ typedef enum {
 	tRBRACE,	///< }
 	tSEMICOLON,	///< ;
 	tDEVNULL,	///< _
+	tCOMMA,		///< ,
 	tEOL,		///< EOL
 	tEOF,		///< EOF
 
