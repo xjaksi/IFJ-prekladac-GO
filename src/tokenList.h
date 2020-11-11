@@ -1,3 +1,4 @@
+
 /** -----------------------------------------------
  * @file tokenList.c
  *	IFJ prekladac jazyka IFJ20
@@ -16,11 +17,14 @@
 
 #include<stdio.h>
 #include<stdlib.h>
-#include ""         //TODO
+#include "dynamicString.h"
+#include "scanner.h"
 
 #define FALSE 0
 #define TRUE 1
 
+
+// DELETE
 /**
  * @brief Typy tokenu a klicova slova
  */
@@ -82,7 +86,7 @@ typedef enum {
  */
 typedef struct Token {
 	TokenType t_type;
-	char atribute[1000000];
+	tStr *atribute;
 	struct Token *lptr;
 	struct Token *rptr;
 } *TokenPtr;
@@ -97,10 +101,10 @@ typedef struct {
  /* prototypy jednotlivých funkcí */
 void DLInitList (tokenList *);
 void DLDisposeList (tokenList *);
-void DLInsertLast(tokenList *, TokenType,  char param_atribute[]);    
+void DLInsertLast(tokenList *, TokenType, tStr *);    
 void DLFirst (tokenList *);
 void DLLast (tokenList *);
-void DLCopy (tokenList *, TokenType *, char param_atribute[]);       
+void DLCopy (tokenList *, TokenType *, tStr *);       
 void DLSucc (tokenList *);
 void DLPred (tokenList *);
 int DLActive (tokenList *);

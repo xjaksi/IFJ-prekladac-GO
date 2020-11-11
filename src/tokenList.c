@@ -1,3 +1,4 @@
+
 /** -----------------------------------------------
  * @file tokenList.c
  *	IFJ prekladac jazyka IFJ20
@@ -17,9 +18,10 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include "tokenList.h"
+#include "scanner.h"
 
-int solved;
-int errflg;
+//int solved; // DELETE
+//int errflg; // DELETE
 
 /*
 ** Vytiskne upozornění na to, že došlo k chybě.
@@ -61,12 +63,10 @@ void DLDisposeList (tokenList *L) {
 }
 
 
-void DLInsertLast(tokenList *L, TokenType param_t_type, char param_atribute[]) {
 /*
-** Vloží nový prvek na konec seznamu L (symetrická operace k DLInsertFirst).
-** V případě, že není dostatek paměti pro nový prvek při operaci malloc,
-** volá funkci DLError().
+** Vloží nový prvek na konec seznamu L
 **/
+void DLInsertLast(tokenList *L, TokenType param_t_type, tStr *p_atribute) {
     
     // pomocny pointer ukazuje na prave vytvoreny novy prvek pomoci malloc()
     TokenPtr sup = malloc(sizeof(struct Token));
@@ -78,7 +78,7 @@ void DLInsertLast(tokenList *L, TokenType param_t_type, char param_atribute[]) {
     }
 
     // prirazeni hodnoty do noveho prvku
-    sup->*atribute = param_atribute;
+    sup->atribute = p_atribute;
     sup->t_type = param_t_type;
     sup->rptr = NULL;
     sup->lptr = L->Last;
@@ -95,26 +95,13 @@ void DLInsertLast(tokenList *L, TokenType param_t_type, char param_atribute[]) {
     L->Last = sup;
 }
 
-/*
-** Nastaví aktivitu na první prvek seznamu L.
-**/
-void DLFirst (tokenList *L) {
-    L->Act = L->First;
-}
-
-/*
-** Nastaví aktivitu na poslední prvek seznamu L.
-**/
-void DLLast (tokenList *L) {	
-    L->Act = L->Last;	
-}
 
 
 /*
 ** Prostřednictvím parametru val vrátí hodnotu aktivního prvku seznamu L.
 ** Pokud seznam L není aktivní, volá funkci DLError ().
 **/
-void DLCopy (tokenList *L, int *param_t_type, char *param_atribute[]) {
+void DLCopy (tokenList *L, int *param_t_type, tStr *p_atribute) {
 	
     // kontrola aktivitty
     if(L->Act == NULL){
@@ -122,7 +109,7 @@ void DLCopy (tokenList *L, int *param_t_type, char *param_atribute[]) {
         return;
     }	
 
-    param_atribute = L->Act->atribute;
+    p_atribute = L->Act->atribute;
     *param_t_type = L->Act->t_type;
 }
 
@@ -153,6 +140,20 @@ void DLPred (tokenList *L) {
 
     // presunuti aktivity na levy prvek
     L->Act = L->Act->lptr;
+}
+
+/*
+** Nastaví aktivitu na první prvek seznamu L.
+**/
+void DLFirst (tokenList *L) {
+    L->Act = L->First;
+}
+
+/*
+** Nastaví aktivitu na poslední prvek seznamu L.
+**/
+void DLLast (tokenList *L) {	
+    L->Act = L->Last;	
 }
 
 /*
