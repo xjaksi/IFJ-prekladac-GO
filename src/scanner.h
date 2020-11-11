@@ -9,6 +9,7 @@ Ucel: rozpoznani a klasifikace lexemu, reprezentace lexemu pomoci tokenu
 Popis:  jak funguje tento soubor
 ----------------------------------------------*/
 #include <stdlib.h>
+#include "tokenList.h"
 
 // TokenType - definovan v tokenList.h
 // *TokenPtr definovan v tokenList.h
