@@ -22,8 +22,8 @@ int parse()
     BSTInit(&localTab);
 
 /* Vytvoreni seznamu pro tokeny a ukonceni v pripade chyby !!!OVERIT!!!*/
-    tListPtr token = initScanner();
-    get_token(token);
+    tokenList token; // vytvori hlavni tokenlist pro vas
+    getTokensTo(&token); //naplni tokeny
 
     // kontrola hlavicky programu 'package main'
     if (token->act->type != kwPACKAGE)
