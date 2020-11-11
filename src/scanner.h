@@ -15,5 +15,5 @@ Popis:  jak funguje tento soubor
 // tokenList definovan v tokenList.h
 
 //prototypy funkci
-tListPtr initTokensList();
+
 void getTokensTo(tListPtr tListMain);
