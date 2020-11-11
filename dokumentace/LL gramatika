@@ -1,0 +1,37 @@
+<START>	    ->	package main EOL <SCEL> 
+<SCEL>	    ->	func <PROG> EOL <SCEL>
+<SCEL>      ->  EOL <SCEL>
+
+<PROG>	    ->	main ( ) { <BODY> } EOF
+<PROG>	    ->	id <FUNC> <FUNC> { <BODY> }
+
+<BODY>	    ->	eps
+<BODY>	    ->	EOL <BODY>
+<BODY>	    ->	if <IF> EOL <BODY>
+<BODY>	    ->	for <FOR> EOL <BODY>
+<BODY>	    ->	id <ID> EOL <BODY>
+
+<ID>		->	<FUNC>
+<ID>		->	<ID_MORE> <ID_OPER>
+<ID_MORE>   ->  eps
+<ID_MORE>   ->  , id <ID_MORE>
+<ID_OPER>   ->  = <ID_TYPE>
+<ID_OPER>   ->  := <EXPR_TYPE>
+<ID_TYPE>   ->  <EXPR_TYPE>
+<ID_TYPE>   ->  <FUNC>
+<ID_TYPE>   ->  , <TYPE> <ID_TYPE>
+
+<EXPR_TYPE> ->  <TYPE>
+<EXPR_TYPE> ->  <EXPR>
+<TYPE>      ->  id
+<TYPE>      ->  int
+<TYPE>      ->  float
+<TYPE>      ->  string
+
+<FUNC>      ->  ( <PARAMS> )
+
+<PARAMS>    ->  eps
+<PARAMS>    ->  <TYPE> DATA_TYPE
+
+<IF>        ->  <EXPR> { <BODY> } else { <BODY> }
+<FOR>       ->  <EXPR_TYPE> ; <EXPR> ; <EXPR> { <BODY> }
