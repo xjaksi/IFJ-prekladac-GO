@@ -101,7 +101,7 @@ void DLInsertLast(tokenList *L, TokenType param_t_type, tStr *p_atribute) {
 ** Prostřednictvím parametru val vrátí hodnotu aktivního prvku seznamu L.
 ** Pokud seznam L není aktivní, volá funkci DLError ().
 **/
-void DLCopy (tokenList *L, int *param_t_type, tStr *p_atribute) {
+void DLCopy (tokenList *L, TokenType *param_t_type, tStr *p_atribute) {
 	
     // kontrola aktivitty
     if(L->Act == NULL){
