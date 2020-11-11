@@ -6,6 +6,7 @@
 <PROG>	    ->	id <FUNC> <FUNC> { <BODY> }
 
 <BODY>	    ->	eps
+<BODY>      ->  return <EXPR>
 <BODY>	    ->	EOL <BODY>
 <BODY>	    ->	if <IF> EOL <BODY>
 <BODY>	    ->	for <FOR> EOL <BODY>

@@ -120,7 +120,7 @@ int funcSave(tokenList token, treeNode *funcTab)
 
 int cBody(tokenList token, treeNode *funcTab, treeNode *localTab)
 {
-    int result;
+    int result = OK;
 
     while (token.Act->t_type != tRBRACE)
     {
@@ -176,6 +176,66 @@ int cBody(tokenList token, treeNode *funcTab, treeNode *localTab)
     }
     return result;
 }
+
+int cId(tokenList token, treeNode *funcTab, treeNode *localTab)
+{
+    int cnt = 0;
+    int result;
+
+    token.Act = token.Act->rptr;
+
+    while (token.Act == tCOMMA)
+    {
+        token.Act = token.Act->rptr;
+        if (token.Act->t_type != tID) return ERROR_SYNTAX;
+        cnt++;
+        token.Act = token.Act->rptr;
+    }
+    
+    switch (token.Act->t_type)
+    {
+    case tLBRACKET:
+        // pokud je to funkce musi byt sama
+        if (cnt != 0) return ERROR_SYNTAX;
+        result = cFunc(token, &funcTab, &localTab);
+        token.Act = token.Act->rptr;
+
+    case tASSIGN:
+        token.Act = token.Act->rptr;
+        if (token.Act->t_type == tID && token.Act->rptr->t_type == tLBRACKET)
+        {
+            token.Act = token.Act->rptr;
+            result = cFunc(token, &funcTab, &localTab);
+            if (result != OK) return result;
+            token.Act = token.Act->rptr;
+            break;
+        }
+        
+        result = cExpr(token, &funcTab, &localTab);
+        if (result != OK) return ERROR_SYNTAX;
+        token.Act = token.Act->rptr;
+        while (token.Act->t_type == tCOMMA)
+        {
+            token.Act = token.Act->rptr;
+            result = cFunc(token, &funcTab, &localTab);
+            if (result != OK) return result;
+            token.Act = token.Act->rptr;
+        }
+
+    case tDEF:
+        token.Act = token.Act->rptr;
+        result = cExpr(token, &funcTab, &localTab);
+        token.Act = token.Act->rptr;
+    
+    default:
+        return ERROR_SYNTAX;
+    }
+    
+    if (token.Act->t_type != tEOL) return ERROR_SYNTAX;
+
+    return OK;
+}
+
 
 int cParams(tokenList token, treeNode *funcTab, char *K)
 {
