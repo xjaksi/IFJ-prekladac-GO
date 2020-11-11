@@ -38,6 +38,8 @@ int parse()
     // kontrola programu
     int result = cScel(token, &funcTab, &localTab);
 
+    
+
     BSTDispose(&funcTab);
     BSTDispose(&localTab);
 
@@ -49,6 +51,7 @@ int cScel(tokenList token, treeNode *funcTab, treeNode *localTab)
 {
     int result;
 
+    // deklarovani funkci pred kontrolou
     result = funcSave(token, &funcTab);
     if (result != OK) return result;
 
@@ -225,7 +228,7 @@ int cId(tokenList token, treeNode *funcTab, treeNode *localTab)
         while (token.Act->t_type == tCOMMA)
         {
             token.Act = token.Act->rptr;
-            result = cFunc(token, &funcTab, &localTab);
+            result = cExpr(token, &funcTab, &localTab);
             if (result != OK) return result;
             token.Act = token.Act->rptr;
         }
@@ -332,7 +335,15 @@ int cFor(tokenList token, treeNode *funcTab, treeNode *localTab)
     return OK;
 }
 
-
+int cFunc(tokenList token, treeNode *funcTab, treeNode *localTab)
+{
+    while (token.Act->t_type != tRBRACKET)
+    {
+        if (token.Act->t_type == tEOF) return ERROR_SYNTAX;
+        token.Act = token.Act->rptr;
+    }
+    return OK;
+}
 
 int cParams(tokenList token, treeNode *funcTab, char *K)
 {
@@ -342,5 +353,10 @@ int cParams(tokenList token, treeNode *funcTab, char *K)
         token.Act = token.Act->rptr;
     }
     token.Act = token.Act->rptr;
+    return OK;
+}
+
+int cExpr(tokenList token, treeNode *funcTab, treeNode *localTab)
+{
     return OK;
 }
