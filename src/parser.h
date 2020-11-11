@@ -16,7 +16,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-#include "scanner.h"
+#include "tokenList.h"
 #include "symtable.h"
 #include "expression.h"
 
@@ -24,4 +24,4 @@
 
 int parse();
 
-int cProg(tListPtr *token, treeNode *funcTab, treeNode *localTab);
+int cProg(tokenList *token, treeNode *funcTab, treeNode *localTab);
