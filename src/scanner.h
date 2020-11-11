@@ -16,4 +16,4 @@ Popis:  jak funguje tento soubor
 
 //prototypy funkci
 
-void getTokensTo(tListPtr tListMain);
+void getTokensTo(tokenList *tListMain);
