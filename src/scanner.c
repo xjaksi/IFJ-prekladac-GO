@@ -26,7 +26,7 @@ void getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vst
 	str_Init(&teststr1);
 	str_Append(&teststr1, "a" ); ///test pridani a
 	str_Append(&teststr1, "b" ); ///test pridani a
-	DLInsertLast(tListMainPtr, tID, &teststr1) /// pridani tokenu do tokenlistu z atributu funkce
+	DLInsertLast(tListMainPtr, tID, &teststr1); /// pridani tokenu do tokenlistu z atributu funkce
 
 	return 0;
 }
