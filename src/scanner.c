@@ -14,7 +14,7 @@ Popis:  jak funguje tento soubor
 
 #include "dynamicString.h"
 
-#inslude "tokenList.h" // protototypy tokenlistu, tokenu, tokentype
+#include "tokenList.h" // protototypy tokenlistu, tokenu, tokentype
 #include "scanner.h"
 #include "errors.h"
 
