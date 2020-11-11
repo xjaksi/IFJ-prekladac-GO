@@ -38,7 +38,7 @@ int parse()
     // kontrola programu
     int result = cScel(token, &funcTab, &localTab);
 
-    
+    DLDisposeList(&token);
 
     BSTDispose(&funcTab);
     BSTDispose(&localTab);
@@ -358,5 +358,23 @@ int cParams(tokenList token, treeNode *funcTab, char *K)
 
 int cExpr(tokenList token, treeNode *funcTab, treeNode *localTab)
 {
-    return OK;
+    int result = OK;
+    tokenList newToken;
+
+    DLInitList(&newToken);
+
+    while (token.Act->t_type != tEOL &&
+            token.Act->t_type != tSEMICOLON &&
+            token.Act->t_type != tLBRACE &&
+            token.Act->t_type != tEOF )
+    {
+        DLInsertLast(&newToken, token.Act->t_type, NULL);
+        token.Act = token.Act->rptr;
+    }
+
+    result = parseExp(&newToken);
+    
+
+    DLDisposeList(&newToken);
+    return result;
 }
