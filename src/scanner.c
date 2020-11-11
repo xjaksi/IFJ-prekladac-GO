@@ -13,43 +13,28 @@ Popis:  jak funguje tento soubor
 #include <string.h>
 
 #inslude "tokenList.c" // funkce pro praci s tokenlistem
-#inslude "tokenList.c" // protototypy tokenlistu, tokenu, tokentype
+#inslude "tokenList.h" // protototypy tokenlistu, tokenu, tokentype
 #include "scanner.h"
 #include "errors.h"
 
 int main(){
 
-	tListPtr tListMain = initTokensList();// vytvoří obousměrné vázány list pro tokeny
-
-	getTokensTo(tListMain); // naplni obousmerne vazany seznam tokeny z stdin
-	//printf("%s\n", tListMain->act->value);
+	tokenList token; // vytvori hlavni tokenlist pro vas
+	getTokensTo(&token); //naplni tokeny
+	printf("%s\n", token.first.t_type);
+	printf("%s\n", token.first.atribute);
 return 0;
 }
 
 
-tListPtr initTokensList(){
 
-	tListPtr tListMain = malloc(sizeof(struct tList)); // hlavni list
-	tListMain->first = NULL;
-	tListMain->act = NULL;
-	tListMain->last = NULL;
-	tListMain->numberTokensInList = 0;
-
-	return tListMain;
-}
-
-void getTokensTo(tListPtr tListMain){ //fuknce pro precteni dat ze std. vstupu a ulozeni do seznamu , DKA
-
-	char tmpString[] = "";
-
-	char helpString = "a";// v kazdem pruchodu getc dostanu novy
-	strcat (tmpString, helpString);
-
-
-
-	printf("%s\n", tmpString);
-		
-	tListAdd(tListMain, tID, tmpString);//ulozit do oboustranne vazaneho seznamu
+void getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstupu a ulozeni do seznamu , DKA
+	DLInitList (tListMainPtr); //// nastavime vsechny pointry na NULL
+	tStr teststr1;
+	str_Init(&teststr1);
+	str_Append(&teststr1, "a" ); ///test pridani a
+	str_Append(&teststr1, "b" ); ///test pridani a
+	DLInsertLast(tListMainPtr, tID, &teststr1) /// pridani tokenu do tokenlistu z atributu funkce
 
 	return 0;
 }
