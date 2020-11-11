@@ -25,3 +25,12 @@
 int parse();
 
 int cProg(tokenList *token, treeNode *funcTab, treeNode *localTab);
+int cScel(tokenList token, treeNode *funcTab, treeNode *localTab);
+int funcSave(tokenList token, treeNode *funcTab);
+int cBody(tokenList token, treeNode *funcTab, treeNode *localTab);
+int cId(tokenList token, treeNode *funcTab, treeNode *localTab);
+int cIf(tokenList token, treeNode *funcTab, treeNode *localTab);
+int cFor(tokenList token, treeNode *funcTab, treeNode *localTab);
+int cFunc(tokenList token, treeNode *funcTab, treeNode *localTab);
+int cParams(tokenList token, treeNode *funcTab, char *K);
+int cExpr(tokenList token, treeNode *funcTab, treeNode *localTab);

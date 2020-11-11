@@ -85,7 +85,7 @@ int funcSave(tokenList token, treeNode *funcTab)
 {
     int isMain = 0;
 
-    while (token.Act != token.Last)
+    while (token.Act->t_type != tEOF)
     {
         if (token.Act->t_type == kwFUNC)
         {
@@ -98,6 +98,8 @@ int funcSave(tokenList token, treeNode *funcTab)
                 if (token.Act->rptr->t_type != tLBRACKET 
                     && token.Act->rptr->rptr->t_type != tRBRACKET)
                         return ERROR_SYNTAX;
+                token.Act = token.Act->rptr;
+                if (token.Act->t_type != tLBRACE) return ERROR_SYNTAX;
             }
             else
             {   
@@ -111,7 +113,7 @@ int funcSave(tokenList token, treeNode *funcTab)
             
         }
         
-        if (token.Act == NULL) return ERROR_SYNTAX;
+        if (token.Act == NULL) return ERROR_COMPILER;
         token.Act = token.Act->rptr;
     }
     
@@ -345,7 +347,7 @@ int cFunc(tokenList token, treeNode *funcTab, treeNode *localTab)
     return OK;
 }
 
-int cParams(tokenList token, treeNode *funcTab, char *K)
+int cParams(tokenList token, treeNode *funcTab)
 {
     // zatim preskakuji parametry po zacatek funkce
     while (token.Act->t_type != tLBRACE && token.Act != token.Last)
