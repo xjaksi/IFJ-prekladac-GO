@@ -147,6 +147,12 @@ int cBody(tokenList token, treeNode *funcTab, treeNode *localTab)
             break;
 
         case kwRETURN:
+            token.Act = token.Act->rptr;
+            if (token.Act->t_type == tEOL)
+            {
+                result = OK;
+                break;
+            }
             result = cExpr(token, &funcTab, &localTab);
             if (result != OK) return result;
             break;
