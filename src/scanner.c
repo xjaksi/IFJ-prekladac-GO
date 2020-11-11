@@ -13,20 +13,10 @@ Popis:  jak funguje tento soubor
 #include <string.h>
 
 #include "dynamicString.h"
-#include "dynamicString.c"
-#inslude "tokenList.c" // funkce pro praci s tokenlistem
+
 #inslude "tokenList.h" // protototypy tokenlistu, tokenu, tokentype
 #include "scanner.h"
 #include "errors.h"
-
-int main(){
-
-	tokenList token; // vytvori hlavni tokenlist pro vas
-	getTokensTo(&token); //naplni tokeny
-	printf("%s\n", token.first.t_type);
-	printf("%s\n", token.first.atribute);
-return 0;
-}
 
 
 
