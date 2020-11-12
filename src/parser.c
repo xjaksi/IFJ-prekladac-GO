@@ -114,7 +114,9 @@ int parse()
     // 
     */
 
-    getTokensTo(&token);
+    int result;
+    result = getTokensTo(&token);
+    if (result != OK) return result;
 
 
 
@@ -130,7 +132,7 @@ int parse()
     token.Act = token.Act->rptr;
 
     // kontrola programu
-    int result = cScel(&token);
+    result = cScel(&token);
 
     DLDisposeList(&token);
 
