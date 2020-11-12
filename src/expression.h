@@ -18,7 +18,7 @@
 
 
 #include "errors.h"
-#include "scanner.h"
+#include "tokenList.h"
 #define PT_SIZE 6
 
 /**
@@ -26,14 +26,14 @@
  */
 typedef enum {
     
-    PT_ADDSUB,
-    PT_MULDIV,
-    PT_CMPS,
-    PT_LBR,
-    PT_RBR,
-    PT_STOP,
-    PT_EXP,
-    PT_CONST,
+    PT_ADDSUB,  // 0
+    PT_MULDIV,  // 1
+    PT_CMPS,    // 2
+    PT_LBR,     // 3
+    PT_RBR,     // 4
+    PT_STOP,    // 5
+    PT_EXP,     // 6
+    PT_CONST,   
 } PtType;
 
 /**
@@ -46,17 +46,10 @@ typedef enum {
     DT_NONE,
 } DataType;
 
-ERROR_CODE parseExp();
-
-
-/**
- * @brief funkce projde seznam tokenu a z toho naplni globalni seznam
- * 
- * @param t seznam tokenu
- * @return ERROR_CODE pokud se neco nepovede, vrati chybovou hodnotu
- */
-ERROR_CODE fillMyList(tList *t);
+ERROR_CODE parseExp(/*tokenList *tList*/);
 
 void shift();
 
 ERROR_CODE reduce();
+
+ERROR_CODE accept();

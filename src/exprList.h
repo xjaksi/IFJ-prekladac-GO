@@ -22,7 +22,7 @@
  * @brief obsahuje hodnotu, datovy typ, symbol v PT a odkaz na nasledujici a predchozi polozku
  */
 typedef struct ListItem {
-    char value[50];
+    char value[5000];
     PtType ptType;
     DataType dType;
     struct ListItem *next;
@@ -66,3 +66,8 @@ ERROR_CODE insertItem(exprList *l, PtType ptType, DataType dType, char *c);
  */
 void removeItem(exprList *l);
 
+ERROR_CODE insertTemp(exprList *l, PtType ptType);
+
+PtType tokenToPT(TokenType tType);
+
+ERROR_CODE fillMyList (exprList *l, tokenList *tList);

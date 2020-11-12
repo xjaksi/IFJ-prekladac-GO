@@ -71,3 +71,69 @@ void removeItem(exprList *l) {
     }
     
 }
+
+ERROR_CODE insertTemp(exprList *l, PtType ptType) {
+    // vytvoreni noveho prvku
+    item newItem = (struct ListItem*) malloc(sizeof(struct ListItem));
+    if (newItem == NULL) {
+        return ERROR_COMPILER;
+    }
+
+    strcpy(newItem->value, " ");
+    newItem->dType = DT_NONE;
+    newItem->ptType = ptType;
+    newItem->next = NULL;
+
+    // vlozeni do seznamu pokud je seznam pradzny
+    if (l->first == NULL){
+        newItem->prev = NULL;
+        l->first = newItem;
+        l->act = newItem;
+        l->last = newItem;
+    }
+
+    // vlozeni do seznamu pokud seznam neni prazdny
+    else {
+        l->last->next = newItem;
+        newItem->prev = l->last;
+        l->last = newItem;
+    }
+    return OK;
+}
+
+ERROR_CODE fillMyList (exprList *l, tokenList *tList) {
+    while (tList->Act != NULL) {
+        insertTemp(l, tokenToPT(tList->Act->t_type));
+        tList->Act = tList->Act->rptr;
+    }
+	insertTemp(l, PT_STOP);
+    return OK;
+}
+
+PtType tokenToPT(TokenType tType) {
+    switch (tType) {
+    case tINT: case tFLOAT: case tSTRING:
+        return PT_CONST; 
+
+    case tID:
+        return PT_EXP;
+
+    case tADD: case tSUB:
+        return PT_ADDSUB;
+    
+    case tMUL: case tDIV:
+        return PT_MULDIV;
+
+    case tLT: case tGT: case tLEQ: case tGEQ: case tEQ: case tNEQ:
+        return PT_CMPS;
+
+    case tLBRACKET:
+        return PT_LBR;
+    
+    case tRBRACKET:
+        return PT_RBR;
+
+    default:
+        return ERROR_SYNTAX;
+    }
+}
