@@ -190,7 +190,7 @@ int cId(tokenList token)
 
     token.Act = token.Act->rptr;
 
-    while (token.Act == tCOMMA)
+    while (token.Act->t_type == tCOMMA)
     {
         token.Act = token.Act->rptr;
         if (token.Act->t_type != tID) return ERROR_SYNTAX;
@@ -205,6 +205,7 @@ int cId(tokenList token)
         if (cnt != 0) return ERROR_SYNTAX;
         result = cFunc(token);
         token.Act = token.Act->rptr;
+        break;
 
     case tASSIGN:
         token.Act = token.Act->rptr;
@@ -367,7 +368,7 @@ int cExpr(tokenList token)
         token.Act = token.Act->rptr;
     }
 
-    result = parseExp(&newToken);
+    //result = parseExp(&newToken);
     
 
     DLDisposeList(&newToken);
