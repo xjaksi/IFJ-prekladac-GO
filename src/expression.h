@@ -46,7 +46,7 @@ typedef enum {
     DT_NONE,
 } DataType;
 
-ERROR_CODE parseExp(/*tokenList *tList*/);
+ERROR_CODE parseExp(tokenList *tList);
 
 void shift();
 

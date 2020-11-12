@@ -19,22 +19,22 @@
 #include <string.h>
 #include <stdbool.h>
 
-#include "tokenList.h"
+
 #include "expression.h"
 
 
 
 int parse();
 
-int cProg(tokenList token);
-int cScel(tokenList token);
-int funcSave(tokenList token);
-int cBody(tokenList token);
-int cId(tokenList token);
-int cIf(tokenList token);
-int cFor(tokenList token);
-int cFunc(tokenList token);
-int cParams(tokenList token);
-int cExpr(tokenList token);
+int cProg(tokenList *token);
+int cScel(tokenList *token);
+int funcSave(tokenList *token);
+int cBody(tokenList *token);
+int cId(tokenList *token, bool dev);
+int cIf(tokenList *token);
+int cFor(tokenList *token);
+int cFunc(tokenList *token);
+int cParams(tokenList *token);
+int cExpr(tokenList *token);
 
 #endif

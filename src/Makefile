@@ -1,10 +1,7 @@
-# MAKEFILE pro prelozeni celeho projektu
-
 PRJ=ifj20
+#
 PROGS=$(PRJ)
-
-# pro konkretni pouziti dej do FILES co chces prelozit
-FILES=main.c generator.c expession.c scanner.c symtable.c parser.c
+FILES = expression.c exprList.c main.c tokenList.c dynamicString.c parser.c
 CC =gcc
 CFLAGS= -Wall -W -Wextra -g -std=c99 -pedantic
 

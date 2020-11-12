@@ -41,6 +41,8 @@ ERROR_CODE parseExp(tokenList *tList) {
 	listInit(&idStack);
 	insertItem(&idStack, PT_STOP, DT_NONE, "$");
 
+	tList->Act = tList->First;
+	
 	fillMyList(&input, tList);
 
 	/*			 M O C K   D A T A
@@ -69,10 +71,6 @@ ERROR_CODE parseExp(tokenList *tList) {
 		// pokud jde o vyraz, provede se nacteni do vlastniho seznamu
 		if(input.act->ptType == PT_EXP || input.act->ptType == PT_CONST) {
 			exprFlag = true;
-			printf("SHIFT EXP: %d\n", count);
-				printf("\tSTACK: %d", opStack.act->ptType);
-				printf("\tINPUT: %d\n", input.act->ptType);
-				printf("\n\n");
 			shift();
 		}
 		
@@ -80,21 +78,12 @@ ERROR_CODE parseExp(tokenList *tList) {
 		else {		
 			switch (precTable[opStack.act->ptType][input.act->ptType]) {
 			case 'R':
-				printf("REDUCTION\n");
-				printf("\t STACK: %d", opStack.act->ptType);
-				printf("\t INPUT: %d\n", input.act->ptType);
 				finalError = reduce();
-				printf("\tRESULT: %d\n", finalError);
-				printf("\n\n");
 			 	if (finalError != OK) {
 					 return finalError;
 				 }	
 				break;
 			case 'S':
-				printf ("SHIFT %c: %d\n",precTable[opStack.act->ptType][input.act->ptType], count);
-				printf("\tSTACK: %d", opStack.act->ptType);
-				printf("\tINPUT: %d\n", input.act->ptType);
-				printf("\n\n");
 				shift();
 				break;
 
@@ -115,7 +104,6 @@ ERROR_CODE parseExp(tokenList *tList) {
 		
 		count++;
 	}
-	printf("idStack: %d\n", idStack.act->ptType);
 	return finalError;
 }
 
@@ -171,10 +159,6 @@ void shift() {
 ERROR_CODE accept() {
 	// v seznamu ID by melo zustat jen jedno E, po odstraneni by tam mel byt jen $
 	removeItem(&idStack); 
-	printf("ACCEPT TEST \n");	
-	printf("\tSTACK: %d", opStack.act->ptType);
-	printf("\tINPUT: %d\n", input.act->ptType);
-	printf("\n\n");
 
 	if (idStack.act->ptType != PT_STOP) {
 		return ERROR_SYNTAX;

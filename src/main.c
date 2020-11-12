@@ -20,5 +20,24 @@ int main() {
     
     int result = parse();
 
+    switch (result)
+    {
+    case ERROR_LEXICAL:
+        fprintf(stderr, "[ERROR] lexical error.\n");
+        break;
+    
+    case OK:
+        fprintf(stderr, "[OK] everything is ok.\n");
+        break;
+    
+    case ERROR_SYNTAX:
+        fprintf(stderr, "[ERROR] syntax error.\n");
+        break;
+
+    default:
+    fprintf(stderr, "[ERROR] something went wrong.\n");
+        break;
+    }
+
     return result;
 }
