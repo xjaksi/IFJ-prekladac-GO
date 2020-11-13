@@ -14,6 +14,7 @@
 #include "parser.h"
 #include "tokenList.h"
 #include "errors.h"
+#include "scanner.h"
 
 int parse()
 {
