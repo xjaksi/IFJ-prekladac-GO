@@ -11,6 +11,7 @@ Popis:  jak funguje tento soubor
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 
 
 #include "dynamicString.h"
@@ -96,6 +97,39 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
                 DLInsertLast(tListMainPtr, tDEVNULL, NULL);
 				printf("tDEVNULL c: %c\n", c);
                 break;
+
+			}
+			if (c == '0'){
+
+				c = getc(stdin);
+				if (isdigit(c))
+				{
+					state = SCANNER_STATE_EOF;
+					return ERROR_LEXICAL;
+				}
+				else if (c == '.')
+				{
+					state = 6;
+					break;
+				}
+				else if ((c == 'E') || (c == 'e'))
+				{
+					state = 7;
+					break;
+				}
+				else
+				{
+					ungetc(c,stdin);
+					DLInsertLast(tListMainPtr, tINT, NULL);
+					printf("tINT c: %c\n", c);
+					state = SCANNER_STATE_START;								
+					break;	
+				}
+
+			}
+			if ((isdigit(c)) && (c != '0')){
+				state = 10;
+				break;
 
 			}
 			if ((isalpha(c)) || (c == '_'))
@@ -248,6 +282,16 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 				}
 				
 			}
+			if (c == '\'')
+			{
+				state = 4;
+				break;
+			}
+			if (c == '\"')
+			{
+				state = 5;
+				break;
+			}
 
 			
 			
@@ -286,7 +330,7 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
                 }
                 else if(strcmp(tmpStr, "func") == 0){
                     DLInsertLast(tListMainPtr, kwFUNC, NULL);
-					printf("kwELSE c: %c\n", c);
+					printf("kwFUNC c: %c\n", c);
                 }
 				else if(strcmp(tmpStr, "string") == 0){
                     DLInsertLast(tListMainPtr, kwSTRING, NULL);
@@ -300,6 +344,10 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
                     DLInsertLast(tListMainPtr, kwPACKAGE, NULL);
 					printf("kwPACKAGE c: %c\n", c);
                 }
+				else if (strcmp(tmpStr, "main") == 0){
+                    DLInsertLast(tListMainPtr, fMAIN, NULL);
+					printf("fMAIN c: %c\n", c);
+                }			
                 else // is tID
 				{
 					//tStr sendedStr;
@@ -349,23 +397,166 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 			break;
 		
 		case 1:
-			if ((c == '\n') || (c == '\r')) //EOL
-			{
-				state =  SCANNER_STATE_START;
-				DLInsertLast(tListMainPtr, tEOL, NULL);
-				printf("tEOL c: %c\n", c);
-				break;
-			}	
+			
 			if (c == EOF)
 			{
-				state =  SCANNER_STATE_START;
-				DLInsertLast(tListMainPtr, tEOF, NULL);
-				printf("tEOF c: %c\n", c);															
-				break;
+				state = SCANNER_STATE_EOF;			
+				return ERROR_LEXICAL;
 			}
-					
+			if ((c == '\n') || (c == '\r')) //EOL
+			{
+				DLInsertLast(tListMainPtr, tEOL, NULL);
+				printf("tEOL c: %c\n", c);
+				state = SCANNER_STATE_START;
+				break;
+			}		
 			
 			break;
+
+		case 4:
+			if (c == EOF)
+			{
+				state = SCANNER_STATE_EOF;			
+				return ERROR_LEXICAL;
+			}
+			else if ((c == '\n') || (c == '\r')) //EOL
+			{
+				state = SCANNER_STATE_EOF;			
+				return ERROR_LEXICAL;
+			}
+			else if (c == '\'')
+			{
+				DLInsertLast(tListMainPtr, tSTRING, NULL);
+				printf("tSTRING c: %c\n", c);
+				state = SCANNER_STATE_START;								
+				break;
+			} 
+			else
+			{
+				/* code */
+			}
+				
+
+			break;
+
+		case 5:
+			if (c == EOF)
+			{
+				state = SCANNER_STATE_EOF;			
+				return ERROR_LEXICAL;
+			}
+			else if ((c == '\n') || (c == '\r')) //EOL
+			{
+				state = SCANNER_STATE_EOF;			
+				return ERROR_LEXICAL;
+			}
+			else if (c == '\"')
+			{
+				DLInsertLast(tListMainPtr, tSTRING, NULL);
+				printf("tSTRING c: %c\n", c);
+				state = SCANNER_STATE_START;								
+				break;
+			} 
+			else
+			{
+				/* code */
+			}
+				
+
+			break;
+
+		case 10:
+			if (isdigit(c))
+			{
+				
+			}
+			else if (c == '.')
+			{
+				state = 6;
+				break;
+			}
+			else if ((c == 'E') || (c == 'e'))
+			{
+				state = 7;
+				break;
+			}
+			else
+			{
+                ungetc(c,stdin);
+				DLInsertLast(tListMainPtr, tINT, NULL);
+				printf("tINT c: %c\n", c);
+				state = SCANNER_STATE_START;								
+				break;
+			}
+			
+			break;		
+
+		case 6:
+			if (isdigit(c))
+			{
+				state = 11;
+				break;
+			}
+			else
+			{
+				state = SCANNER_STATE_EOF;
+				return ERROR_LEXICAL;
+ 			}
+
+
+			break;
+
+		case 11:
+			if (isdigit(c))
+			{
+
+			}
+			else if ((c == 'E') || (c == 'e'))
+			{
+				state = 7;
+				break;
+			}
+			else
+			{
+				DLInsertLast(tListMainPtr, tFLOAT, NULL);
+				printf("tFLOAT c: %c\n", c);
+				state = SCANNER_STATE_START;								
+				break;
+			}
+				
+			break;
+
+		case 7:
+			if (isdigit(c))
+			{
+				state = 11;
+				break;
+			}
+			else if((c == '+') || (c == '-'))
+			{
+				state = 8;
+				break;
+			}
+			else
+			{
+				state = SCANNER_STATE_EOF;
+				return ERROR_LEXICAL;
+			}		
+
+			break;
+
+		case 8:
+			if (isdigit(c))
+			{
+				state = 11;
+			}
+			else
+			{
+				state = SCANNER_STATE_EOF;
+				return ERROR_LEXICAL;
+			}
+			
+			break;		
 
 		default:
 			printf("defaultcase: %s\n", tmpStr);
