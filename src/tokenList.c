@@ -20,8 +20,7 @@
 #include "tokenList.h"
 #include "scanner.h"
 
-//int solved; // DELETE
-//int errflg; // DELETE
+
 
 /*
 ** Vytiskne upozornění na to, že došlo k chybě.
@@ -53,6 +52,12 @@ void DLDisposeList (tokenList *L) {
     // cyklus rozkladajici seznam prvek po prvku
     while(L->First != NULL){
         sup = L->First->rptr;
+
+        // pokud byl pousit atribut, tez se uvolni jeho pamet
+        if(L->First->atribute != NULL){
+            str_Dispose(L->First->atribute);
+        }
+
         free(L->First);
         L->First = sup;
     }
@@ -76,7 +81,7 @@ void DLInsertLast(tokenList *L, TokenType param_t_type, tStr *p_atribute) {
         DLError();
         return;
     }
-
+    
     // prirazeni hodnoty do noveho prvku
     sup->atribute = p_atribute;
     sup->t_type = param_t_type;

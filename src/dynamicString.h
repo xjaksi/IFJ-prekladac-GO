@@ -1,4 +1,16 @@
 
+/** -----------------------------------------------
+ * @file tokenList.c
+ *	IFJ prekladac jazyka IFJ20
+ *	Tým 101:
+ *		@author Jaksik, Ales <xjaksi01>
+ * ------------------------------------------------
+ *		@author Vlasakova, Nela <xvlasa14>
+ *		@author Belohlavek, Jan <xbeloh8>
+ *		@author Mraz, Filip <xmrazf00>
+ * ------------------------------------------------
+ * @brief Implementovane funkce pro praci s obousmerne vazanym seznamem tokenu
+ * -----------------------------------------------*/
 
 #ifndef DYNAMIC_STRING_H
 #define DYNAMIC_STRING_H
@@ -10,7 +22,8 @@
 #define STRING_LEN 10
 #define RESERVED 5
 
-typedef struct
+
+typedef struct 
 {
 	char *str;      // ukazatel na zacatek stringu
 	int length;     // pocet znaku v stringu vcetne '\0'
@@ -18,17 +31,17 @@ typedef struct
 } tStr;
 
 // prototypy funkci
-int str_Init(tStr *);
+tStr *str_Init(int *);
 void str_Dispose(tStr *);
 int str_Append(tStr *, char );
 int str_Compare(tStr *, tStr *);
+int str_Compare_char(tStr *, char *);
 
 // DELETE
 // void str_Clean(tStr *);
-// int str_Concat(tStr *pram_str1, tStr *param_str2);
-// int str_Copy(tStr *pram_str1, tStr *param_str2);
-// int str_Compare_char(tString *s1, char* s2);
-// int str_Print(tString *s);
+// int str_Concat(tStr *, tStr *);
+// int str_Copy(tStr *, tStr *);
+// int str_Print(tStr *);
 
 
 #endif // DYNAMIC_STRING_H
