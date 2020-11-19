@@ -1,0 +1,254 @@
+tRBRACE c: }
+tEOL c: 
+
+tASSIGN c: 
+
+tEOL c: 
+
+tEQ c: =
+tEOL c: 
+
+tLEQ c: =
+tSEMICOLON c: ;
+tSEMICOLON c: ;
+tRBRACKET c: )
+tLBRACKET c: (
+tEOL c: 
+
+tEOL c: 
+
+tASSIGN c: 
+
+tEOL c: 
+
+tASSIGN c: 
+
+tEOL c: 
+
+tASSIGN c: 
+
+tEOL c: 
+
+TmpStr: 06´V
+kwIF: 
+
+tEOL c: 
+
+TmpStr: 06´V
+TmpStr: 06´V
+TmpStr: 06´V
+TmpStr: 06´V
+TmpStr: 06´V
+TmpStr: 06´V
+TmpStr: 06´V
+TmpStr: 06´V
+TmpStr: 06´V
+TmpStr: 06´V
+TmpStr: 06´V
+TmpStr: 06´V
+TmpStr: 06´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+tID: iftotojeveeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeelicedlouhyidentifikator
+tEOL c: 
+
+TmpStr: °6´V
+TmpStr: °6´V
+tID: iftotojeveeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeelicedlouhyidentifikatorfor
+tEOL c: 
+
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+tID: iftotojeveeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeelicedlouhyidentifikatorforhere
+tEOL c: 
+
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+tID: iftotojeveeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeelicedlouhyidentifikatorforherewhile
+tEOL c: 
+
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: °6´V
+TmpStr: ð8´V
+TmpStr: ð8´V
+tID: iftotojeveeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeelicedlouhyidentifikatorforherewhilefloat64
+tSEMICOLON c: ;
+tEOL c: 
+
+tEOL c: 
+
+tEOF c: ÿ
+DvousmÄ›rnÄ› vÃ¡zanÃ½ lineÃ¡rnÃ­ seznam
+=================================
+-----------------
+L:  1  ----------
+ 	}
+ 	EOL
+L:  2  ----------
+ 	=
+ 	EOL
+L:  3  ----------
+ 	==
+ 	EOL
+L:  4  ----------
+ 	>=
+ 	;
+ 	;
+ 	)
+ 	(
+ 	EOL
+L:  5  ----------
+ 	EOL
+L:  6  ----------
+ 	=
+ 	EOL
+L:  7  ----------
+ 	=
+ 	EOL
+L:  8  ----------
