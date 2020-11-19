@@ -42,7 +42,6 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 	{
 		
 		c = getc(stdin);
-		//printf("while start c: %c\n", c);
 
 	
 		switch (state)
@@ -52,54 +51,45 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 			{
 				DLInsertLast(tListMainPtr, tEOF, NULL);
 				state = SCANNER_STATE_EOF;
-				printf("tEOF c: %c\n", c);
 				break;
 			}
 			if ((c == '\n') || (c == '\r')) //EOL
 			{
 				DLInsertLast(tListMainPtr, tEOL, NULL);
-				printf("tEOL c: %c\n", c);
 				break;
 			}
 			if (c == ','){
                 DLInsertLast(tListMainPtr, tCOMMA, NULL);
-				printf("tCOMMA c: %c\n", c);
                 break;
 
 			}
 			if (c == '('){
                 DLInsertLast(tListMainPtr, tLBRACKET, NULL);
-				printf("tLBRACKET c: %c\n", c);
                 break;
 
 			}
 			if (c == ')'){
                 DLInsertLast(tListMainPtr, tRBRACKET, NULL);
-				printf("tRBRACKET c: %c\n", c);
                 break;
 
 			}
 			if (c == '{'){
                 DLInsertLast(tListMainPtr, tLBRACE, NULL);
-				printf("tLBRACE c: %c\n", c);
                 break;
 
 			}
 			if (c == '}'){
                 DLInsertLast(tListMainPtr, tRBRACE, NULL);
-				printf("tRBRACE c: %c\n", c);
                 break;
 
 			}
 			if (c == ';'){
                 DLInsertLast(tListMainPtr, tSEMICOLON, NULL);
-				printf("tSEMICOLON c: %c\n", c);
                 break;
 
 			}
 			if (c == '_'){
                 DLInsertLast(tListMainPtr, tDEVNULL, NULL);
-				printf("tDEVNULL c: %c\n", c);
                 break;
 
 			}
@@ -125,7 +115,6 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 				{
 					ungetc(c,stdin);
 					DLInsertLast(tListMainPtr, tINT, NULL);
-					printf("tINT c: %c\n", c);
 					state = SCANNER_STATE_START;								
 					break;	
 				}
@@ -156,21 +145,18 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 			if (c == '+')
 			{
 				DLInsertLast(tListMainPtr, tADD, NULL);
-				printf("tADD c: %c\n", c);
 				state = SCANNER_STATE_START;								
 				break;
 			}
 			if (c == '-')
 			{
 				DLInsertLast(tListMainPtr, tSUB, NULL);
-				printf("tSUB c: %c\n", c);
 				state = SCANNER_STATE_START;								
 				break;
 			}
 			if (c == '*')
 			{
 				DLInsertLast(tListMainPtr, tMUL, NULL);
-				printf("tMUL c: %c\n", c);
 				state = SCANNER_STATE_START;								
 				break;
 			}
@@ -191,7 +177,6 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 				{
 					ungetc(c,stdin);
 					DLInsertLast(tListMainPtr, tDIV, NULL);
-					printf("tDIV c: %c\n", c);
 					state = SCANNER_STATE_START;								
 					break;	
 				}
@@ -203,7 +188,6 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 				if (c == '=')
 				{
 					DLInsertLast(tListMainPtr, tEQ, NULL);
-					printf("tEQ c: %c\n", c);
 					state = SCANNER_STATE_START;								
 					break;
 				}
@@ -211,7 +195,6 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 				{
 					ungetc(c,stdin);
 					DLInsertLast(tListMainPtr, tASSIGN, NULL);
-					printf("tASSIGN c: %c\n", c);
 					state = SCANNER_STATE_START;								
 					break;	
 				}
@@ -223,7 +206,6 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 				if (c == '=')
 				{
 					DLInsertLast(tListMainPtr, tDEF, NULL);
-					printf("tDEF c: %c\n", c);
 					state = SCANNER_STATE_START;								
 					break;
 				}
@@ -239,7 +221,6 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 				if (c == '=')
 				{
 					DLInsertLast(tListMainPtr, tLEQ, NULL);
-					printf("tLEQ c: %c\n", c);
 					state = SCANNER_STATE_START;								
 					break;
 				}
@@ -247,7 +228,6 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 				{
 					ungetc(c,stdin);
 					DLInsertLast(tListMainPtr, tLT, NULL);
-					printf("tLT c: %c\n", c);
 					state = SCANNER_STATE_START;								
 					break;	
 				}
@@ -259,7 +239,6 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 				if (c == '=')
 				{
 					DLInsertLast(tListMainPtr, tGEQ, NULL);
-					printf("tLEQ c: %c\n", c);
 					state = SCANNER_STATE_START;								
 					break;
 				}
@@ -267,7 +246,6 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 				{
 					ungetc(c,stdin);
 					DLInsertLast(tListMainPtr, tGT, NULL);
-					printf("tLT c: %c\n", c);
 					state = SCANNER_STATE_START;								
 					break;	
 				}
@@ -279,7 +257,6 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 				if (c == '=')
 				{
 					DLInsertLast(tListMainPtr, tNEQ, NULL);
-					printf("tNEQ c: %c\n", c);
 					state = SCANNER_STATE_START;								
 					break;
 				}
@@ -307,7 +284,6 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 			
 
             if(isalpha(c) || (c == '_') || (isdigit(c))){
-				printf("TmpStr: %s\n", p_DS);
                 str_Append(p_DS, c ); /// pridani c do strKwOrId
             }
             else{
@@ -315,48 +291,37 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
                               
 				if (strcmp(p_DS->str, "if") == 0){	
                     DLInsertLast(tListMainPtr, kwIF, NULL);
-					printf("kwIF: %c\n", c);
                 }
                 else if (strcmp(p_DS->str, "else") == 0){
                     DLInsertLast (tListMainPtr, kwELSE, NULL);
-					printf("kwELSE c: %c\n", c);
                 }
                 else if(strcmp(p_DS->str, "for") == 0){
                     DLInsertLast(tListMainPtr, kwFOR, NULL);
-					printf("kwFOR c: %c\n", c);
                 }
                 else if(strcmp(p_DS->str, "return") == 0){
                     DLInsertLast(tListMainPtr, kwRETURN, NULL);
-					printf("kwRETURN c: %c\n", c);
                 }
                 else if(strcmp(p_DS->str, "float64") == 0){
                     DLInsertLast(tListMainPtr, kwFLOAT64, NULL);
-					printf("kwFLOAT64 c: %c\n", c);
                 }
                 else if(strcmp(p_DS->str, "func") == 0){
                     DLInsertLast(tListMainPtr, kwFUNC, NULL);
-					printf("kwFUNC c: %c\n", c);
                 }
 				else if(strcmp(p_DS->str, "string") == 0){
                     DLInsertLast(tListMainPtr, kwSTRING, NULL);
-					printf("kwSTRING c: %c\n", c);
                 }
 				else if (strcmp(p_DS->str, "int") == 0){
                     DLInsertLast(tListMainPtr, kwINT, NULL);
-					printf("kwINT c: %c\n", c);
                 }
 				else if(strcmp(p_DS->str, "package") == 0){
                     DLInsertLast(tListMainPtr, kwPACKAGE, NULL);
-					printf("kwPACKAGE c: %c\n", c);
                 }
 				else if (strcmp(p_DS->str, "main") == 0){
                     DLInsertLast(tListMainPtr, fMAIN, NULL);
-					printf("fMAIN c: %c\n", c);
                 }			
                 else // is tID
 				{
 					DLInsertLast(tListMainPtr, tID, p_DS);
-					printf("tID: %s\n", p_DS->str);
 				}	
 
 				if(tListMainPtr->Last->t_type != tID){
@@ -403,7 +368,6 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 			if ((c == '\n') || (c == '\r')) //EOL
 			{
 				DLInsertLast(tListMainPtr, tEOL, NULL);
-				printf("tEOL c: %c\n", c);
 				state = SCANNER_STATE_START;
 				break;
 			}		
@@ -424,7 +388,6 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 			else if (c == '\'')
 			{
 				DLInsertLast(tListMainPtr, tSTRING, NULL);
-				printf("tSTRING c: %c\n", c);
 				state = SCANNER_STATE_START;								
 				break;
 			} 
@@ -450,7 +413,6 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 			else if (c == '\"')
 			{
 				DLInsertLast(tListMainPtr, tSTRING, NULL);
-				printf("tSTRING c: %c\n", c);
 				state = SCANNER_STATE_START;								
 				break;
 			} 
@@ -481,7 +443,6 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 			{
                 ungetc(c,stdin);
 				DLInsertLast(tListMainPtr, tINT, NULL);
-				printf("tINT c: %c\n", c);
 				state = SCANNER_STATE_START;								
 				break;
 			}
@@ -516,7 +477,6 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 			else
 			{
 				DLInsertLast(tListMainPtr, tFLOAT, NULL);
-				printf("tFLOAT c: %c\n", c);
 				state = SCANNER_STATE_START;								
 				break;
 			}
@@ -556,7 +516,6 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 			break;		
 
 		default:
-			printf("defaultcase: %s\n", tmpStr);
 			break;
 		}
 		

@@ -64,7 +64,7 @@ void print_elements_of_list(tokenList TL)	{
 		int sup = TL.First->t_type;
 		printf("\n \t%s",tokens[sup]);
 		if(TL.First->atribute != NULL){
-			printf(" \t8%s",TL.First->atribute->str);
+			printf(" \t%s",TL.First->atribute->str);
 		}
 		if ((TL.First==TL.Act) && (TL.Act!=NULL))
 			printf("\t <= toto je aktivní prvek ");
