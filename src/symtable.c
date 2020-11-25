@@ -90,7 +90,7 @@ int BSTInsert (treeNode* RootPtr, char* K, bool def, nodeInfCont Content)
 		return OK;
 	}
 
-	// pokud se klice shoduji, redefinace odchazim
+	// pokud se klice shoduji, redefinice odchazim
 	else if (strcmp(K, ((*RootPtr)->Key)) == 0)
 	{
 
@@ -148,12 +148,15 @@ void BSTDispose (treeNode *RootPtr)
  * Vytvareni obsahu
  * nahraje do data obsah pro koren
  */
-nodeInfCont createCont (nodeType nnType, int noParam, dataType ddType)
+nodeInfCont createCont (nodeType nnType, int noParam, int noRet, int arg, int out, int ddType)
 {
     nodeInfCont data = malloc(sizeof(struct nodeCont));
     data->nType = nnType;
     data->noParams = noParam;
+	data->noReturn = noRet;
     data->dType = ddType;
+	data->paramsIn = arg;
+	data->paramsOut = out;
 
     return data;
 }

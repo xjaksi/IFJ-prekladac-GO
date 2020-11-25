@@ -32,21 +32,16 @@ typedef enum
     ntFunc          // koren je funkce
 } nodeType;
 
-// datove typy
-typedef enum datatype
-{
-    typeNo,
-    typeInt,
-    typeFloat,
-    typeString,
-} dataType;
 
 // informace o obsahu uzlu
 typedef struct nodeCont
 {
     nodeType nType;                 // jedna se o funkci nebo promennou
     int noParams;                   // pocet parametru teto funkce
-    dataType dType;                 // nazev datoveho typu
+    int noReturn;                   // pocet vracenych parametru
+    int paramsIn;                   // datovy typ argumentu
+    int paramsOut;                  // datovy typ co funkce vraci
+    int dType;                 // nazev datoveho typu
 } *nodeInfCont;
 
 
@@ -79,7 +74,7 @@ nodeInfCont BSTSearch (treeNode *RootPtr, char* K);
 int BSTInsert (treeNode *, char *, bool, nodeInfCont);
 void BSTDispose(treeNode *);
 
-nodeInfCont createCont (nodeType nnType, int noParam, dataType ddType);
+nodeInfCont createCont (nodeType nnType, int noParam, int noRet, int arg, int out, int ddType)
 
 /*                Konec binarniho stromu                */
 /* ---------------------------------------------------- */
