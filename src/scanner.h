@@ -6,7 +6,7 @@
 		Belohlavek, Jan (xbeloh8)
 -------------------------------------------------
 Ucel: rozpoznani a klasifikace lexemu, reprezentace lexemu pomoci tokenu
-Popis:  jak funguje tento soubor
+Popis:  jak funguje tento soubor1
 ----------------------------------------------*/
 #include <stdlib.h>
 #include "tokenList.h"
