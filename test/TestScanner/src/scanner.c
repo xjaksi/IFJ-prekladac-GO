@@ -31,12 +31,13 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 	char c; // pro načítání znaku
 	//tStr strPom;
 	//str_Init(&strPom);
-	char tmpStr[5000] = "\0";
-	int pos = 0;
+	//char tmpStr[5000] = "\0";
+	//int pos = 0;
 	
 	// Pouzije se v pripade, ze dany tokenType potrebuje ATRIBUT.
 	// Po predani do SEZNAMU nastavit vzdy na NULL
 	tStr *p_DS = NULL;	
+	int isE = 0;
 
 	while (state != SCANNER_STATE_EOF)
 	{
@@ -103,24 +104,58 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 				}
 				else if (c == '.')
 				{
+					if(p_DS == NULL)
+					{
+					int DELETE;
+					p_DS = str_Init(&DELETE); //TODO nastavit errnum
+					}
+					str_Append(p_DS, '0' ); /// pridani c do dynStr
+					str_Append(p_DS, c ); /// pridani c do dynStr
 					state = 6;
 					break;
 				}
 				else if ((c == 'E') || (c == 'e'))
 				{
+					if(p_DS == NULL)
+					{
+					int DELETE;
+					p_DS = str_Init(&DELETE); //TODO nastavit errnum
+					}
+					str_Append(p_DS, '0' ); /// pridani c do dynStr
+					str_Append(p_DS, c ); /// pridani c do dynStr
 					state = 7;
 					break;
 				}
-				else
+				else if ((c == '*') || (c == '+') || (c == '-') || (c == '/') || (c == '%') || (c == ' ') || (c == ';') || (c == ')') || (c == '\n') || (c == '\r'))
 				{
 					ungetc(c,stdin);
-					DLInsertLast(tListMainPtr, tINT, NULL);
+
+					if(p_DS == NULL)
+					{
+					int DELETE;
+					p_DS = str_Init(&DELETE); //TODO nastavit errnum
+					}
+					str_Append(p_DS, c ); /// pridani c do dynStr
+					DLInsertLast(tListMainPtr, tINT, p_DS);
+					p_DS = NULL;
 					state = SCANNER_STATE_START;								
 					break;	
 				}
+				else
+				{
+					state = SCANNER_STATE_EOF;
+					return ERROR_LEXICAL;
+				}
+				
 
 			}
 			if ((isdigit(c)) && (c != '0')){
+				if(p_DS == NULL)
+				{
+					int DELETE;
+					p_DS = str_Init(&DELETE); //TODO nastavit errnum
+				}
+				str_Append(p_DS, c ); /// pridani c do dynStr
 				state = 10;
 				break;
 
@@ -286,7 +321,7 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
             if(isalpha(c) || (c == '_') || (isdigit(c))){
                 str_Append(p_DS, c ); /// pridani c do strKwOrId
             }
-            else{
+            else {
                 ungetc(c,stdin);
                               
 				if (strcmp(p_DS->str, "if") == 0){	
@@ -318,7 +353,37 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
                 }
 				else if (strcmp(p_DS->str, "main") == 0){
                     DLInsertLast(tListMainPtr, fMAIN, NULL);
-                }			
+                }
+				else if (strcmp(p_DS->str, "inputs") == 0){
+                    DLInsertLast(tListMainPtr, fINPUTS, NULL);
+                }
+				else if (strcmp(p_DS->str, "inputi") == 0){
+                    DLInsertLast(tListMainPtr, fINPUTI, NULL);
+                }
+				else if (strcmp(p_DS->str, "inputf") == 0){
+                    DLInsertLast(tListMainPtr, fINPUTF, NULL);
+                }
+				else if (strcmp(p_DS->str, "print") == 0){
+                    DLInsertLast(tListMainPtr, fPRINT, NULL);
+                }
+				else if (strcmp(p_DS->str, "int2float") == 0){
+                    DLInsertLast(tListMainPtr, fINT2FLOAT, NULL);
+                }
+				else if (strcmp(p_DS->str, "float2int") == 0){
+                    DLInsertLast(tListMainPtr, fFLOAT2INT, NULL);
+                }
+				else if (strcmp(p_DS->str, "len") == 0){
+                    DLInsertLast(tListMainPtr, fLEN, NULL);
+                }
+				else if (strcmp(p_DS->str, "substr") == 0){
+                    DLInsertLast(tListMainPtr, fSUBSTR, NULL);
+                }
+				else if (strcmp(p_DS->str, "ord") == 0){
+                    DLInsertLast(tListMainPtr, fORD, NULL);
+                }
+				else if (strcmp(p_DS->str, "chr") == 0){
+                    DLInsertLast(tListMainPtr, fCHR, NULL);
+                }
                 else // is tID
 				{
 					DLInsertLast(tListMainPtr, tID, p_DS);
@@ -387,13 +452,20 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 			}
 			else if (c == '\'')
 			{
-				DLInsertLast(tListMainPtr, tSTRING, NULL);
+				DLInsertLast(tListMainPtr, tSTRING, p_DS);
+				p_DS = NULL;
 				state = SCANNER_STATE_START;								
 				break;
 			} 
 			else
 			{
-				/* code */
+				if(p_DS == NULL)
+				{
+					int DELETE;
+					p_DS = str_Init(&DELETE); //TODO nastavit errnum
+				}
+
+				str_Append(p_DS, c ); /// pridani c do dynStr
 			}
 				
 
@@ -412,13 +484,20 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 			}
 			else if (c == '\"')
 			{
-				DLInsertLast(tListMainPtr, tSTRING, NULL);
+				DLInsertLast(tListMainPtr, tSTRING, p_DS);
+				p_DS = NULL;
 				state = SCANNER_STATE_START;								
 				break;
 			} 
 			else
 			{
-				/* code */
+				if(p_DS == NULL)
+				{
+					int DELETE;
+					p_DS = str_Init(&DELETE); //TODO nastavit errnum
+				}
+
+				str_Append(p_DS, c ); /// pridani c do dynStr
 			}
 				
 
@@ -427,7 +506,7 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 		case 10:
 			if (isdigit(c))
 			{
-				
+				str_Append(p_DS, c ); /// pridani c do dynStr
 			}
 			else if (c == '.')
 			{
@@ -439,19 +518,27 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 				state = 7;
 				break;
 			}
-			else
+			else if ((c == '*') || (c == '+') || (c == '-') || (c == '/') || (c == '%') || (c == ' ') || (c == ';') || (c == ')') || (c == '\n') || (c == '\r'))
 			{
                 ungetc(c,stdin);
-				DLInsertLast(tListMainPtr, tINT, NULL);
+				DLInsertLast(tListMainPtr, tINT, p_DS);
+				p_DS = NULL;
 				state = SCANNER_STATE_START;								
 				break;
 			}
+			else
+			{
+				state = SCANNER_STATE_START;			
+				return ERROR_LEXICAL;
+			}
+			
 			
 			break;		
 
 		case 6:
 			if (isdigit(c))
 			{
+				str_Append(p_DS, c ); /// pridani c do dynStr
 				state = 11;
 				break;
 			}
@@ -467,30 +554,43 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 		case 11:
 			if (isdigit(c))
 			{
-
+				str_Append(p_DS, c ); /// pridani c do dynStr
+				break;
 			}
-			else if ((c == 'E') || (c == 'e'))
+			else if (((c == 'E') || (c == 'e')) && (isE == 0))
 			{
+				str_Append(p_DS, c ); /// pridani c do dynStr
 				state = 7;
+				break;
+			}
+			else if ((c == '*') || (c == '+') || (c == '-') || (c == '/') || (c == '%') || (c == ' ') || (c == ';') || (c == ')') || (c == '\n') || (c == '\r')) 
+			{
+				ungetc(c,stdin);
+				DLInsertLast(tListMainPtr, tFLOAT, p_DS);
+				p_DS = NULL;
+				isE = 0;
+				state = SCANNER_STATE_START;								
 				break;
 			}
 			else
 			{
-				DLInsertLast(tListMainPtr, tFLOAT, NULL);
-				state = SCANNER_STATE_START;								
-				break;
+				state = SCANNER_STATE_EOF;
+				return ERROR_LEXICAL;
 			}
 				
 			break;
 
 		case 7:
+			isE = 1;
 			if (isdigit(c))
 			{
+				str_Append(p_DS, c ); /// pridani c do dynStr
 				state = 11;
 				break;
 			}
 			else if((c == '+') || (c == '-'))
 			{
+				str_Append(p_DS, c ); /// pridani c do dynStr
 				state = 8;
 				break;
 			}
@@ -505,6 +605,7 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 		case 8:
 			if (isdigit(c))
 			{
+				str_Append(p_DS, c ); /// pridani c do dynStr
 				state = 11;
 			}
 			else
