@@ -127,10 +127,7 @@ int funcSave(tokenList *token, treeNode *funcTab)
             {   
                 // ulozeni nazvu funkce a kontrola parametru
                 if (token->Act->t_type != tID) return ERROR_SYNTAX;
-                //result = BSTInsert(&funcTab, token->Act->value, true, createCont(ntFunc, 0, t_typeNo));
-                //if (result != OK) return result;
-                //result = cParams(token, &funcTab, token->Act->value);
-                //if (result != OK) return result;
+
             }
             
         }
@@ -256,9 +253,29 @@ int cId(tokenList *token, bool dev, treeNode *funcTab, treeNode *localTab)
             token->Act = token->Act->rptr;
             break;
         }
+
+        // pokud ne vestavena funkce, pak kontrola vyrazu
+        switch (token->Act->t_type)
+        {
+        case fINPUTS:
+        case fINPUTI:
+        case fINPUTF:
+        case fPRINT:
+        case fINT2FLOAT:
+        case fFLOAT2INT:
+        case fLEN:
+        case fSUBSTR:
+        case fORD:
+        case fCHR:
+            result = cFunc(token, &funcTab, &localTab);
+            if (result != OK) return result;
+            break;
+        default:
+            result = cExpr(token, &funcTab, &localTab);
+            if (result != OK) return result;
+            break;
+        }
         
-        result = cExpr(token, &funcTab, &localTab);
-        if (result != OK) return result;
         while (token->Act->t_type == tCOMMA)
         {
             token->Act = token->Act->rptr;
