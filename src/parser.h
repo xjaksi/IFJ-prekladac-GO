@@ -26,15 +26,16 @@
 
 int parse();
 
-int cProg(tokenList *token);
-int cScel(tokenList *token);
-int funcSave(tokenList *token);
-int cBody(tokenList *token);
-int cId(tokenList *token, bool dev);
-int cIf(tokenList *token);
-int cFor(tokenList *token);
-int cFunc(tokenList *token);
-int cParams(tokenList *token);
-int cExpr(tokenList *token);
+int cScel(tokenList *token, treeNode *funcTab, treeNode *localTab);
+int funcSave(tokenList *token, treeNode *funcTab);
+int cBody(tokenList *token, treeNode *funcTab, treeNode *localTab);
+int cId(tokenList *token, bool dev, treeNode *funcTab, treeNode *localTab);
+int cIf(tokenList *token, treeNode *funcTab, treeNode *localTab);
+int cFor(tokenList *token, treeNode *funcTab, treeNode *localTab);
+int cFunc(tokenList *token, treeNode *funcTab, treeNode *localTab);
+int cParams(tokenList *token, treeNode *funcTab, treeNode *localTab);
+int cExpr(tokenList *token, treeNode *funcTab, treeNode *localTab);
+
+void buidInFunc(treeNode *funcTab);
 
 #endif

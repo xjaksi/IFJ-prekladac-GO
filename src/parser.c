@@ -15,111 +15,28 @@
 #include "tokenList.h"
 #include "errors.h"
 #include "scanner.h"
+#include "symtable.h"
 
 int parse()
 {
+    treeNode funcTab;
+    treeNode localTab;
+
+    BSTInit(&funcTab);
+    BSTInit(&localTab);
+
 
     tokenList token;
 
     DLInitList(&token);
 
-    /*
-    DLInsertLast(&token, kwPACKAGE, NULL);
-    DLInsertLast(&token, fMAIN, NULL);
-    DLInsertLast(&token, tEOL, NULL);
-    DLInsertLast(&token, kwFUNC, NULL);
-    DLInsertLast(&token, tID, NULL);
-    DLInsertLast(&token, tLBRACKET, NULL);
-    DLInsertLast(&token, tRBRACKET, NULL);
-    DLInsertLast(&token, tLBRACKET, NULL);
-    DLInsertLast(&token, tRBRACKET, NULL);
-    DLInsertLast(&token, tLBRACE, NULL);
-    DLInsertLast(&token, tEOL, NULL);
-    
-    DLInsertLast(&token, kwRETURN, NULL);
-    DLInsertLast(&token, tID, NULL);
-    DLInsertLast(&token, tEOL, NULL);
-    DLInsertLast(&token, tRBRACE, NULL);
-    DLInsertLast(&token, tEOL, NULL);
-    DLInsertLast(&token, tEOL, NULL);
-    DLInsertLast(&token, tEOL, NULL);
-
-    DLInsertLast(&token, kwFUNC, NULL);
-    DLInsertLast(&token, fMAIN, NULL);
-    DLInsertLast(&token, tLBRACKET, NULL);
-    DLInsertLast(&token, tRBRACKET, NULL);
-    DLInsertLast(&token, tLBRACE, NULL);
-    DLInsertLast(&token, tEOL, NULL);
-
-    DLInsertLast(&token, kwIF, NULL);
-    DLInsertLast(&token, tID, NULL);
-    DLInsertLast(&token, tLEQ, NULL);
-    DLInsertLast(&token, tINT, NULL);
-    DLInsertLast(&token, tLBRACE, NULL);
-    DLInsertLast(&token, tEOL, NULL);
-
-    DLInsertLast(&token, tID, NULL);
-    DLInsertLast(&token, tDEF, NULL);
-    DLInsertLast(&token, tID, NULL);
-    DLInsertLast(&token, tMUL, NULL);
-    DLInsertLast(&token, tID, NULL);
-    DLInsertLast(&token, tEOL, NULL);
-    DLInsertLast(&token, tRBRACE, NULL);
-    DLInsertLast(&token, tEOL, NULL);
-
-    DLInsertLast(&token, kwELSE, NULL);
-    DLInsertLast(&token, tLBRACE, NULL);
-    DLInsertLast(&token, tEOL, NULL);
-
-    DLInsertLast(&token, tDEVNULL, NULL);
-     DLInsertLast(&token, tASSIGN, NULL);
-    DLInsertLast(&token, tID, NULL);
-    DLInsertLast(&token, tLBRACKET, NULL);
-        DLInsertLast(&token, tID, NULL);
-
-     DLInsertLast(&token, tRBRACKET, NULL);
-    DLInsertLast(&token, tEOL, NULL);
-
-    DLInsertLast(&token, kwFOR, NULL);
-    DLInsertLast(&token, tID, NULL);
-    DLInsertLast(&token, tDEF, NULL);
-    DLInsertLast(&token, tID, NULL);
-    DLInsertLast(&token, tSEMICOLON, NULL);
-    DLInsertLast(&token, tID, NULL);
-    DLInsertLast(&token, tLEQ, NULL);
-    DLInsertLast(&token, tINT, NULL);
-    DLInsertLast(&token, tSEMICOLON, NULL);
-    DLInsertLast(&token, tID, NULL);
-    DLInsertLast(&token, tASSIGN, NULL);
-    DLInsertLast(&token, tID, NULL);
-    DLInsertLast(&token, tSUB, NULL);
-    DLInsertLast(&token, tINT, NULL);
-    DLInsertLast(&token, tLBRACE, NULL);
-    DLInsertLast(&token, tEOL, NULL);
-
-    DLInsertLast(&token, tID, NULL);
-    DLInsertLast(&token, tASSIGN, NULL);
-    DLInsertLast(&token, tID, NULL);
-    DLInsertLast(&token, tADD, NULL);
-    DLInsertLast(&token, tID, NULL);
-    DLInsertLast(&token, tEOL, NULL);
-    DLInsertLast(&token, tRBRACE, NULL);
-    DLInsertLast(&token, tEOL, NULL);
-
-    DLInsertLast(&token, tRBRACE, NULL);
-    DLInsertLast(&token, tEOL, NULL);
-
-    DLInsertLast(&token, tRBRACE, NULL);
-    DLInsertLast(&token, tEOF, NULL);
-
-    // 
-    */
 
     int result;
     result = getTokensTo(&token);
     if (result != OK) return result;
 
-
+    // vestavene funkce
+    buidInFunc(&funcTab);
 
 
     // kontrola hlavicky programu 'package main'
@@ -133,20 +50,23 @@ int parse()
     token.Act = token.Act->rptr;
 
     // kontrola programu
-    result = cScel(&token);
+    result = cScel(&token, &funcTab, &localTab);
 
     DLDisposeList(&token);
+
+    BSTDispose(&funcTab);
+    BSTDispose(&localTab);
 
     return result;
 
 }
 
-int cScel(tokenList *token)
+int cScel(tokenList *token, treeNode *funcTab, treeNode *localTab)
 {
     int result;
 
     // deklarovani funkci pred kontrolou
-    result = funcSave(token);
+    result = funcSave(token, &funcTab);
     if (result != OK) return result;
 
 
@@ -173,7 +93,7 @@ int cScel(tokenList *token)
 
 
         if (token->Act->t_type != tEOL) return ERROR_SYNTAX;
-        result = cBody(token);
+        result = cBody(token, &funcTab, &localTab);
         if (result != OK) return result;
 
         if (token->Act->t_type != tRBRACE) return ERROR_SYNTAX;
@@ -183,7 +103,7 @@ int cScel(tokenList *token)
     return result;
 }
 
-int funcSave(tokenList *token)
+int funcSave(tokenList *token, treeNode *funcTab)
 {
     int isMain = 0;
 
@@ -224,7 +144,7 @@ int funcSave(tokenList *token)
     return OK;
 }
 
-int cBody(tokenList *token)
+int cBody(tokenList *token, treeNode *funcTab, treeNode *localTab)
 {
     int result = OK;
     bool dev = false;
@@ -247,17 +167,17 @@ int cBody(tokenList *token)
         case tID :
             if (token->Act->t_type == tDEVNULL) dev = true;
 
-            result = cId(token, dev);
+            result = cId(token, dev, &funcTab, &localTab);
             if (result != OK) return result;
             break;
 
         case kwIF:
-            result = cIf(token);
+            result = cIf(token, &funcTab, &localTab);
             if (result != OK) return result;
             break;
 
         case kwFOR:
-            result = cFor(token);
+            result = cFor(token, &funcTab, &localTab);
             if (result != OK) return result;
             break;
 
@@ -268,7 +188,7 @@ int cBody(tokenList *token)
                 result = OK;
                 break;
             }
-            result = cExpr(token);
+            result = cExpr(token, &funcTab, &localTab);
             if (result != OK) return result;
             break;
 
@@ -301,7 +221,7 @@ int cBody(tokenList *token)
     return result;
 }
 
-int cId(tokenList *token, bool dev)
+int cId(tokenList *token, bool dev, treeNode *funcTab, treeNode *localTab)
 {
     int cnt = 0;
     int result;
@@ -322,7 +242,7 @@ int cId(tokenList *token, bool dev)
         // pokud je to funkce musi byt sama
         if (cnt != 0) return ERROR_SYNTAX;
         if (dev) return ERROR_SYNTAX;
-        result = cFunc(token);
+        result = cFunc(token, &funcTab, &localTab);
         token->Act = token->Act->rptr;
         break;
 
@@ -331,18 +251,18 @@ int cId(tokenList *token, bool dev)
         if (token->Act->t_type == tID && token->Act->rptr->t_type == tLBRACKET)
         {
             token->Act = token->Act->rptr;
-            result = cFunc(token);
+            result = cFunc(token, &funcTab, &localTab);
             if (result != OK) return result;
             token->Act = token->Act->rptr;
             break;
         }
         
-        result = cExpr(token);
+        result = cExpr(token, &funcTab, &localTab);
         if (result != OK) return result;
         while (token->Act->t_type == tCOMMA)
         {
             token->Act = token->Act->rptr;
-            result = cExpr(token);
+            result = cExpr(token, &funcTab, &localTab);
             if (result != OK) return result;
             token->Act = token->Act->rptr;
         }
@@ -351,7 +271,7 @@ int cId(tokenList *token, bool dev)
     case tDEF:
         if (dev) return ERROR_SYNTAX;
         token->Act = token->Act->rptr;
-        result = cExpr(token);
+        result = cExpr(token, &funcTab, &localTab);
         if (result != OK) return result;
         break;
            
@@ -364,11 +284,11 @@ int cId(tokenList *token, bool dev)
 }
 
 
-int cIf(tokenList *token)
+int cIf(tokenList *token, treeNode *funcTab, treeNode *localTab)
 {
     int result;
     token->Act = token->Act->rptr;
-    result = cExpr(token);
+    result = cExpr(token, &funcTab, &localTab);
 
     if (result != OK) return result;
 
@@ -377,7 +297,7 @@ int cIf(tokenList *token)
     token->Act = token->Act->rptr;
     if (token->Act->t_type != tEOL) return ERROR_SYNTAX;
     // telo if
-    result = cBody(token);
+    result = cBody(token, &funcTab, &localTab);
     if (result != OK) return result;
     if (token->Act->t_type != tRBRACE) return ERROR_SYNTAX;
     token->Act = token->Act->rptr;
@@ -393,7 +313,7 @@ int cIf(tokenList *token)
     token->Act = token->Act->rptr;
     if (token->Act->t_type != tEOL) return ERROR_SYNTAX;
     // telo else
-    result = cBody(token);
+    result = cBody(token, &funcTab, &localTab);
     if (result != OK) return result;
     if (token->Act->t_type != tRBRACE) return ERROR_SYNTAX;
 
@@ -406,7 +326,7 @@ int cIf(tokenList *token)
     return OK;
 }
 
-int cFor(tokenList *token)
+int cFor(tokenList *token, treeNode *funcTab, treeNode *localTab)
 {
     int result;
 
@@ -417,7 +337,7 @@ int cFor(tokenList *token)
         token->Act = token->Act->rptr;
         if (token->Act->t_type != tDEF) return ERROR_SYNTAX;
         token->Act = token->Act->rptr;
-        result = cExpr(token);
+        result = cExpr(token, &funcTab, &localTab);
         if (result != OK) return result;
     }
     if (token->Act->t_type != tSEMICOLON) return ERROR_SYNTAX;
@@ -426,7 +346,7 @@ int cFor(tokenList *token)
     // vyraz
     if (token->Act->t_type != tSEMICOLON)
     {
-        result = cExpr(token);
+        result = cExpr(token, &funcTab, &localTab);
         if (result != OK) return result;
     }
     if (token->Act->t_type != tSEMICOLON) return ERROR_SYNTAX;
@@ -438,7 +358,7 @@ int cFor(tokenList *token)
         token->Act = token->Act->rptr;
         if (token->Act->t_type != tASSIGN) return ERROR_SYNTAX;
         token->Act = token->Act->rptr;
-        result = cExpr(token);
+        result = cExpr(token, &funcTab, &localTab);
         if (result != OK) return result;
     }
     if (token->Act->t_type != tLBRACE) return ERROR_SYNTAX;
@@ -446,14 +366,14 @@ int cFor(tokenList *token)
     if (token->Act->t_type != tEOL) return ERROR_SYNTAX;
 
     // telo for
-    result = cBody(token);
+    result = cBody(token, &funcTab, &localTab);
     if (result != OK) return result;
 
     token->Act = token->Act->rptr;
     return OK;
 }
 
-int cFunc(tokenList *token)
+int cFunc(tokenList *token, treeNode *funcTab, treeNode *localTab)
 {
     while (token->Act->t_type != tRBRACKET)
     {
@@ -463,7 +383,7 @@ int cFunc(tokenList *token)
     return OK;
 }
 
-int cParams(tokenList *token)
+int cParams(tokenList *token, treeNode *funcTab, treeNode *localTab)
 {
     // zatim preskakuji parametry po zacatek funkce
     while (token->Act->t_type != tLBRACE && token->Act != token->Last)
@@ -474,7 +394,7 @@ int cParams(tokenList *token)
     return OK;
 }
 
-int cExpr(tokenList *token)
+int cExpr(tokenList *token, treeNode *funcTab, treeNode *localTab)
 {
     int result = OK;
     tokenList newToken;
@@ -498,4 +418,45 @@ int cExpr(tokenList *token)
 
     DLDisposeList(&newToken);
     return result;
+}
+
+
+void buidInFunc(treeNode *funcTab)
+{
+    // inputs
+    int out[2] = {tSTRING, tINT};
+    BSTInsert(&funcTab, "inputs", false, createCont(ntFunc, 0, 2, 101, out, 101));
+    //inputi
+    int out2[2] = {tINT, tINT};
+    BSTInsert(&funcTab, "inputi", false, createCont(ntFunc, 0, 2, 101, out, 101));
+    // inputf
+    int out3[2] = {tFLOAT, tINT};
+    BSTInsert(&funcTab, "inputf", false, createCont(ntFunc, 0, 2, 101, out, 101));
+    // print
+    BSTInsert(&funcTab, "print", false, createCont(ntFunc, 101, 0, 101, 101, 101));
+    // int2float
+    int out4[1] = {tFLOAT};
+    int in4[1] = {tINT};
+    BSTInsert(&funcTab, "int2float", false, createCont(ntFunc, 1, 1, in4, out4, 101));
+    // float2int
+    int out5[1] = {tINT};
+    int in5[1] = {tFLOAT};
+    BSTInsert(&funcTab, "float2int", false, createCont(ntFunc, 1, 1, in5, out5, 101));
+    // len
+    int out6[1] = {tINT};
+    int in6[1] = {tSTRING};
+    BSTInsert(&funcTab, "len", false, createCont(ntFunc, 1, 1, in6, out6, 101));
+    // substr
+    int out7[2] = {tSTRING, tINT};
+    int in7[3] = {tSTRING, tINT, tINT};
+    BSTInsert(&funcTab, "substr", false, createCont(ntFunc, 3, 2, in7, out7, 101));
+    // ord
+    int out8[2] = {tINT, tINT};
+    int in8[2] = {tSTRING, tINT};
+    BSTInsert(&funcTab, "ord", false, createCont(ntFunc, 2, 2, in8, out8, 101));
+    // chr
+    int out9[2] = {tSTRING, tINT};
+    int in9[1] = {tINT};
+    BSTInsert(&funcTab, "chr", false, createCont(ntFunc, 1, 2, in9, out9, 101));
+
 }
