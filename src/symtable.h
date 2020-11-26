@@ -71,7 +71,7 @@ typedef struct ListOfTrees
     listT act;
 } treeList;
 
-
+/*_________________ Seznam _________________*/
 
 
 // prototypy funkci
@@ -94,9 +94,16 @@ nodeInfCont BSTSearch (treeNode *RootPtr, char* K);
 int BSTInsert (treeNode *, char *, bool, nodeInfCont);
 void BSTDispose(treeNode *);
 
-nodeInfCont createCont (nodeType nnType, int noParam, int noRet, int arg, int out, int ddType)
+nodeInfCont createCont (nodeType nnType, int noParam, int noRet, int arg, int out, int ddType);
 
 /*                Konec binarniho stromu                */
 /* ---------------------------------------------------- */
+
+/* ---------------------------------------------------- */
+/*     Seznam/zasobnik pro jednotlive ramce/stromy      */
+void treeListInit(treeList *l);
+int treeListInsert(treeList *l, treeNode *tree);
+void treeListRemove(treeList *l);
+void treeListDestroy(treeList *l);
 
 #endif
