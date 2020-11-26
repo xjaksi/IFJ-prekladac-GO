@@ -106,6 +106,7 @@ int cScel(tokenList *token, treeNode *funcTab, treeNode *localTab)
 int funcSave(tokenList *token, treeNode *funcTab)
 {
     int isMain = 0;
+    int result;
 
     while (token->Act->t_type != tEOF)
     {
@@ -125,9 +126,126 @@ int funcSave(tokenList *token, treeNode *funcTab)
             }
             else
             {   
+                if (isMain > 0) return ERROR_SYNTAX;
+
                 // ulozeni nazvu funkce a kontrola parametru
                 if (token->Act->t_type != tID) return ERROR_SYNTAX;
 
+                char *idName = token->Act->atribute->str;
+
+                int noArg = 0;
+                int noRet = 0;
+                int noComma = 0;
+
+                // argumenty funkce
+                token->Act = token->Act->rptr;
+                if (token->Act->t_type != tLBRACKET) return ERROR_SYNTAX;
+                token->Act = token->Act->rptr;
+
+                // dva pruchody argumentama
+                // nejdriv zjistim pocet argumentu
+                while (token->Act->t_type != tRBRACKET && token->Act->t_type != tEOF)
+                {
+                    noArg++;
+                    token->Act = token->Act->rptr->rptr;
+                    if (token->Act->t_type == tCOMMA)
+                    {
+                        noComma++;
+                        token->Act = token->Act->rptr;
+                    }
+                }
+                if (noArg > 1 && noArg != noComma+1) return ERROR_SYNTAX;
+                if (token->Act->t_type != tRBRACKET) return ERROR_SYNTAX;
+
+                int args[ noArg ];
+                // pokud existuji argumenty kontroluji je od zacatku
+                if (noArg > 0)
+                {
+                    while (token->Act->lptr->t_type != tLBRACKET) token->Act = token->Act->lptr;
+                
+                    for (int i = 0; i < noArg; i++)
+                    {
+                        if (token->Act->t_type != tID) return ERROR_SYNTAX;
+                        // TODO /////////////// PAMATOVAT ID ///////////////////////
+                        token->Act = token->Act->rptr;
+                        if (token->Act->t_type != kwINT &&
+                            token->Act->t_type != kwSTRING &&
+                            token->Act->t_type != kwFLOAT64)
+                                return ERROR_SYNTAX;
+
+                        args[i] = token->Act->t_type;
+                        token->Act = token->Act->rptr;
+
+                        // za datovym typem nasleduje konec argumentu nebo dalsi
+                        if (token->Act->t_type == tRBRACKET) 
+                        {
+                            if (i+1 != noArg) return ERROR_SYNTAX;
+                            break;
+                        }
+                        if (token->Act->t_type != tCOMMA) return ERROR_SYNTAX;
+                        token->Act = token->Act->rptr;
+                    }
+                }
+                if (token->Act->t_type != tRBRACKET) return ERROR_SYNTAX;
+                token->Act = token->Act->rptr;
+
+                // pokud je tabulka s navratovymi hodnotami, kontroluji
+                if (token->Act->t_type == tLBRACKET)
+                {
+                    noComma = 0;
+                    token->Act = token->Act->rptr;
+                    // pocitani hodnot
+                    while (token->Act->t_type != tRBRACKET && token->Act->t_type != tEOF)
+                    {
+                        noRet++;
+                        token->Act = token->Act->rptr;
+                        if (token->Act->t_type == tCOMMA) 
+                        {
+                            noComma++;
+                            token->Act = token->Act->rptr;
+                        }
+                    }
+                    if (noRet > 1 && noRet != noComma+1) return ERROR_SYNTAX;
+                    if (token->Act->t_type != tRBRACKET) return ERROR_SYNTAX;
+
+                    int ret[ noRet ];
+                    if (noRet > 0)
+                    {
+                        // posun na zacatek navratovych hodnot
+                        while (token->Act->lptr->t_type != tLBRACKET) token->Act = token->Act->lptr;
+
+                        for (int i = 0; i < noRet; i++)
+                        {
+                            if (token->Act->t_type != kwINT &&
+                                token->Act->t_type != kwSTRING &&
+                                token->Act->t_type != kwFLOAT64)
+                                    return ERROR_SYNTAX;
+                            ret[i] = token->Act->t_type;
+                            token->Act = token->Act->rptr;
+
+                            // za datovym typem nasleduje konec nebo dalsi
+                            if (token->Act->t_type == tRBRACKET)
+                            {
+                                if (i+1 != noRet) return ERROR_SYNTAX; 
+                                break;
+                            }
+                            if (token->Act->t_type != tCOMMA) return ERROR_SYNTAX;
+                            token->Act = token->Act->rptr;
+                        }
+                    }
+
+                    if (token->Act->t_type != tRBRACKET) return ERROR_SYNTAX;
+                    token->Act = token->Act->rptr;
+
+                    result = BSTInsert(funcTab, idName, true, createCont(ntFunc, noArg, noRet, args, ret, 101));
+                    if (result != OK) return result;
+                }
+                else
+                {
+                    result = BSTInsert(funcTab, idName, true, createCont(ntFunc, noArg, noRet, 0, 101, 101));
+                    if (result != OK) return result;
+                }
+                if (token->Act->t_type != tLBRACE) return ERROR_SYNTAX;
             }
             
         }
@@ -445,10 +563,10 @@ void buidInFunc(treeNode *funcTab)
     BSTInsert(&funcTab, "inputs", false, createCont(ntFunc, 0, 2, 101, out, 101));
     //inputi
     int out2[2] = {tINT, tINT};
-    BSTInsert(&funcTab, "inputi", false, createCont(ntFunc, 0, 2, 101, out, 101));
+    BSTInsert(&funcTab, "inputi", false, createCont(ntFunc, 0, 2, 101, out2, 101));
     // inputf
     int out3[2] = {tFLOAT, tINT};
-    BSTInsert(&funcTab, "inputf", false, createCont(ntFunc, 0, 2, 101, out, 101));
+    BSTInsert(&funcTab, "inputf", false, createCont(ntFunc, 0, 2, 101, out3, 101));
     // print
     BSTInsert(&funcTab, "print", false, createCont(ntFunc, 101, 0, 101, 101, 101));
     // int2float
