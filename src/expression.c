@@ -44,12 +44,10 @@ ERROR_CODE parseExp(tokenList *tList) {
 	insertItem(&opStack, PT_STOP, DT_NONE, false);
 	insertItem(&idStack, PT_STOP, DT_NONE, false);
 
-	
 	tList->Act = tList->First;		// [token] nastaveni aktivity na prvni prvek
 	fillMyList(&input, tList);		// [token] naplneni seznamu z toknu
 	input.act = input.first; 		// [vstup] nastaveni aktivity na prvni prvek
 
-	
 	while (input.act != NULL) {		// precedencni analyza - prochazeni vstupniho seznamu
 		if(input.act->ptType == PT_EXP || input.act->ptType == PT_CONST) {
 			exprFlag = true;
@@ -94,7 +92,7 @@ ERROR_CODE reduce() {
 		removeItem(&opStack);
 		removeItem(&opStack);
 	}
-	
+
 	// E [op] E -> E redukce
 	else {	
 		DataType finalType;		///< promenna drzici finalni datovy typ
@@ -105,42 +103,35 @@ ERROR_CODE reduce() {
 			
 			// KROK 2: zjisteni operace, kterou provadime
 			switch (opStack.act->ptType) {
-				case PT_ADD:
-					// KROK 3: zjistit kompatibilitu typu
-					if (finalType == DT_NONE || finalType == DT_BOOL) {
+
+				// KROK 3: zjistit kompatibilitu typu a operace
+				case PT_ADD: case PT_CMPS:
+					if (finalType == DT_NONE || finalType == DT_BOOL) {		
 						return ERROR_TYPE_COMPATIBILITY;
 					}
+					break;
+
+				case PT_MUL: case PT_DIV: case PT_SUB: 
+					if (finalType == DT_NONE || finalType == DT_BOOL || finalType == DT_STRING) {		
+						return ERROR_TYPE_COMPATIBILITY;
+					}
+
+					if (opStack.act->ptType == PT_DIV) {
+						if (idStack.act->isZero == true) {
+							return ERROR_ZERO_DIVISION;
+						}
+						
+					}
 					
-					removeItem(&opStack);
-					removeItem(&idStack); 
 					break;
 
-				case PT_MUL:
-					/* code */
-					break;
-				
-				case PT_DIV:
-					/* code */
-					break;
-
-				case PT_CMPS:
-					/* code */
-					break;
 				default:
 					break;
 			}
-			// overeni deleni nulou v int i float pripadech
-			if ((strcmp(opStack.act->value, "/") == 0) && (idStack.act->ptType == PT_CONST) && (strtof(idStack.act->value, NULL) == 0)) {	
-				return ERROR_ZERO_DIVISION;	
-			}
-				
-			removeItem(&idStack);
-			if (idStack.act->ptType == PT_STOP) {
-				return ERROR_SYNTAX;
-			}
-			
+
+			// KROK 4: redukce (odstraneni operatoru a jednoho z vyrazu ze seznamu)
 			removeItem(&opStack);
-		
+			removeItem(&idStack); 
 		}
 		else {
 			return ERROR_TYPE_COMPATIBILITY;
