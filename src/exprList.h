@@ -22,7 +22,7 @@
  * @brief obsahuje hodnotu, datovy typ, symbol v PT a odkaz na nasledujici a predchozi polozku
  */
 typedef struct ListItem {
-    char value[5000];
+    bool isZero;
     PtType ptType;
     DataType dType;
     struct ListItem *next;
@@ -54,9 +54,9 @@ void listInit(exprList *l);
  * @param l seznam, kam chceme vkladat
  * @param ptType symbol z precedencni tabulky
  * @param dType datovy typ
- * @param c hodnota, kterou chceme vkladat
+ * @param isZero priznak, jestli je hodnota nula
  */
-ERROR_CODE insertItem(exprList *l, PtType ptType, DataType dType, char *c);
+ERROR_CODE insertItem(exprList *l, PtType ptType, DataType dType, bool isZero);
 
 
 /**
@@ -66,8 +66,14 @@ ERROR_CODE insertItem(exprList *l, PtType ptType, DataType dType, char *c);
  */
 void removeItem(exprList *l);
 
-ERROR_CODE insertTemp(exprList *l, PtType ptType);
 
+/**
+ * @brief vrati ekvivalent typu tokenu z precedencni tabulky
+ * 
+ * @param tType token typ
+ * @return PtType ekvivalent zadaneho tokenu
+ */
 PtType tokenToPT(TokenType tType);
+
 
 ERROR_CODE fillMyList (exprList *l, tokenList *tList);

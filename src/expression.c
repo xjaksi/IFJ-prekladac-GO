@@ -15,13 +15,15 @@
 
 
  char precTable[PT_SIZE][PT_SIZE] = {
-  //  +-   */  cmp   (    )    $
-	{'R', 'S', 'R', 'S', 'R', 'R'},		// +-
-	{'R', 'R', 'R', 'S', 'R', 'R'},		// */
-	{'S', 'S', 'R', 'S', 'R', 'R'},		// cmp
-	{'S', 'S', 'S', 'S', 'S', 'E'},		// (
-	{'R', 'R', 'R', 'E', 'S', 'R'},		// )
-	{'S', 'S', 'S', 'S', 'E', 'A'},		// $ 
+  //  +    -    *    /   cmp   (    )    $
+	{'R', 'R', 'S', 'S', 'R', 'S', 'R', 'R'},		// +
+	{'R', 'R', 'S', 'S', 'R', 'S', 'R', 'R'},		// -
+	{'R', 'R', 'R', 'R', 'R', 'S', 'R', 'R'},		// *
+	{'R', 'R', 'R', 'R', 'R', 'S', 'R', 'R'},		// /
+	{'S', 'S', 'S', 'S', 'R', 'S', 'R', 'R'},		// cmp
+	{'S', 'S', 'S', 'S', 'S', 'S', 'S', 'E'},		// (
+	{'R', 'R', 'R', 'R', 'R', 'E', 'S', 'R'},		// )
+	{'S', 'S', 'S', 'S', 'S', 'S', 'E', 'A'},		// $ 
 };
 
 exprList opStack;
@@ -33,76 +35,54 @@ bool exprFlag = false;
 ERROR_CODE finalError;
 
 ERROR_CODE parseExp(tokenList *tList) {
-	int count = 1;
-	// inicializace vsech potrebnych seznamu
+	// inicializace seznamu: vstup, operatory, id/vyrazy
 	listInit(&input);
 	listInit(&opStack);
-	insertItem(&opStack, PT_STOP, DT_NONE, "$");
 	listInit(&idStack);
-	insertItem(&idStack, PT_STOP, DT_NONE, "$");
 
-	tList->Act = tList->First;
+	// vlozeni stop symbolu na konec seznamu pro operatory a id/vyrazy
+	insertItem(&opStack, PT_STOP, DT_NONE, false);
+	insertItem(&idStack, PT_STOP, DT_NONE, false);
+
 	
-	fillMyList(&input, tList);
+	tList->Act = tList->First;		// [token] nastaveni aktivity na prvni prvek
+	fillMyList(&input, tList);		// [token] naplneni seznamu z toknu
+	input.act = input.first; 		// [vstup] nastaveni aktivity na prvni prvek
 
-	/*			 M O C K   D A T A
-	insertItem(&input, PT_LBR, DT_NONE, "(");
-	insertItem(&input, PT_EXP, DT_INT, "a");
-	insertItem(&input, PT_MULDIV, DT_NONE, "*");
-	insertItem(&input, PT_EXP, DT_INT, "10");
-	insertItem(&input, PT_ADDSUB, DT_NONE, "+");
-	insertItem(&input, PT_EXP, DT_INT, "c");
-	insertItem(&input, PT_RBR, DT_NONE, ")");
-	insertItem(&input, PT_MULDIV, DT_NONE, "/");
-	insertItem(&input, PT_CONST, DT_INT, "10");
-	insertItem(&input, PT_STOP, DT_NONE, "$");
-												
-
-	while (input.act != NULL) {
-		printf("VEC: %d\n", input.act->ptType);
-		input.act = input.act->next;
-	}
-		*/
-	input.act = input.first;
-
-	// prochazeni seznamu reprezentujiciho vstupni vyraz
-	while (input.act != NULL) {
-
-		// pokud jde o vyraz, provede se nacteni do vlastniho seznamu
+	
+	while (input.act != NULL) {		// precedencni analyza - prochazeni vstupniho seznamu
 		if(input.act->ptType == PT_EXP || input.act->ptType == PT_CONST) {
 			exprFlag = true;
 			shift();
 		}
-		
-		// vsechno ostatni je operator a podrobuje se precedencni analyze
 		else {		
-			switch (precTable[opStack.act->ptType][input.act->ptType]) {
-			case 'R':
-				finalError = reduce();
-			 	if (finalError != OK) {
-					 return finalError;
-				 }	
-				break;
-			case 'S':
-				shift();
-				break;
+			// operace se urci podle precedencni tabulky
+			switch (precTable[opStack.act->ptType][input.act->ptType]) {			
+				case 'R':		// operace je redukce
+					finalError = reduce();
+					if (finalError != OK) {
+						return finalError;
+					}	
+					break;
 
-			case 'A':
-				finalError = accept();
-				if (finalError != OK) {
-					 return finalError;
-				 }	
-				return finalError;
+				case 'S':		// operace je shift (= nacteni do seznamu operatoru)
+					shift();
+					break;
+		
+				case 'A':		// konec analyzy
+					finalError = accept();
+					if (finalError != OK) {
+						return finalError;
+					}	
+					return finalError;
 
-			case 'E':
-				return ERROR_SYNTAX;
+				case 'E':		// nepovolena sekvence znaku
+					return ERROR_SYNTAX;
 
-			default:
-				return ERROR_COMPILER;
+				default:
+					return ERROR_COMPILER;
 			}
 		}
-		
-		count++;
 	}
 	return finalError;
 }
@@ -110,52 +90,80 @@ ERROR_CODE parseExp(tokenList *tList) {
 ERROR_CODE reduce() {
 	// (E) -> E redukce
 	if (opStack.act->ptType == PT_RBR) {
+		// odstraneni zavorek ze seznamu
 		removeItem(&opStack);
 		removeItem(&opStack);
 	}
 	
 	// E [op] E -> E redukce
-	else {		
-		//DataType eOne = idStack.act->dType;
-		//DataType eTwo = idStack.act->prev->dType;
-		//PtType op = opStack.act->ptType;
+	else {	
+		DataType finalType;		///< promenna drzici finalni datovy typ
 
-		// zajisteni stejnych datovych typu
-	/*	if (idStack.act->dType == idStack.act->prev->dType) {
+		// KROK 1: zajisteni stejnych datovych typu
+		if (idStack.act->dType == idStack.act->prev->dType) {
+			finalType = idStack.act->dType;
+			
+			// KROK 2: zjisteni operace, kterou provadime
+			switch (opStack.act->ptType) {
+				case PT_ADD:
+					// KROK 3: zjistit kompatibilitu typu
+					if (finalType == DT_NONE || finalType == DT_BOOL) {
+						return ERROR_TYPE_COMPATIBILITY;
+					}
+					
+					removeItem(&opStack);
+					removeItem(&idStack); 
+					break;
 
+				case PT_MUL:
+					/* code */
+					break;
+				
+				case PT_DIV:
+					/* code */
+					break;
+
+				case PT_CMPS:
+					/* code */
+					break;
+				default:
+					break;
+			}
 			// overeni deleni nulou v int i float pripadech
 			if ((strcmp(opStack.act->value, "/") == 0) && (idStack.act->ptType == PT_CONST) && (strtof(idStack.act->value, NULL) == 0)) {	
 				return ERROR_ZERO_DIVISION;	
 			}
-				*/
+				
 			removeItem(&idStack);
 			if (idStack.act->ptType == PT_STOP) {
 				return ERROR_SYNTAX;
 			}
 			
 			removeItem(&opStack);
-	/*		
+		
 		}
 		else {
 			return ERROR_TYPE_COMPATIBILITY;
-		}*/
+		}
 	} 
 	return OK;	
 }
 
+// DONE NESAHAT !!!!
 void shift() {
 	if (exprFlag) {
-		insertItem(&idStack, input.act->ptType, input.act->dType, input.act->value);
+		insertItem(&idStack, input.act->ptType, input.act->dType);
 		idStack.act = idStack.act->next;
 		exprFlag = false;
 	}
 	else {
-		insertItem(&opStack, input.act->ptType, input.act->dType, input.act->value);
+		insertItem(&opStack, input.act->ptType, input.act->dType);
 		opStack.act = opStack.act->next;
 	}	
 	input.act = input.act->next;
 }
 
+// DONE NESAHAT !!!!
 ERROR_CODE accept() {
 	// v seznamu ID by melo zustat jen jedno E, po odstraneni by tam mel byt jen $
 	removeItem(&idStack); 

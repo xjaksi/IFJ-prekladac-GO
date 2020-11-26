@@ -13,21 +13,22 @@
 
 #include "exprList.h"
 
-
+// DONE NESAHAT !!!!
 void listInit(exprList *l) {
     l->first = NULL;
     l->last = NULL;
     l->act = NULL;
 }
 
-ERROR_CODE insertItem(exprList *l, PtType ptType, DataType dType, char *c) {
+// DONE NESAHAT !!!!
+ERROR_CODE insertItem(exprList *l, PtType ptType, DataType dType, bool isZero) {
     // vytvoreni noveho prvku
     item newItem = (struct ListItem*) malloc(sizeof(struct ListItem));
     if (newItem == NULL) {
         return ERROR_COMPILER;
     }
-
-    strcpy(newItem->value, c);
+    
+    newItem->isZero = isZero;
     newItem->ptType = ptType;
     newItem->dType = dType;
     newItem->next = NULL;
@@ -49,6 +50,7 @@ ERROR_CODE insertItem(exprList *l, PtType ptType, DataType dType, char *c) {
     return OK;
 }
 
+// DONE NESAHAT !!!!
 void removeItem(exprList *l) {
     // pokud seznam neni prazdny
     if (l->first != NULL) {
@@ -72,68 +74,66 @@ void removeItem(exprList *l) {
     
 }
 
-ERROR_CODE insertTemp(exprList *l, PtType ptType) {
-    // vytvoreni noveho prvku
-    item newItem = (struct ListItem*) malloc(sizeof(struct ListItem));
-    if (newItem == NULL) {
-        return ERROR_COMPILER;
-    }
-
-    strcpy(newItem->value, " ");
-    newItem->dType = DT_NONE;
-    newItem->ptType = ptType;
-    newItem->next = NULL;
-
-    // vlozeni do seznamu pokud je seznam pradzny
-    if (l->first == NULL){
-        newItem->prev = NULL;
-        l->first = newItem;
-        l->act = newItem;
-        l->last = newItem;
-    }
-
-    // vlozeni do seznamu pokud seznam neni prazdny
-    else {
-        l->last->next = newItem;
-        newItem->prev = l->last;
-        l->last = newItem;
-    }
-    return OK;
-}
 
 ERROR_CODE fillMyList (exprList *l, tokenList *tList) {
+
+    // prochazeni celeho tokenoveho seznamu
     while (tList->Act != NULL) {
-        insertTemp(l, tokenToPT(tList->Act->t_type));
+
+        // podle toho, o jaky typ tokenu se jedna, se rozhodne, jak se provede vlozeni do seznamu l
+        switch (tList->Act->t_type) {
+        // jedna se o konstanty, tedy int, float nebo string
+        case tINT: 
+        // TO DO:   isZero flag
+            insertItem(l, PT_CONST, DT_INT, false);
+            break;
+
+        case tFLOAT: 
+            insertItem(l, PT_CONST, DT_FLOAT, false);
+            break;
+
+        case tSTRING:
+            insertItem(l, PT_CONST, DT_STRING, false);
+            break;
+        
+        // jedna se o vyraz nebo operator
+        default:
+            // TO DO:   doplnit vyhledani a urceni datoveho typu
+            insertItem(l, tokenToPT(tList->Act->t_type), DT_NONE, false);
+            break;
+        }
+        
+        // posunuti na dalsi prvek v seznamu
         tList->Act = tList->Act->rptr;
     }
-	insertTemp(l, PT_STOP);
+
+    // vlozeni stop symbolu na konec
+	insertItem(l, PT_STOP, DT_NONE, false);
     return OK;
 }
 
+// DONE NESAHAT !!!!
 PtType tokenToPT(TokenType tType) {
     switch (tType) {
-    case tINT: case tFLOAT: case tSTRING:
-        return PT_CONST; 
+        case tID:
+            return PT_EXP;
 
-    case tID:
-        return PT_EXP;
+        case tADD: case tSUB:
+            return PT_ADDSUB;
+        
+        case tMUL: case tDIV:
+            return PT_MULDIV;
 
-    case tADD: case tSUB:
-        return PT_ADDSUB;
-    
-    case tMUL: case tDIV:
-        return PT_MULDIV;
+        case tLT: case tGT: case tLEQ: case tGEQ: case tEQ: case tNEQ:
+            return PT_CMPS;
 
-    case tLT: case tGT: case tLEQ: case tGEQ: case tEQ: case tNEQ:
-        return PT_CMPS;
+        case tLBRACKET:
+            return PT_LBR;
+        
+        case tRBRACKET:
+            return PT_RBR;
 
-    case tLBRACKET:
-        return PT_LBR;
-    
-    case tRBRACKET:
-        return PT_RBR;
-
-    default:
-        return ERROR_SYNTAX;
+        default:
+            return ERROR_SYNTAX;
     }
 }

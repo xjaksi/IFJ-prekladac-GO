@@ -19,20 +19,23 @@
 
 #include "errors.h"
 #include "tokenList.h"
-#define PT_SIZE 6
+#include "dynamicString.h"
+#define PT_SIZE 8
 
 /**
  * @brief typy symbolu v precedencni tabulce
  */
 typedef enum {
     
-    PT_ADDSUB,  // 0
-    PT_MULDIV,  // 1
-    PT_CMPS,    // 2
-    PT_LBR,     // 3
-    PT_RBR,     // 4
-    PT_STOP,    // 5
-    PT_EXP,     // 6
+    PT_ADD,     // 0
+    PT_SUB,     // 1
+    PT_MUL,     // 2
+    PT_DIV,     // 3
+    PT_CMPS,    // 4
+    PT_LBR,     // 5
+    PT_RBR,     // 6
+    PT_STOP,    // 7
+    PT_EXP,     // 8
     PT_CONST,   
 } PtType;
 
@@ -44,6 +47,7 @@ typedef enum {
     DT_STRING,
     DT_FLOAT,
     DT_NONE,
+    DT_BOOL,
 } DataType;
 
 ERROR_CODE parseExp(tokenList *tList);
