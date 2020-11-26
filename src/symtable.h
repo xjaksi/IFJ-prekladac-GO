@@ -54,6 +54,26 @@ typedef struct BSTNode
 	struct BSTNode * RPtr;         // pravy podstrom
 } *treeNode;
 
+
+/******************** Seznam *****************/
+
+// uzel
+typedef struct ListCont
+{
+    struct BSTNode *symtab;
+    struct ListCont *next;
+} *listT;
+
+// seznam
+typedef struct ListOfTrees
+{
+    listT first;
+    listT act;
+} treeList;
+
+
+
+
 // prototypy funkci
 
 /**
