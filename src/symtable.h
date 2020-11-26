@@ -71,7 +71,7 @@ typedef struct ListOfTrees
     listT act;
 } treeList;
 
-/*_________________ Seznam _________________*/
+/*__________________ Seznam _________________*/
 
 
 // prototypy funkci
@@ -105,5 +105,6 @@ void treeListInit(treeList *l);
 int treeListInsert(treeList *l, treeNode *tree);
 void treeListRemove(treeList *l);
 void treeListDestroy(treeList *l);
+int dataSearch(treeList *l, char *k);
 
 #endif

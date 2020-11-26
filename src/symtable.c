@@ -90,7 +90,7 @@ int BSTInsert (treeNode* RootPtr, char* K, bool def, nodeInfCont Content)
 		return OK;
 	}
 
-	// pokud se klice shoduji, redefinice odchazim
+	// pokud se klice shoduji, kontroluji zda nedeklaruji
 	else if (strcmp(K, ((*RootPtr)->Key)) == 0)
 	{
 
@@ -225,5 +225,26 @@ void treeListDestroy(treeList *l)
 	while (l->first != NULL)
 	{
 		treeListRemove(&l);
+	}
+}
+
+int dataSearch(treeList *l, char *k)
+{
+	// postupne projdu vsechny tabulky
+	l->act = l->first;
+	treeNode cont;
+	while (l->act != NULL)
+	{
+		cont->TBSNodeCont = BSTSearch(l->act->symtab, k);
+		if (cont->TBSNodeCont != NULL) break;
+		l->act = l->act->next;
+	}
+	if (cont->TBSNodeCont == NULL)
+	{
+		return 101;
+	}
+	else
+	{
+		return cont->TBSNodeCont->dType;
 	}
 }
