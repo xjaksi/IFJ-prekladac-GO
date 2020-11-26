@@ -90,7 +90,7 @@ int BSTInsert (treeNode* RootPtr, char* K, bool def, nodeInfCont Content)
 		return OK;
 	}
 
-	// pokud se klice shoduji, redefinice odchazim
+	// pokud se klice shoduji, kontroluji zda nedeklaruji
 	else if (strcmp(K, ((*RootPtr)->Key)) == 0)
 	{
 
@@ -163,3 +163,88 @@ nodeInfCont createCont (nodeType nnType, int noParam, int noRet, int arg, int ou
 
 /*                Konec binarniho stromu                */
 /* ---------------------------------------------------- */
+
+/* ---------------------------------------------------- */
+/*     Seznam/zasobnik pro jednotlive ramce/stromy      */
+
+
+
+void treeListInit(treeList *l)
+{
+	l->act = NULL;
+	l->first = NULL;
+}
+
+int treeListInsert(treeList *l, treeNode *tree)
+{
+	listT newList = (struct ListCont*) malloc(sizeof(struct ListCont));
+	if (newList == NULL) return ERROR_COMPILER;
+
+	newList->symtab = &(*tree);
+
+	if (l->first == NULL)
+	{
+		newList->next = NULL;
+		l->first = newList;
+	}
+	else
+	{
+		newList->next = l->first;
+		l->first = newList;
+	}
+	return OK;
+}
+
+void treeListRemove(treeList *l)
+{
+	if (l->first != NULL)
+	{
+		// je jediny
+		if (l->first->next == NULL)
+		{
+			BSTDispose(l->first->symtab);
+			free(l->first);
+			l->first = NULL;
+			l->act = NULL;
+		}
+
+		// existuji nasledujici
+		else
+		{
+			l->act = l->first;
+			l->first = l->first->next;
+			BSTDispose(l->act->symtab);
+			free(l->act);
+			l->act = NULL;
+		}
+	}
+}
+
+void treeListDestroy(treeList *l)
+{
+	while (l->first != NULL)
+	{
+		treeListRemove(&l);
+	}
+}
+
+int dataSearch(treeList *l, char *k)
+{
+	// postupne projdu vsechny tabulky
+	l->act = l->first;
+	treeNode cont;
+	while (l->act != NULL)
+	{
+		cont->TBSNodeCont = BSTSearch(l->act->symtab, k);
+		if (cont->TBSNodeCont != NULL) break;
+		l->act = l->act->next;
+	}
+	if (cont->TBSNodeCont == NULL)
+	{
+		return 101;
+	}
+	else
+	{
+		return cont->TBSNodeCont->dType;
+	}
+}
