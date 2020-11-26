@@ -29,7 +29,7 @@ int parse();
 int cScel(tokenList *token, treeNode *funcTab, treeList *tList);
 int funcSave(tokenList *token, treeNode *funcTab);
 int cBody(tokenList *token, treeNode *funcTab, treeList *tList);
-int cId(tokenList *token, bool dev, treeNode *funcTab, treeList *tList);
+int cId(tokenList *token, treeNode *funcTab, treeList *tList);
 int cIf(tokenList *token, treeNode *funcTab, treeList *tList);
 int cFor(tokenList *token, treeNode *funcTab, treeList *tList);
 int cFunc(tokenList *token, treeNode *funcTab, treeList *tList);

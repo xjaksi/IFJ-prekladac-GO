@@ -262,7 +262,12 @@ int funcSave(tokenList *token, treeNode *funcTab)
 int cBody(tokenList *token, treeNode *funcTab, treeList *tList)
 {
     int result = OK;
-    bool dev = false;
+
+    // vytvoreni lokalni tabulky pro soucasne telo
+    treeNode localTab;
+    BSTInit(&localTab);
+    treeListInsert(&tList, &localTab);
+
 
     while (token->Act->t_type != tRBRACE)
     {   
@@ -280,9 +285,7 @@ int cBody(tokenList *token, treeNode *funcTab, treeList *tList)
         {
         case tDEVNULL:
         case tID :
-            if (token->Act->t_type == tDEVNULL) dev = true;
-
-            result = cId(token, dev, &funcTab, &tList);
+            result = cId(token, &funcTab, &tList);
             if (result != OK) return result;
             break;
 
@@ -332,11 +335,14 @@ int cBody(tokenList *token, treeNode *funcTab, treeList *tList)
         }
 
     }
+
+    // odebrani ramce na konci tela
+    treeListRemove(&tList);
     
     return result;
 }
 
-int cId(tokenList *token, bool dev, treeNode *funcTab, treeList *tList)
+int cId(tokenList *token, treeNode *funcTab, treeList *tList)
 {
     int cnt = 0;
     int result;
@@ -356,7 +362,7 @@ int cId(tokenList *token, bool dev, treeNode *funcTab, treeList *tList)
     case tLBRACKET:
         // pokud je to funkce musi byt sama
         if (cnt != 0) return ERROR_SYNTAX;
-        if (dev) return ERROR_SYNTAX;
+        if (token->Act->lptr->t_type != tID) return ERROR_SYNTAX;
         result = cFunc(token, &funcTab, &tList);
         token->Act = token->Act->rptr;
         break;
@@ -404,7 +410,6 @@ int cId(tokenList *token, bool dev, treeNode *funcTab, treeList *tList)
         break;
 
     case tDEF:
-        if (dev) return ERROR_SYNTAX;
         token->Act = token->Act->rptr;
         result = cExpr(token, &funcTab, &tList);
         if (result != OK) return result;
@@ -510,11 +515,19 @@ int cFor(tokenList *token, treeNode *funcTab, treeList *tList)
 
 int cFunc(tokenList *token, treeNode *funcTab, treeList *tList)
 {
-    while (token->Act->t_type != tRBRACKET)
-    {
-        if (token->Act->t_type == tEOF) return ERROR_SYNTAX;
-        token->Act = token->Act->rptr;
-    }
+    treeNode foo;
+    foo->TBSNodeCont = BSTSearch(&funcTab, token->Act->lptr->atribute->str);
+    if (foo->TBSNodeCont == NULL) return ERROR_UNDEFINED;
+
+    // funkce existuje kontroluji argumenty
+
+
+
+
+
+
+
+    
     return OK;
 }
 
