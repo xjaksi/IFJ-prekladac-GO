@@ -12,7 +12,6 @@
  * -----------------------------------------------*/ 
 
 #include "exprList.h"
-
 // DONE NESAHAT !!!!
 void listInit(exprList *l) {
     l->first = NULL;
@@ -76,8 +75,8 @@ void removeItem(exprList *l) {
 
 
 ERROR_CODE fillMyList (exprList *l, tokenList *tList) {
-
-    // prochazeni celeho tokenoveho seznamu
+    int DATA;   // TO DO: odstranit
+     // prochazeni celeho tokenoveho seznamu
     while (tList->Act != NULL) {
 
         // podle toho, o jaky typ tokenu se jedna, se rozhodne, jak se provede vlozeni do seznamu l
@@ -85,10 +84,19 @@ ERROR_CODE fillMyList (exprList *l, tokenList *tList) {
         // jedna se o konstanty, tedy int, float nebo string
         case tINT: 
         // TO DO:   isZero flag
+            if (strtof(tList->Act->atribute->str, NULL) == 0) {
+                insertItem(l, PT_CONST, DT_INT, true);
+                break;
+            }
             insertItem(l, PT_CONST, DT_INT, false);
             break;
 
         case tFLOAT: 
+            if (strtof(tList->Act->atribute->str, NULL) == 0) {
+                insertItem(l, PT_CONST, DT_FLOAT, true);
+                break;
+            }
+
             insertItem(l, PT_CONST, DT_FLOAT, false);
             break;
 
@@ -96,9 +104,19 @@ ERROR_CODE fillMyList (exprList *l, tokenList *tList) {
             insertItem(l, PT_CONST, DT_STRING, false);
             break;
         
-        // jedna se o vyraz nebo operator
+        case tID:
+            DATA = DT_INT; // TO DO: vyhledani v BS
+            /**
+             * TADY BUDE ZJISTENI JESTLI ID EXISTUJE
+             * if (bstSearch() == NULL) {
+             *      return ERROR_UNDEFINED;
+             * }
+             */
+            insertItem(l, PT_EXP, DATA, false);
+            break;
+
+        // jedna se o operator
         default:
-            // TO DO:   doplnit vyhledani a urceni datoveho typu
             insertItem(l, tokenToPT(tList->Act->t_type), DT_NONE, false);
             break;
         }
@@ -118,11 +136,16 @@ PtType tokenToPT(TokenType tType) {
         case tID:
             return PT_EXP;
 
-        case tADD: case tSUB:
-            return PT_ADDSUB;
+        case tADD: 
+            return PT_ADD;
         
-        case tMUL: case tDIV:
-            return PT_MULDIV;
+        case tSUB:
+            return PT_SUB;
+        
+        case tMUL: 
+            return PT_MUL;
+        case tDIV:
+            return PT_DIV;
 
         case tLT: case tGT: case tLEQ: case tGEQ: case tEQ: case tNEQ:
             return PT_CMPS;
@@ -136,4 +159,12 @@ PtType tokenToPT(TokenType tType) {
         default:
             return ERROR_SYNTAX;
     }
+}
+
+void next(exprList *l) {
+    l->act = l->act->next;
+}
+
+void reset(exprList *l) {
+    l->act = l->first;
 }
