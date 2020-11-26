@@ -13,7 +13,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 
 #include "expression.h"
 
@@ -77,3 +76,7 @@ PtType tokenToPT(TokenType tType);
 
 
 ERROR_CODE fillMyList (exprList *l, tokenList *tList);
+
+void next(exprList *l);
+
+void reset(exprList *l);

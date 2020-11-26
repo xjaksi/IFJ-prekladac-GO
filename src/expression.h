@@ -17,7 +17,6 @@
 #include <ctype.h>
 #include <stdbool.h>
 
-
 #include "errors.h"
 #include "tokenList.h"
 #include "dynamicString.h"
@@ -58,3 +57,5 @@ void shift();
 ERROR_CODE reduce();
 
 ERROR_CODE accept();
+
+char* debug(PtType i);
