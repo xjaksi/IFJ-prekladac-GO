@@ -105,7 +105,7 @@ typedef struct {
 
  /* prototypy jednotlivých funkcí */
 void DLInitList (tokenList *);
-void DLDisposeList (tokenList *);
+void DLDisposeList (tokenList *, int);
 void DLInsertLast(tokenList *, TokenType, tStr *);    
 void DLFirst (tokenList *);
 void DLLast (tokenList *);

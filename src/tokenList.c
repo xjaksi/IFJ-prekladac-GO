@@ -44,7 +44,8 @@ void DLInitList (tokenList *L) {
 ** Zruší všechny prvky seznamu L a uvede seznam do stavu, v jakém
 ** se nacházel po inicializaci. Vsechny prvky uvolni funkci free().
 **/
-void DLDisposeList (tokenList *L) {
+
+void DLDisposeList(tokenList *L, int flag_atribute_dispose) {
    
     // pomocny ukazatel na strukturu prvku
     TokenPtr sup;
@@ -53,8 +54,8 @@ void DLDisposeList (tokenList *L) {
     while(L->First != NULL){
         sup = L->First->rptr;
 
-        // pokud byl pousit atribut, tez se uvolni jeho pamet
-        if(L->First->atribute != NULL){
+        // pokud byl pouzit atribut, tez se uvolni jeho pamet
+        if((L->First->atribute != NULL) && flag_atribute_dispose){
             str_Dispose(L->First->atribute);
         }
 
@@ -66,7 +67,6 @@ void DLDisposeList (tokenList *L) {
     L->Act = NULL;
     L->Last = NULL;
 }
-
 
 /*
 ** Vloží nový prvek na konec seznamu L
