@@ -155,8 +155,8 @@ nodeInfCont createCont (nodeType nnType, int noParam, int noRet, int *arg, int *
     data->noParams = noParam;
 	data->noReturn = noRet;
     data->dType = ddType;
-	data->paramsIn = &arg;
-	data->paramsOut = &out;
+	data->paramsIn = arg;
+	data->paramsOut = out;
 
     return data;
 }
@@ -180,7 +180,7 @@ int treeListInsert(treeList *l, treeNode *tree)
 	listT newList = (struct ListCont*) malloc(sizeof(struct ListCont));
 	if (newList == NULL) return ERROR_COMPILER;
 
-	newList->symtab = &(*tree);
+	newList->symtab = *tree;
 
 	if (l->first == NULL)
 	{
@@ -202,7 +202,7 @@ void treeListRemove(treeList *l)
 		// je jediny
 		if (l->first->next == NULL)
 		{
-			BSTDispose(l->first->symtab);
+			BSTDispose(&(l->first->symtab));
 			free(l->first);
 			l->first = NULL;
 			l->act = NULL;
@@ -213,7 +213,7 @@ void treeListRemove(treeList *l)
 		{
 			l->act = l->first;
 			l->first = l->first->next;
-			BSTDispose(l->act->symtab);
+			BSTDispose(&(l->act->symtab));
 			free(l->act);
 			l->act = NULL;
 		}
@@ -224,7 +224,7 @@ void treeListDestroy(treeList *l)
 {
 	while (l->first != NULL)
 	{
-		treeListRemove(&l);
+		treeListRemove(l);
 	}
 }
 
@@ -235,7 +235,7 @@ int dataSearch(treeList *l, char *k)
 	treeNode cont;
 	while (l->act != NULL)
 	{
-		cont->TBSNodeCont = BSTSearch(l->act->symtab, k);
+		cont->TBSNodeCont = BSTSearch(&(l->act->symtab), k);
 		if (cont->TBSNodeCont != NULL) break;
 		l->act = l->act->next;
 	}

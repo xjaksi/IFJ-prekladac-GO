@@ -99,19 +99,18 @@ int cScel(tokenList *token, treeNode *funcTab, treeList *tList)
         else
         {
             // tabulka pro funkci
-            treeNode Func;
-            Func->TBSNodeCont = BSTSearch(funcTab, token->Act->atribute->str);
-            if (Func->TBSNodeCont == NULL) return ERROR_COMPILER;
-            if (Func->TBSNodeCont->noReturn != 0) 
+            nodeInfCont TBSNodeCont = BSTSearch(&funcTab, token->Act->atribute->str);
+            if (TBSNodeCont == NULL) return ERROR_COMPILER;
+            if (TBSNodeCont->noReturn != 0) 
             {
-                retVal = Func->TBSNodeCont->paramsOut;
+                retVal = TBSNodeCont->paramsOut;
             }
             else
             {
                 retVal = NULL;
             }
 
-            if (Func->TBSNodeCont->noParams != 0)
+            if (TBSNodeCont->noParams != 0)
             {
                 paramsIN = true;
                 // pokud ma funkce argumenty dam do tabulky
@@ -128,17 +127,17 @@ int cScel(tokenList *token, treeNode *funcTab, treeList *tList)
                     if (token->Act->t_type == tEOF) return ERROR_COMPILER;
                     if (token->Act->rptr->t_type == kwINT)
                     {
-                        result = BSTInsert(tList->first->symtab, token->Act->atribute->str, true, createCont(ntVar, 101,101,101,101, tINT));
+                        result = BSTInsert(&(tList->first->symtab), token->Act->atribute->str, true, createCont(ntVar, 101,101,101,101, tINT));
                         if (result != OK) return result;
                     }
                     else if (token->Act->rptr->t_type == kwFLOAT64)
                     {
-                        result = BSTInsert(tList->first->symtab, token->Act->atribute->str, true, createCont(ntVar, 101,101,101,101, tFLOAT));
+                        result = BSTInsert(&(tList->first->symtab), token->Act->atribute->str, true, createCont(ntVar, 101,101,101,101, tFLOAT));
                         if (result != OK) return result;
                     }
                     else if (token->Act->rptr->t_type == kwSTRING)
                     {
-                        result = BSTInsert(tList->first->symtab, token->Act->atribute->str, true, createCont(ntVar, 101,101,101,101, tSTRING));
+                        result = BSTInsert(&(tList->first->symtab), token->Act->atribute->str, true, createCont(ntVar, 101,101,101,101, tSTRING));
                         if (result != OK) return result;
                     }
                     else
@@ -326,12 +325,12 @@ int funcSave(tokenList *token, treeNode *funcTab)
                     if (token->Act->t_type != tRBRACKET) return ERROR_SYNTAX;
                     token->Act = token->Act->rptr;
 
-                    result = BSTInsert(funcTab, idName, true, createCont(ntFunc, noArg, noRet, args, ret, 101));
+                    result = BSTInsert(&funcTab, idName, true, createCont(ntFunc, noArg, noRet, args, ret, 101));
                     if (result != OK) return result;
                 }
                 else
                 {
-                    result = BSTInsert(funcTab, idName, true, createCont(ntFunc, noArg, noRet, 0, 101, 101));
+                    result = BSTInsert(&funcTab, idName, true, createCont(ntFunc, noArg, noRet, 0, 101, 101));
                     if (result != OK) return result;
                 }
                 if (token->Act->t_type != tLBRACE) return ERROR_SYNTAX;
@@ -470,24 +469,24 @@ int cId(tokenList *token, treeNode *funcTab, treeList *tList)
     case tDEF:
         if (cnt != 1) return ERROR_SYNTAX;
         if (token->Act->lptr->t_type != tID) return ERROR_SYNTAX;
-        treeNode exist;
-        exist->TBSNodeCont = BSTSearch(funcTab, token->Act->lptr->atribute->str);
-        if (exist->TBSNodeCont != NULL) return ERROR_REDEFINITION;
+        
+        nodeInfCont TBSNodeCont = BSTSearch(&funcTab, token->Act->lptr->atribute->str);
+        if (TBSNodeCont != NULL) return ERROR_REDEFINITION;
         token->Act = token->Act->rptr;
         result = cExpr(token, &tList, &type);
         if (result != OK) return result;
         // pokud je type podporovany typ ulozim
         if (type == DT_INT)
         {
-            BSTInsert(tList->first->symtab, token->Act->lptr->lptr->atribute->str, true, createCont(ntVar, 101, 101, 101, 101, tINT));
+            BSTInsert(&(tList->first->symtab), token->Act->lptr->lptr->atribute->str, true, createCont(ntVar, 101, 101, 101, 101, tINT));
         }
         else if (type == DT_STRING)
         {
-            BSTInsert(tList->first->symtab, token->Act->lptr->lptr->atribute->str, true, createCont(ntVar, 101, 101, 101, 101, tSTRING));
+            BSTInsert(&(tList->first->symtab), token->Act->lptr->lptr->atribute->str, true, createCont(ntVar, 101, 101, 101, 101, tSTRING));
         }
         else if (type == DT_FLOAT)
         {
-            BSTInsert(tList->first->symtab, token->Act->lptr->lptr->atribute->str, true, createCont(ntVar, 101, 101, 101, 101, tFLOAT));
+            BSTInsert(&(tList->first->symtab), token->Act->lptr->lptr->atribute->str, true, createCont(ntVar, 101, 101, 101, 101, tFLOAT));
         }
         else
         {
@@ -632,9 +631,8 @@ int cFor(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal, bool
     if (token->Act->t_type == tID)
     {
         // pokud existuje jako funkce, koncim
-        treeNode exist;
-        exist->TBSNodeCont = BSTSearch(funcTab, token->Act->atribute->str);
-        if (exist->TBSNodeCont != NULL) return ERROR_REDEFINITION;
+        nodeInfCont TBSNodeCont = BSTSearch(funcTab, token->Act->atribute->str);
+        if (TBSNodeCont != NULL) return ERROR_REDEFINITION;
         // jinal vytvorim novy ramec
         treeNode localTab;
         BSTInit(&localTab);
@@ -651,15 +649,15 @@ int cFor(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal, bool
         // vlozeni do tabulky
         if (type == DT_INT)
         {
-            BSTInsert(tList->first->symtab, name, true, createCont(ntVar, 101, 101, 101, 101, tINT));
+            BSTInsert(&(tList->first->symtab), name, true, createCont(ntVar, 101, 101, 101, 101, tINT));
         }
         else if (type == DT_STRING)
         {
-            BSTInsert(tList->first->symtab, name, true, createCont(ntVar, 101, 101, 101, 101, tSTRING));
+            BSTInsert(&(tList->first->symtab), name, true, createCont(ntVar, 101, 101, 101, 101, tSTRING));
         }
         else if (type == DT_FLOAT)
         {
-            BSTInsert(tList->first->symtab, name, true, createCont(ntVar, 101, 101, 101, 101, tFLOAT));
+            BSTInsert(&(tList->first->symtab), name, true, createCont(ntVar, 101, 101, 101, 101, tFLOAT));
         }
         else
         {
@@ -715,12 +713,11 @@ int cFor(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal, bool
 // kontrola funkce, ocekavam token leve zavorky
 int cFunc(tokenList *token, treeNode *funcTab, treeList *tList, int noItems, bool ass)
 {
-    treeNode foo;
-    foo->TBSNodeCont = BSTSearch(&funcTab, token->Act->lptr->atribute->str);
-    if (foo->TBSNodeCont == NULL) return ERROR_UNDEFINED;
+    nodeInfCont TBSNodeCont = BSTSearch(&funcTab, token->Act->lptr->atribute->str);
+    if (TBSNodeCont == NULL) return ERROR_UNDEFINED;
 
     // funkce existuje kontroluji argumenty
-    int noParam = foo->TBSNodeCont->noParams;
+    int noParam = TBSNodeCont->noParams;
 
     token->Act = token->Act->rptr; // posuny se na token za (
     // funkce nema mit argument
@@ -731,7 +728,7 @@ int cFunc(tokenList *token, treeNode *funcTab, treeList *tList, int noItems, boo
     // jeden argument
     else if (noParam == 1)
     {
-        if (token->Act->t_type != foo->TBSNodeCont->paramsIn[0]) return ERROR_PARAMETERS;
+        if (token->Act->t_type != TBSNodeCont->paramsIn[0]) return ERROR_PARAMETERS;
         token->Act = token->Act->rptr;
         if (token->Act->t_type != tRBRACKET) return ERROR_PARAMETERS;
     }
@@ -741,7 +738,7 @@ int cFunc(tokenList *token, treeNode *funcTab, treeList *tList, int noItems, boo
         int noC = 0;
         for (int i = 0; i < noParam; i++)
         {
-            if (token->Act->t_type != foo->TBSNodeCont->paramsIn[i]) return ERROR_PARAMETERS;
+            if (token->Act->t_type != TBSNodeCont->paramsIn[i]) return ERROR_PARAMETERS;
             token->Act = token->Act->rptr;
             if (token->Act->t_type == tCOMMA) noC++;
             token->Act = token->Act->rptr;
@@ -761,7 +758,7 @@ int cFunc(tokenList *token, treeNode *funcTab, treeList *tList, int noItems, boo
     // kontrola navratovych hodnot
     if (ass)
     {
-        if (foo->TBSNodeCont->noReturn != noItems) return ERROR_SEMANTICS;
+        if (TBSNodeCont->noReturn != noItems) return ERROR_SEMANTICS;
 
         // jdu na zacatek radku
         token->Act = token->Act->lptr;
@@ -783,7 +780,7 @@ int cFunc(tokenList *token, treeNode *funcTab, treeList *tList, int noItems, boo
                 if (token->Act->t_type != tID) return ERROR_SYNTAX;
                 type = dataSearch(&tList, token->Act->atribute->str);
                 if (type == 101) return ERROR_UNDEFINED;
-                if (type != foo->TBSNodeCont->paramsOut[i]) return ERROR_RETURN_VALUE;
+                if (type != TBSNodeCont->paramsOut[i]) return ERROR_RETURN_VALUE;
                 token->Act = token->Act->rptr;
             }
             if (token->Act->t_type == tCOMMA)
@@ -802,7 +799,7 @@ int cFunc(tokenList *token, treeNode *funcTab, treeList *tList, int noItems, boo
     }
     else
     {
-        if (foo->TBSNodeCont->noReturn != 0) return ERROR_SEMANTICS;
+        if (TBSNodeCont->noReturn != 0) return ERROR_SEMANTICS;
     }
     
 
