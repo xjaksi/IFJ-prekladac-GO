@@ -8,7 +8,7 @@
  *		@author Belohlavek, Jan <xbeloh8>
  *		@author Mraz, Filip <xmrazf00>
  * ------------------------------------------------
- * @brief funkce pro pouzivani obousmerneho seznamu
+ * @brief funkce pro pouzivani obousmernych seznamu
  * -----------------------------------------------*/ 
 
 #include <stdio.h>
@@ -75,8 +75,54 @@ void removeItem(exprList *l);
 PtType tokenToPT(TokenType tType);
 
 
+/**
+ * @brief funkce vezme vstupni seznam tokenu a naplni jim druhy seznam, provadi i kontroly semantiky
+ * 
+ * @param l seznam, ktery bude naplnen
+ * @param tList seznam tokenu
+ * @return ERROR_CODE navratova hodnota, OK nebo nejaky chybovy kod
+ */
 ERROR_CODE fillMyList (exprList *l, tokenList *tList);
 
+
+/**
+ * @brief funkce posune aktivitu na dalsi prvek v seznamu
+ * 
+ * @param l seznam, ve kterem se chceme posunout
+ */
 void next(exprList *l);
 
+
+/**
+ * @brief funkce vrati/nastavi aktivitu na prvni prvek
+ * 
+ * @param l seznam, kde chceme napravit aktivitu
+ */
 void reset(exprList *l);
+
+
+/**
+ * @brief prevod z infixu na postfix
+ * 
+ * @param expr seznam tokenu v infix formatu
+ * @param output seznam token v postfix formatu
+ * @return ERROR_CODE chybova hodnota
+ */
+ERROR_CODE postfix(tokenList *expr, tokenList *output);
+
+
+/**
+ * @brief vymazani posledniho tokenu aka "pop"
+ * 
+ * @param t seznam tokenu
+ */
+void deleteToken(tokenList *t);
+
+
+/**
+ * @brief vrati stupen precedence daneho operatoru
+ * 
+ * @param type typ tokenu
+ * @return int hodnota precedence
+ */
+int getPrecedence(TokenType type);

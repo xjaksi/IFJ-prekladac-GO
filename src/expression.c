@@ -13,7 +13,7 @@
 
 #include "exprList.h"
 
-
+///< precedencni tabulka
  char precTable[PT_SIZE][PT_SIZE] = {
   //  +    -    *    /   cmp   (    )    $
 	{'R', 'R', 'S', 'S', 'R', 'S', 'R', 'R'},		// +
@@ -26,15 +26,15 @@
 	{'S', 'S', 'S', 'S', 'S', 'S', 'E', 'A'},		// $ 
 };
 
-exprList opStack;
-exprList idStack;
-exprList input;
+exprList opStack;		///< seznam fungujici jako zasobnik pro operatory
+exprList idStack;		///< seznam fungujici jako zasobnik pro vyrazy/id
+exprList input;			///< seznam reprezentujici cely vstupni vyraz 
+char text[100] = " ";	///< promenna pro debugovani
+bool exprFlag = false;	///< priznak pro urceni, jestli se jedna o ID nebo operator (pro shift funkci)
 
-bool exprFlag = false;
+ERROR_CODE finalError;	///< navratova hodnota
 
-ERROR_CODE finalError;
-
-ERROR_CODE parseExp(tokenList *tList) {
+ERROR_CODE parseExp(tokenList *tList, DataType *final) {
 	// inicializace seznamu: vstup, operatory, id/vyrazy
 	listInit(&input);
 	listInit(&opStack);
@@ -47,16 +47,7 @@ ERROR_CODE parseExp(tokenList *tList) {
 	DLFirst(tList);				// [token] nastaveni aktivity na prvni prvek
 	fillMyList(&input, tList);		// [token] naplneni seznamu z toknu
 	reset(&input); 					// [vstup] nastaveni aktivity na prvni prvek
-	
-	fprintf(stderr, "FILLED LIST: %s", debug(input.act->ptType));
-	while (input.act != NULL){
-		fprintf(stderr, "%d ", input.act->ptType);
-		next(&input);
-	}
-	fprintf(stderr, "\n");
-
-	reset(&input);
-
+	DLFirst(tList);
 	while (input.act != NULL) {		// precedencni analyza - prochazeni vstupniho seznamu
 		if(input.act->ptType == PT_EXP || input.act->ptType == PT_CONST) {
 			exprFlag = true;
@@ -77,14 +68,27 @@ ERROR_CODE parseExp(tokenList *tList) {
 					break;
 		
 				case 'A':		// konec analyzy
-					finalError = accept();
+					finalError = accept(final);
 					if (finalError != OK) {
 						return finalError;
 					}	
+					tokenList output;
+					DLInitList(&output);
+
+					postfix(tList, &output);
+
+					DLFirst(&output);
+
+					fprintf(stderr,"[POSFITX] posfixed output:\t");
+					while(output.Act != NULL) {
+						debug(tokenToPT(output.Act->t_type));
+						fprintf(stderr, "%s ", text);
+						output.Act = output.Act->rptr;
+					}
+					fprintf(stderr, "\n");
 					return finalError;
 
 				case 'E':		// nepovolena sekvence znaku
-					fprintf(stderr, "[DEBUG] opStack: %s \t input: %s \n", debug(opStack.act->ptType), debug(input.act->ptType));
 					return ERROR_SYNTAX;
 
 				default:
@@ -92,13 +96,15 @@ ERROR_CODE parseExp(tokenList *tList) {
 			}
 		}
 	}
+	
 	return finalError;
 }
+
 
 ERROR_CODE reduce() {
 	// (E) -> E redukce
 	if (opStack.act->ptType == PT_RBR) {
-		fprintf(stderr, "[INFO] bracket reduction \n");
+		// fprintf(stderr, "[INFO] bracket reduction \n");
 		// odstraneni zavorek ze seznamu
 		removeItem(&opStack);
 		removeItem(&opStack);
@@ -136,12 +142,12 @@ ERROR_CODE reduce() {
 					break;
 
 				default:
-					fprintf(stderr, "OOPS NELA FUCKED UP\n");
+					// fprintf(stderr, "OOPS NELA FUCKED UP\n");
 					return ERROR_COMPILER;
 					break;
 			}
-
-			fprintf(stderr, "[INFO] basic reduction E %s E \n", debug(opStack.act->ptType));
+			debug(opStack.act->ptType);
+			// fprintf(stderr, "[INFO] basic reduction E %s E \n", text);
 
 			// KROK 4: redukce (odstraneni operatoru a jednoho z vyrazu ze seznamu)
 			removeItem(&opStack);
@@ -154,24 +160,27 @@ ERROR_CODE reduce() {
 	return OK;	
 }
 
-// DONE NESAHAT !!!!
+
 void shift() {
 	if (exprFlag) {
-		fprintf(stderr, "[INFO] shifting %s onto idStack \n", debug(input.act->ptType));
+		debug(input.act->ptType);
+		// fprintf(stderr, "[INFO] shifting %s onto idStack \n", text);
 		insertItem(&idStack, input.act->ptType, input.act->dType, input.act->isZero);
 		idStack.act = idStack.act->next;
 		exprFlag = false;
 	}
 	else {
-		fprintf(stderr, "[INFO] shifting %s onto opStack \n", debug(input.act->ptType));
+		debug(input.act->ptType);
+		// fprintf(stderr, "[INFO] shifting %s onto opStack \n", text);
 		insertItem(&opStack, input.act->ptType, input.act->dType, input.act->isZero);
 		opStack.act = opStack.act->next;
 	}	
 	input.act = input.act->next;
 }
 
-// DONE NESAHAT !!!!
-ERROR_CODE accept() {
+
+ERROR_CODE accept(DataType *final) {
+	*final = idStack.act->dType;
 	// v seznamu ID by melo zustat jen jedno E, po odstraneni by tam mel byt jen $
 	removeItem(&idStack); 
 
@@ -179,56 +188,59 @@ ERROR_CODE accept() {
 		return ERROR_SYNTAX;
 	}
 	
-	input.act = input.act->next;
+	// input.act = input.act->next;
 	return OK;
 }
 
-char* debug(PtType i) {
-	char text[100] = "/0";
-	char *ptr = text;
+
+void debug(PtType i) {
 	switch (i) {
 		case PT_ADD:
 			strcpy(text, "+");
-			return ptr;
-
+			break;
 		case PT_SUB:
 			strcpy(text, "-");
-			return ptr;
+			break;
 
 		case PT_MUL:
 			strcpy(text, "*");
-			return ptr;
+			break;
 
 		case PT_DIV:
 			strcpy(text, "/");
-			return ptr;
+			break;
 
 		case PT_CMPS:
 			strcpy(text, "CMPS");
-			return ptr;
+			break;
 
 		case PT_LBR:
 			strcpy(text, "(");
-			return ptr;
+			break;
 
 		case PT_RBR:
 			strcpy(text, ")");
-			return ptr;
+			break;
 
 		case PT_STOP:
 			strcpy(text, "$");
-			return ptr;
+			break;
 
 		case PT_EXP:
 			strcpy(text, "E");
-			return ptr;
+			break;
 
 		case PT_CONST:
 			strcpy(text, "E");
-			return ptr;
+			break;
 
 		default:
 			strcpy(text, "ERROR");
-			return ptr;
+			break;
 	}
 }
+
+	
+	
+
+

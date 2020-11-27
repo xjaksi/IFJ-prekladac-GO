@@ -50,12 +50,43 @@ typedef enum {
     DT_BOOL,
 } DataType;
 
-ERROR_CODE parseExp(tokenList *tList);
 
+/**
+ * @brief hlavni funkce, ktera provede precedencni analyzu predaneho vyrazu a zapise vysledny datovy typ do predane promenne
+ * 
+ * @param tList seznam tokenu tvorici vyraz
+ * @return ERROR_CODE navratova hodnota, OK nebo chybovy kod
+ */
+ERROR_CODE parseExp(tokenList *tList, DataType *final);
+
+
+/**
+ * @brief nahrani momentalni polozky do seznamu
+ */
 void shift();
 
+
+/**
+ * @brief redukce vyrazu, kontrola datove kompatibility
+ * 
+ * @return ERROR_CODE OK nebo chybovy kod
+ */
 ERROR_CODE reduce();
 
-ERROR_CODE accept();
 
-char* debug(PtType i);
+/**
+ * @brief stav prijeti vyrazu jako spravny, finalni kontrola spravnosti
+ * 
+ * @param final ukazatel na hodnotu nesouci finalni datovy typ
+ * @return ERROR_CODE chybovy kod nebo OK
+ */
+ERROR_CODE accept(DataType *final);
+
+
+/**
+ * @brief debugovaci funkce, ktera podle cisla zapise do globalni promenne text
+ * 
+ * @param i cislo reprezentujici symbol v precedencni tabulce
+ */
+void debug(PtType i);
+
