@@ -5,7 +5,9 @@
 #include "errors.h"
 #include <string.h>
 
-char *tokens[] = {"typ ID","typ integer","typ float","typ string","+","-","/","*",":=","=","<","<=",">",">=","==","!=","(",")","{","}",";","_",",","EOL","EOF","if","else","for","return","float64","func","string","int","package","inputs","inputi","inputf","print","int2float","float2int","len","substr","ord","chr","main"}; 
+char *tokens[] = {"typ ID","typ integer","typ float","typ string","+","-","/","*",":=","=","<","<=",">",">=","==","!=","(",")","{","}",";","_",",","EOL","EOF",
+					"if","else","for","return","float64","func","string","int","package",
+					"inputs","inputi","inputf","print","int2float","float2int","len","substr","ord","chr","main"}; 
 
 // prototypy func
 void print_elements_of_list(tokenList TL);
@@ -62,9 +64,9 @@ void print_elements_of_list(tokenList TL)	{
 	printf("\nL:%3d  ----------", lines);
 	while (TL.First!=NULL) {
 		int sup = TL.First->t_type;
-		printf("\n \t%s",tokens[sup]);
+		printf("\n \t%10.10s",tokens[sup]);
 		if(TL.First->atribute != NULL){
-			printf(" \t%s",TL.First->atribute->str);
+			printf(" \t_%s",TL.First->atribute->str);
 		}
 		if ((TL.First==TL.Act) && (TL.Act!=NULL))
 			printf("\t <= toto je aktivní prvek ");
