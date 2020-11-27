@@ -345,7 +345,8 @@ int cId(tokenList *token, treeNode *funcTab, treeList *tList)
     while (token->Act->t_type == tCOMMA)
     {
         token->Act = token->Act->rptr;
-        if (token->Act->t_type != tID) return ERROR_SYNTAX;
+        if (token->Act->t_type != tID &&
+            token->Act->t_type != tDEVNULL) return ERROR_SYNTAX;
         cnt++;
         token->Act = token->Act->rptr;
     }
@@ -363,43 +364,9 @@ int cId(tokenList *token, treeNode *funcTab, treeList *tList)
 
     case tASSIGN:
         token->Act = token->Act->rptr;
-        if (token->Act->t_type == tID && token->Act->rptr->t_type == tLBRACKET)
-        {
-            token->Act = token->Act->rptr;
-            result = cFunc(token, &funcTab, &tList);
-            if (result != OK) return result;
-            token->Act = token->Act->rptr;
-            break;
-        }
-
-        // pokud ne vestavena funkce, pak kontrola vyrazu
-        switch (token->Act->t_type)
-        {
-        case fINPUTS:
-        case fINPUTI:
-        case fINPUTF:
-        case fINT2FLOAT:
-        case fFLOAT2INT:
-        case fLEN:
-        case fSUBSTR:
-        case fORD:
-        case fCHR:
-            result = cFunc(token, &funcTab, &tList);
-            if (result != OK) return result;
-            break;
-        default:
-            result = cExpr(token, &funcTab, &tList, &type);
-            if (result != OK) return result;
-            break;
-        }
-        
-        while (token->Act->t_type == tCOMMA)
-        {
-            token->Act = token->Act->rptr;
-            result = cExpr(token, &funcTab, &tList, &type);
-            if (result != OK) return result;
-            token->Act = token->Act->rptr;
-        }
+        // predam ukazatel na prvni token za =
+        result = cAssign(token, &funcTab, &tList, cnt);
+        if (result != OK) return result;
         break;
 
     case tDEF:
@@ -435,6 +402,23 @@ int cId(tokenList *token, treeNode *funcTab, treeList *tList)
     return OK;
 }
 
+// token za =
+int cAssign(tokenList *token, treeNode *funcTab, treeList *tList, int item)
+{
+    int result;
+
+    // prirazuji z funkce
+    if (token->Act->t_type == tID && token->Act->rptr->t_type == tLBRACKET)
+    {
+        token->Act = token->Act->rptr;
+        result = cFunc(token, &funcTab, &tList, item, true);
+        return result;
+    }
+    
+
+
+
+}
 
 int cIf(tokenList *token, treeNode *funcTab, treeList *tList)
 {
@@ -527,7 +511,8 @@ int cFor(tokenList *token, treeNode *funcTab, treeList *tList)
     return OK;
 }
 
-int cFunc(tokenList *token, treeNode *funcTab, treeList *tList)
+// kontrola funkce, ocekavam token leve zavorky
+int cFunc(tokenList *token, treeNode *funcTab, treeList *tList, int noItems, bool ass)
 {
     treeNode foo;
     foo->TBSNodeCont = BSTSearch(&funcTab, token->Act->lptr->atribute->str);
@@ -572,19 +557,57 @@ int cFunc(tokenList *token, treeNode *funcTab, treeList *tList)
     token->Act = token->Act->rptr;
     if (token->Act->t_type != tEOL) return ERROR_SYNTAX;
 
+    // kontrola navratovych hodnot
+    if (ass)
+    {
+        if (foo->TBSNodeCont->noReturn != noItems) return ERROR_SEMANTICS;
+
+        // jdu na zacatek radku
+        token->Act = token->Act->lptr;
+        while (token->Act->lptr != tEOL)
+        {
+            token->Act = token->Act->lptr;
+            if (token->Act->lptr == NULL) return ERROR_COMPILER;
+        }
+        // overovani datovych typu
+        int type;
+        for (int i = 0; i < noItems; i++)
+        {
+            if (token->Act->t_type == tDEVNULL)
+            {
+                token->Act = token->Act->rptr;
+            }
+            else
+            {
+                if (token->Act->t_type != tID) return ERROR_SYNTAX;
+                type = dataSearch(&tList, token->Act->atribute->str);
+                if (type == 101) return ERROR_UNDEFINED;
+                if (type != foo->TBSNodeCont->paramsOut[i]) return ERROR_RETURN_VALUE;
+                token->Act = token->Act->rptr;
+            }
+            if (token->Act->t_type == tCOMMA)
+            {
+                token->Act = token->Act->rptr;
+            }
+        }
+
+        // snad jsem se zastavil na =
+        // radek je OK jdu na konec
+        while (token->Act->t_type != tEOL)
+        {
+            if (token->Act->t_type == tEOF) return ERROR_SYNTAX;
+            token->Act = token->Act->rptr;
+        }
+    }
+    else
+    {
+        if (foo->TBSNodeCont->noReturn != 0) return ERROR_SEMANTICS;
+    }
+    
+
     return OK;
 }
 
-int cParams(tokenList *token, treeNode *funcTab, treeList *tList)
-{
-    // zatim preskakuji parametry po zacatek funkce
-    while (token->Act->t_type != tLBRACE && token->Act != token->Last)
-    {
-        token->Act = token->Act->rptr;
-    }
-    token->Act = token->Act->rptr;
-    return OK;
-}
 
 int cExpr(tokenList *token, treeNode *funcTab, treeList *tList, int *type)
 {
