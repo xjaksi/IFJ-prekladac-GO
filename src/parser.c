@@ -379,12 +379,12 @@ int cBody(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal, boo
             break;
 
         case kwIF:
-            result = cIf(token, funcTab, tList, retVal, &returnWas);
+            result = cIf(token, funcTab, tList, retVal, returnWas);
             if (result != OK) return result;
             break;
 
         case kwFOR:
-            result = cFor(token, funcTab, tList, retVal, &returnWas);
+            result = cFor(token, funcTab, tList, retVal, returnWas);
             if (result != OK) return result;
             break;
 
@@ -565,7 +565,7 @@ int cAssign(tokenList *token, treeNode *funcTab, treeList *tList, int item)
         {
             if (token->Act->t_type != tID) return ERROR_SYNTAX;
 
-            type = dataSearch(&tList, token->Act->atribute->str);
+            type = dataSearch(tList, token->Act->atribute->str);
             if (type == 101) return ERROR_UNDEFINED;
             if (type != list[i]) return ERROR_SEMANTICS;
             token->Act = token->Act->rptr;
@@ -591,7 +591,7 @@ int cIf(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal, bool 
     token->Act = token->Act->rptr;
     if (token->Act->t_type != tEOL) return ERROR_SYNTAX;
     // telo if
-    result = cBody(token, funcTab, tList, retVal, &returnWas);
+    result = cBody(token, funcTab, tList, retVal, returnWas);
     if (result != OK) return result;
     if (token->Act->t_type != tRBRACE) return ERROR_SYNTAX;
     token->Act = token->Act->rptr;
@@ -607,7 +607,7 @@ int cIf(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal, bool 
     token->Act = token->Act->rptr;
     if (token->Act->t_type != tEOL) return ERROR_SYNTAX;
     // telo else
-    result = cBody(token, funcTab, tList, retVal, &returnWas);
+    result = cBody(token, funcTab, tList, retVal, returnWas);
     if (result != OK) return result;
     if (token->Act->t_type != tRBRACE) return ERROR_SYNTAX;
 
@@ -700,7 +700,7 @@ int cFor(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal, bool
     if (token->Act->t_type != tEOL) return ERROR_SYNTAX;
 
     // telo for
-    result = cBody(token, funcTab, tList, retVal, &returnWas);
+    result = cBody(token, funcTab, tList, retVal, returnWas);
     if (result != OK) return result;
 
     // pokud jsem vytvarel hlavicku popnu
@@ -827,7 +827,7 @@ int cExpr(tokenList *token, treeList *tList, int *type)
         return ERROR_SYNTAX;
     }
 
-    result = parseExp(&newToken, tList, &type);
+    result = parseExp(&newToken, tList, type);
     
 
     DLDisposeList(&newToken);
