@@ -148,15 +148,15 @@ void BSTDispose (treeNode *RootPtr)
  * Vytvareni obsahu
  * nahraje do data obsah pro koren
  */
-nodeInfCont createCont (nodeType nnType, int noParam, int noRet, int arg, int out, int ddType)
+nodeInfCont createCont (nodeType nnType, int noParam, int noRet, int *arg, int *out, int ddType)
 {
     nodeInfCont data = malloc(sizeof(struct nodeCont));
     data->nType = nnType;
     data->noParams = noParam;
 	data->noReturn = noRet;
     data->dType = ddType;
-	data->paramsIn = arg;
-	data->paramsOut = out;
+	data->paramsIn = &arg;
+	data->paramsOut = &out;
 
     return data;
 }

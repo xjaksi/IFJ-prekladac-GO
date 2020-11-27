@@ -67,6 +67,7 @@ typedef enum {
 	kwPACKAGE,	///< package
 
 	// vestavene funkce
+/*
 	fINPUTS,	///< inputs
 	fINPUTI,	///< inputi
 	fINPUTF,	///< inputf
@@ -77,7 +78,7 @@ typedef enum {
 	fSUBSTR,	///< substr
 	fORD,		///< ord
 	fCHR,		///< chr
-
+*/
 	fMAIN		///< main
 } TokenType;
 
