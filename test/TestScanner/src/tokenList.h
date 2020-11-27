@@ -67,6 +67,7 @@ typedef enum {
 	kwPACKAGE,	///< package
 
 	// vestavene funkce
+/*
 	fINPUTS,	///< inputs
 	fINPUTI,	///< inputi
 	fINPUTF,	///< inputf
@@ -77,7 +78,7 @@ typedef enum {
 	fSUBSTR,	///< substr
 	fORD,		///< ord
 	fCHR,		///< chr
-
+*/
 	fMAIN		///< main
 } TokenType;
 
@@ -104,7 +105,7 @@ typedef struct {
 
  /* prototypy jednotlivých funkcí */
 void DLInitList (tokenList *);
-void DLDisposeList (tokenList *);
+void DLDisposeList (tokenList *, int);
 void DLInsertLast(tokenList *, TokenType, tStr *);    
 void DLFirst (tokenList *);
 void DLLast (tokenList *);
