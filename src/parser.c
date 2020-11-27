@@ -357,7 +357,7 @@ int cId(tokenList *token, treeNode *funcTab, treeList *tList)
         // pokud je to funkce musi byt sama
         if (cnt != 1) return ERROR_SYNTAX;
         if (token->Act->lptr->t_type != tID) return ERROR_SYNTAX;
-        result = cFunc(token, &funcTab, &tList);
+        result = cFunc(token, &funcTab, &tList, 0, false);
         if (result != OK) return result;
         // token by mel by nastaven na konec radku
         break;
@@ -414,9 +414,66 @@ int cAssign(tokenList *token, treeNode *funcTab, treeList *tList, int item)
         result = cFunc(token, &funcTab, &tList, item, true);
         return result;
     }
+
+    int list[ item ];
+    int type;
+
+    // nahrani datovych typu
+    for (int i = 0; i < item; i++)
+    {
+        result = cExpr(token, &funcTab, &tList, &type);
+        if (result != OK) return result;
+
+        if (type == DT_INT)
+        {
+            list[i] = tINT;
+        }
+        else if (type == DT_STRING)
+        {
+            list[i] = tSTRING;
+        }
+        else if (type == DT_FLOAT)
+        {
+            list[i] = tFLOAT;
+        }
+        else
+        {
+            return ERROR_TYPE_INFERENCE;
+        }
+
+        token->Act = token->Act->rptr;
+        if (token->Act->t_type == tCOMMA) token->Act = token->Act->rptr;
+    }
+
+    if (token->Act->t_type != tEOL) return ERROR_SYNTAX;
+
+    // jinak jdu na zacatek radku a overuji
+    token->Act = token->Act->lptr;
+    while (token->Act->lptr != tEOL)
+    {
+        if (token->Act->lptr != NULL) return ERROR_COMPILER;
+        token->Act = token->Act->lptr;
+    }
+
+    for (int i = 0; i < item; i++)
+    {
+        if (token->Act->t_type == tDEVNULL)
+        {
+            token->Act = token->Act->rptr;
+        }
+        else
+        {
+            if (token->Act->t_type != tID) return ERROR_SYNTAX;
+
+            type = dataSearch(&tList, token->Act->atribute->str);
+            if (type == 101) return ERROR_UNDEFINED;
+            if (type != list[i]) return ERROR_SEMANTICS;
+            token->Act = token->Act->rptr;
+        }
+        if (token->Act->t_type == tCOMMA) token->Act = token->Act->rptr;
+    }
     
-
-
+    return OK;
 
 }
 
@@ -619,9 +676,10 @@ int cExpr(tokenList *token, treeNode *funcTab, treeList *tList, int *type)
     while (token->Act->t_type != tEOL &&
             token->Act->t_type != tSEMICOLON &&
             token->Act->t_type != tLBRACE &&
+            token->Act->t_type != tCOMMA &&
             token->Act->t_type != tEOF )
     {
-        DLInsertLast(&newToken, token->Act->t_type, NULL);
+        DLInsertLast(&newToken, token->Act->t_type, token->Act->atribute->str);
         token->Act = token->Act->rptr;
     }
     if (newToken.First == NULL) {
