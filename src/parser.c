@@ -364,7 +364,8 @@ int cId(tokenList *token, treeNode *funcTab, treeList *tList)
         if (cnt != 0) return ERROR_SYNTAX;
         if (token->Act->lptr->t_type != tID) return ERROR_SYNTAX;
         result = cFunc(token, &funcTab, &tList);
-        token->Act = token->Act->rptr;
+        if (result != OK) return result;
+        // token by mel by nastaven na konec radku
         break;
 
     case tASSIGN:
@@ -520,14 +521,44 @@ int cFunc(tokenList *token, treeNode *funcTab, treeList *tList)
     if (foo->TBSNodeCont == NULL) return ERROR_UNDEFINED;
 
     // funkce existuje kontroluji argumenty
+    int noParam = foo->TBSNodeCont->noParams;
 
+    token->Act = token->Act->rptr; // posuny se na token za (
+    // funkce nema mit argument
+    if (noParam == 0)
+    {
+        if (token->Act->t_type != tRBRACKET) return ERROR_PARAMETERS;
+    }
+    // jeden argument
+    else if (noParam == 1)
+    {
+        if (token->Act->t_type != foo->TBSNodeCont->paramsIn[0]) return ERROR_PARAMETERS;
+        token->Act = token->Act->rptr;
+        if (token->Act->t_type != tRBRACKET) return ERROR_PARAMETERS;
+    }
+    // vice
+    else
+    {
+        int noC = 0;
+        for (int i = 0; i < noParam; i++)
+        {
+            if (token->Act->t_type != foo->TBSNodeCont->paramsIn[i]) return ERROR_PARAMETERS;
+            token->Act = token->Act->rptr;
+            if (token->Act->t_type == tCOMMA) noC++;
+            token->Act = token->Act->rptr;
+        }
+        if (token->Act->t_type == tID ||
+            token->Act->t_type == tINT ||
+            token->Act->t_type == tSTRING ||
+            token->Act->t_type == tFLOAT ||
+            noC+1 != noParam)
+                return ERROR_PARAMETERS;
+        if (token->Act->t_type != tRBRACKET) return ERROR_SYNTAX;
+    }
 
+    token->Act = token->Act->rptr;
+    if (token->Act->t_type != tEOL) return ERROR_SYNTAX;
 
-
-
-
-
-    
     return OK;
 }
 
