@@ -34,7 +34,7 @@ int cIf(tokenList *token, treeNode *funcTab, treeList *tList);
 int cFor(tokenList *token, treeNode *funcTab, treeList *tList);
 int cFunc(tokenList *token, treeNode *funcTab, treeList *tList);
 int cParams(tokenList *token, treeNode *funcTab, treeList *tList);
-int cExpr(tokenList *token, treeNode *funcTab, treeList *tList);
+int cExpr(tokenList *token, treeNode *funcTab, treeList *tList, int *type);
 
 void buidInFunc(treeNode *funcTab);
 

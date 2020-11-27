@@ -262,6 +262,7 @@ int funcSave(tokenList *token, treeNode *funcTab)
 int cBody(tokenList *token, treeNode *funcTab, treeList *tList)
 {
     int result = OK;
+    int type;
 
     // vytvoreni lokalni tabulky pro soucasne telo
     treeNode localTab;
@@ -306,20 +307,11 @@ int cBody(tokenList *token, treeNode *funcTab, treeList *tList)
                 result = OK;
                 break;
             }
-            result = cExpr(token, &funcTab, &tList);
+            result = cExpr(token, &funcTab, &tList, &type);
             if (result != OK) return result;
             break;
 
-        case fINPUTS:
-        case fINPUTI:
-        case fINPUTF:
         case fPRINT:
-        case fINT2FLOAT:
-        case fFLOAT2INT:
-        case fLEN:
-        case fSUBSTR:
-        case fORD:
-        case fCHR:
             while (token->Act->t_type != tRBRACKET)
             {
                 if (token->Act->t_type == tEOF) return ERROR_SYNTAX;
@@ -344,8 +336,9 @@ int cBody(tokenList *token, treeNode *funcTab, treeList *tList)
 
 int cId(tokenList *token, treeNode *funcTab, treeList *tList)
 {
-    int cnt = 0;
+    int cnt = 1;
     int result;
+    int type;
 
     token->Act = token->Act->rptr;
 
@@ -361,7 +354,7 @@ int cId(tokenList *token, treeNode *funcTab, treeList *tList)
     {
     case tLBRACKET:
         // pokud je to funkce musi byt sama
-        if (cnt != 0) return ERROR_SYNTAX;
+        if (cnt != 1) return ERROR_SYNTAX;
         if (token->Act->lptr->t_type != tID) return ERROR_SYNTAX;
         result = cFunc(token, &funcTab, &tList);
         if (result != OK) return result;
@@ -385,7 +378,6 @@ int cId(tokenList *token, treeNode *funcTab, treeList *tList)
         case fINPUTS:
         case fINPUTI:
         case fINPUTF:
-        case fPRINT:
         case fINT2FLOAT:
         case fFLOAT2INT:
         case fLEN:
@@ -396,7 +388,7 @@ int cId(tokenList *token, treeNode *funcTab, treeList *tList)
             if (result != OK) return result;
             break;
         default:
-            result = cExpr(token, &funcTab, &tList);
+            result = cExpr(token, &funcTab, &tList, &type);
             if (result != OK) return result;
             break;
         }
@@ -404,16 +396,35 @@ int cId(tokenList *token, treeNode *funcTab, treeList *tList)
         while (token->Act->t_type == tCOMMA)
         {
             token->Act = token->Act->rptr;
-            result = cExpr(token, &funcTab, &tList);
+            result = cExpr(token, &funcTab, &tList, &type);
             if (result != OK) return result;
             token->Act = token->Act->rptr;
         }
         break;
 
     case tDEF:
+        if (cnt != 1) return ERROR_SYNTAX;
+        if (token->Act->lptr->t_type != tID) return ERROR_SYNTAX;
         token->Act = token->Act->rptr;
-        result = cExpr(token, &funcTab, &tList);
+        result = cExpr(token, &funcTab, &tList, &type);
         if (result != OK) return result;
+        // pokud je type podporovany typ ulozim
+        if (type == DT_INT)
+        {
+            BSTInsert(tList->act->symtab, token->Act->lptr->lptr->atribute->str, true, createCont(ntVar, 101, 101, 101, 101, tINT));
+        }
+        else if (type == DT_STRING)
+        {
+            BSTInsert(tList->act->symtab, token->Act->lptr->lptr->atribute->str, true, createCont(ntVar, 101, 101, 101, 101, tSTRING));
+        }
+        else if (type == DT_FLOAT)
+        {
+            BSTInsert(tList->act->symtab, token->Act->lptr->lptr->atribute->str, true, createCont(ntVar, 101, 101, 101, 101, tFLOAT));
+        }
+        else
+        {
+            return ERROR_TYPE_INFERENCE;
+        }
         break;
            
     default:
@@ -428,8 +439,9 @@ int cId(tokenList *token, treeNode *funcTab, treeList *tList)
 int cIf(tokenList *token, treeNode *funcTab, treeList *tList)
 {
     int result;
+    int type;
     token->Act = token->Act->rptr;
-    result = cExpr(token, &funcTab, &tList);
+    result = cExpr(token, &funcTab, &tList, &type);
 
     if (result != OK) return result;
 
@@ -470,6 +482,7 @@ int cIf(tokenList *token, treeNode *funcTab, treeList *tList)
 int cFor(tokenList *token, treeNode *funcTab, treeList *tList)
 {
     int result;
+    int type;
 
     token->Act = token->Act->rptr;
     //definice
@@ -478,7 +491,7 @@ int cFor(tokenList *token, treeNode *funcTab, treeList *tList)
         token->Act = token->Act->rptr;
         if (token->Act->t_type != tDEF) return ERROR_SYNTAX;
         token->Act = token->Act->rptr;
-        result = cExpr(token, &funcTab, &tList);
+        result = cExpr(token, &funcTab, &tList, &type);
         if (result != OK) return result;
     }
     if (token->Act->t_type != tSEMICOLON) return ERROR_SYNTAX;
@@ -487,7 +500,7 @@ int cFor(tokenList *token, treeNode *funcTab, treeList *tList)
     // vyraz
     if (token->Act->t_type != tSEMICOLON)
     {
-        result = cExpr(token, &funcTab, &tList);
+        result = cExpr(token, &funcTab, &tList, &type);
         if (result != OK) return result;
     }
     if (token->Act->t_type != tSEMICOLON) return ERROR_SYNTAX;
@@ -499,7 +512,7 @@ int cFor(tokenList *token, treeNode *funcTab, treeList *tList)
         token->Act = token->Act->rptr;
         if (token->Act->t_type != tASSIGN) return ERROR_SYNTAX;
         token->Act = token->Act->rptr;
-        result = cExpr(token, &funcTab, &tList);
+        result = cExpr(token, &funcTab, &tList, &type);
         if (result != OK) return result;
     }
     if (token->Act->t_type != tLBRACE) return ERROR_SYNTAX;
@@ -573,7 +586,7 @@ int cParams(tokenList *token, treeNode *funcTab, treeList *tList)
     return OK;
 }
 
-int cExpr(tokenList *token, treeNode *funcTab, treeList *tList)
+int cExpr(tokenList *token, treeNode *funcTab, treeList *tList, int *type)
 {
     int result = OK;
     tokenList newToken;
@@ -592,7 +605,7 @@ int cExpr(tokenList *token, treeNode *funcTab, treeList *tList)
         return ERROR_SYNTAX;
     }
 
-    result = parseExp(&newToken);
+    result = parseExp(&newToken, &tList, &type);
     
 
     DLDisposeList(&newToken);
