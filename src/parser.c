@@ -15,7 +15,7 @@
 #include "tokenList.h"
 #include "errors.h"
 #include "scanner.h"
-#include "symtable.h"
+
 
 int parse()
 {
@@ -70,7 +70,7 @@ int cScel(tokenList *token, treeNode *funcTab, treeList *tList)
     bool returnWas = false;
 
     // deklarovani funkci pred kontrolou
-    result = funcSave(token, &funcTab);
+    result = funcSave(token, funcTab);
     if (result != OK) return result;
 
 
@@ -99,7 +99,7 @@ int cScel(tokenList *token, treeNode *funcTab, treeList *tList)
         else
         {
             // tabulka pro funkci
-            nodeInfCont TBSNodeCont = BSTSearch(&funcTab, token->Act->atribute->str);
+            nodeInfCont TBSNodeCont = BSTSearch(funcTab, token->Act->atribute->str);
             if (TBSNodeCont == NULL) return ERROR_COMPILER;
             if (TBSNodeCont->noReturn != 0) 
             {
@@ -116,7 +116,7 @@ int cScel(tokenList *token, treeNode *funcTab, treeList *tList)
                 // pokud ma funkce argumenty dam do tabulky
                 treeNode localTab;
                 BSTInit(&localTab);
-                treeListInsert(&tList, &localTab);
+                treeListInsert(tList, &localTab);
 
                 // po id je ( potom zacinaji parametry
                 token->Act = token->Act->rptr->rptr;
@@ -127,17 +127,17 @@ int cScel(tokenList *token, treeNode *funcTab, treeList *tList)
                     if (token->Act->t_type == tEOF) return ERROR_COMPILER;
                     if (token->Act->rptr->t_type == kwINT)
                     {
-                        result = BSTInsert(&(tList->first->symtab), token->Act->atribute->str, true, createCont(ntVar, 101,101,101,101, tINT));
+                        result = BSTInsert(&(tList->first->symtab), token->Act->atribute->str, true, createCont(ntVar, 101,101,NULL,NULL, tINT));
                         if (result != OK) return result;
                     }
                     else if (token->Act->rptr->t_type == kwFLOAT64)
                     {
-                        result = BSTInsert(&(tList->first->symtab), token->Act->atribute->str, true, createCont(ntVar, 101,101,101,101, tFLOAT));
+                        result = BSTInsert(&(tList->first->symtab), token->Act->atribute->str, true, createCont(ntVar, 101,101,NULL,NULL, tFLOAT));
                         if (result != OK) return result;
                     }
                     else if (token->Act->rptr->t_type == kwSTRING)
                     {
-                        result = BSTInsert(&(tList->first->symtab), token->Act->atribute->str, true, createCont(ntVar, 101,101,101,101, tSTRING));
+                        result = BSTInsert(&(tList->first->symtab), token->Act->atribute->str, true, createCont(ntVar, 101,101,NULL,NULL, tSTRING));
                         if (result != OK) return result;
                     }
                     else
@@ -167,7 +167,7 @@ int cScel(tokenList *token, treeNode *funcTab, treeList *tList)
 
 
         if (token->Act->t_type != tEOL) return ERROR_SYNTAX;
-        result = cBody(token, &funcTab, &tList, retVal, &returnWas);
+        result = cBody(token, funcTab, tList, retVal, &returnWas);
         if (result != OK) return result;
 
         if (token->Act->t_type != tRBRACE) return ERROR_SYNTAX;
@@ -175,7 +175,7 @@ int cScel(tokenList *token, treeNode *funcTab, treeList *tList)
 
         // odchazim z tela funkce
         if (returnWas == false && retVal != NULL) return ERROR_RETURN_VALUE;
-        if (paramsIN) treeListRemove(&tList);
+        if (paramsIN) treeListRemove(tList);
     }
 
     return result;
@@ -325,12 +325,12 @@ int funcSave(tokenList *token, treeNode *funcTab)
                     if (token->Act->t_type != tRBRACKET) return ERROR_SYNTAX;
                     token->Act = token->Act->rptr;
 
-                    result = BSTInsert(&funcTab, idName, true, createCont(ntFunc, noArg, noRet, args, ret, 101));
+                    result = BSTInsert(funcTab, idName, true, createCont(ntFunc, noArg, noRet, args, ret, 101));
                     if (result != OK) return result;
                 }
                 else
                 {
-                    result = BSTInsert(&funcTab, idName, true, createCont(ntFunc, noArg, noRet, 0, 101, 101));
+                    result = BSTInsert(funcTab, idName, true, createCont(ntFunc, noArg, noRet, 0, NULL, 101));
                     if (result != OK) return result;
                 }
                 if (token->Act->t_type != tLBRACE) return ERROR_SYNTAX;
@@ -355,7 +355,7 @@ int cBody(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal, boo
     // vytvoreni lokalni tabulky pro soucasne telo
     treeNode localTab;
     BSTInit(&localTab);
-    treeListInsert(&tList, &localTab);
+    treeListInsert(tList, &localTab);
 
 
     while (token->Act->t_type != tRBRACE)
@@ -374,27 +374,27 @@ int cBody(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal, boo
         {
         case tDEVNULL:
         case tID :
-            result = cId(token, &funcTab, &tList);
+            result = cId(token, funcTab, tList);
             if (result != OK) return result;
             break;
 
         case kwIF:
-            result = cIf(token, &funcTab, &tList, retVal, &returnWas);
+            result = cIf(token, funcTab, tList, retVal, &returnWas);
             if (result != OK) return result;
             break;
 
         case kwFOR:
-            result = cFor(token, &funcTab, &tList, retVal, &returnWas);
+            result = cFor(token, funcTab, tList, retVal, &returnWas);
             if (result != OK) return result;
             break;
 
         case kwRETURN:
-            returnWas = true;
+            *returnWas = true;
             token->Act = token->Act->rptr;
             if (retVal != NULL)
             {
                 int type;
-                int cnt = 0;
+                signed int cnt = 0;
                 if (token->Act->t_type == tEOL) return ERROR_RETURN_VALUE;
                 while (token->Act->t_type != tEOL)
                 {
@@ -426,7 +426,7 @@ int cBody(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal, boo
     }
 
     // odebrani ramce na konci tela
-    treeListRemove(&tList);
+    treeListRemove(tList);
     
     return result;
 }
@@ -454,7 +454,7 @@ int cId(tokenList *token, treeNode *funcTab, treeList *tList)
         // pokud je to funkce musi byt sama
         if (cnt != 1) return ERROR_SYNTAX;
         if (token->Act->lptr->t_type != tID) return ERROR_SYNTAX;
-        result = cFunc(token, &funcTab, &tList, 0, false);
+        result = cFunc(token, funcTab, tList, 0, false);
         if (result != OK) return result;
         // token by mel by nastaven na konec radku
         break;
@@ -462,7 +462,7 @@ int cId(tokenList *token, treeNode *funcTab, treeList *tList)
     case tASSIGN:
         token->Act = token->Act->rptr;
         // predam ukazatel na prvni token za =
-        result = cAssign(token, &funcTab, &tList, cnt);
+        result = cAssign(token, funcTab, tList, cnt);
         if (result != OK) return result;
         break;
 
@@ -470,23 +470,23 @@ int cId(tokenList *token, treeNode *funcTab, treeList *tList)
         if (cnt != 1) return ERROR_SYNTAX;
         if (token->Act->lptr->t_type != tID) return ERROR_SYNTAX;
         
-        nodeInfCont TBSNodeCont = BSTSearch(&funcTab, token->Act->lptr->atribute->str);
+        nodeInfCont TBSNodeCont = BSTSearch(funcTab, token->Act->lptr->atribute->str);
         if (TBSNodeCont != NULL) return ERROR_REDEFINITION;
         token->Act = token->Act->rptr;
-        result = cExpr(token, &tList, &type);
+        result = cExpr(token, tList, &type);
         if (result != OK) return result;
         // pokud je type podporovany typ ulozim
         if (type == DT_INT)
         {
-            BSTInsert(&(tList->first->symtab), token->Act->lptr->lptr->atribute->str, true, createCont(ntVar, 101, 101, 101, 101, tINT));
+            BSTInsert(&(tList->first->symtab), token->Act->lptr->lptr->atribute->str, true, createCont(ntVar, 101, 101, NULL, NULL, tINT));
         }
         else if (type == DT_STRING)
         {
-            BSTInsert(&(tList->first->symtab), token->Act->lptr->lptr->atribute->str, true, createCont(ntVar, 101, 101, 101, 101, tSTRING));
+            BSTInsert(&(tList->first->symtab), token->Act->lptr->lptr->atribute->str, true, createCont(ntVar, 101, 101, NULL, NULL, tSTRING));
         }
         else if (type == DT_FLOAT)
         {
-            BSTInsert(&(tList->first->symtab), token->Act->lptr->lptr->atribute->str, true, createCont(ntVar, 101, 101, 101, 101, tFLOAT));
+            BSTInsert(&(tList->first->symtab), token->Act->lptr->lptr->atribute->str, true, createCont(ntVar, 101, 101, NULL, NULL, tFLOAT));
         }
         else
         {
@@ -511,7 +511,7 @@ int cAssign(tokenList *token, treeNode *funcTab, treeList *tList, int item)
     if (token->Act->t_type == tID && token->Act->rptr->t_type == tLBRACKET)
     {
         token->Act = token->Act->rptr;
-        result = cFunc(token, &funcTab, &tList, item, true);
+        result = cFunc(token, funcTab, tList, item, true);
         return result;
     }
 
@@ -521,7 +521,7 @@ int cAssign(tokenList *token, treeNode *funcTab, treeList *tList, int item)
     // nahrani datovych typu
     for (int i = 0; i < item; i++)
     {
-        result = cExpr(token, &tList, &type);
+        result = cExpr(token, tList, &type);
         if (result != OK) return result;
 
         if (type == DT_INT)
@@ -549,7 +549,7 @@ int cAssign(tokenList *token, treeNode *funcTab, treeList *tList, int item)
 
     // jinak jdu na zacatek radku a overuji
     token->Act = token->Act->lptr;
-    while (token->Act->lptr != tEOL)
+    while (token->Act->lptr->t_type != tEOL)
     {
         if (token->Act->lptr != NULL) return ERROR_COMPILER;
         token->Act = token->Act->lptr;
@@ -582,7 +582,7 @@ int cIf(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal, bool 
     int result;
     int type;
     token->Act = token->Act->rptr;
-    result = cExpr(token, &tList, &type);
+    result = cExpr(token, tList, &type);
     if (result != OK) return result;
     if (type != DT_BOOL) return ERROR_TYPE_COMPATIBILITY;
 
@@ -591,7 +591,7 @@ int cIf(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal, bool 
     token->Act = token->Act->rptr;
     if (token->Act->t_type != tEOL) return ERROR_SYNTAX;
     // telo if
-    result = cBody(token, &funcTab, &tList, retVal, &returnWas);
+    result = cBody(token, funcTab, tList, retVal, &returnWas);
     if (result != OK) return result;
     if (token->Act->t_type != tRBRACE) return ERROR_SYNTAX;
     token->Act = token->Act->rptr;
@@ -607,7 +607,7 @@ int cIf(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal, bool 
     token->Act = token->Act->rptr;
     if (token->Act->t_type != tEOL) return ERROR_SYNTAX;
     // telo else
-    result = cBody(token, &funcTab, &tList, retVal, &returnWas);
+    result = cBody(token, funcTab, tList, retVal, &returnWas);
     if (result != OK) return result;
     if (token->Act->t_type != tRBRACE) return ERROR_SYNTAX;
 
@@ -636,7 +636,7 @@ int cFor(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal, bool
         // jinal vytvorim novy ramec
         treeNode localTab;
         BSTInit(&localTab);
-        treeListInsert(&tList, &localTab);
+        treeListInsert(tList, &localTab);
         head = true;
         char *name = token->Act->atribute->str;
         // :=
@@ -644,20 +644,20 @@ int cFor(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal, bool
         if (token->Act->t_type != tDEF) return ERROR_SYNTAX;
         token->Act = token->Act->rptr;
         // hodnota vyrazu
-        result = cExpr(token, &tList, &type);
+        result = cExpr(token, tList, &type);
         if (result != OK) return result;
         // vlozeni do tabulky
         if (type == DT_INT)
         {
-            BSTInsert(&(tList->first->symtab), name, true, createCont(ntVar, 101, 101, 101, 101, tINT));
+            BSTInsert(&(tList->first->symtab), name, true, createCont(ntVar, 101, 101, NULL, NULL, tINT));
         }
         else if (type == DT_STRING)
         {
-            BSTInsert(&(tList->first->symtab), name, true, createCont(ntVar, 101, 101, 101, 101, tSTRING));
+            BSTInsert(&(tList->first->symtab), name, true, createCont(ntVar, 101, 101, NULL, NULL, tSTRING));
         }
         else if (type == DT_FLOAT)
         {
-            BSTInsert(&(tList->first->symtab), name, true, createCont(ntVar, 101, 101, 101, 101, tFLOAT));
+            BSTInsert(&(tList->first->symtab), name, true, createCont(ntVar, 101, 101, NULL, NULL, tFLOAT));
         }
         else
         {
@@ -671,7 +671,7 @@ int cFor(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal, bool
     // vyraz
     if (token->Act->t_type != tSEMICOLON)
     {
-        result = cExpr(token, &tList, &type);
+        result = cExpr(token, tList, &type);
         if (result != OK) return result;
         if (type != DT_BOOL) return ERROR_SEMANTICS;
     }
@@ -688,7 +688,7 @@ int cFor(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal, bool
         token->Act = token->Act->rptr;
         if (token->Act->t_type != tASSIGN) return ERROR_SYNTAX;
         token->Act = token->Act->rptr;
-        result = cExpr(token, &funcTab, &tList, &type);
+        result = cExpr(token, tList, &type);
         if (result != OK) return result;
         if (((dat == tINT) && (type != DT_INT)) ||
             ((dat == tFLOAT) && (type != DT_FLOAT)) ||
@@ -700,11 +700,11 @@ int cFor(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal, bool
     if (token->Act->t_type != tEOL) return ERROR_SYNTAX;
 
     // telo for
-    result = cBody(token, &funcTab, &tList, retVal, &returnWas);
+    result = cBody(token, funcTab, tList, retVal, &returnWas);
     if (result != OK) return result;
 
     // pokud jsem vytvarel hlavicku popnu
-    if (head) treeListRemove(&tList);
+    if (head) treeListRemove(tList);
 
     token->Act = token->Act->rptr;
     return OK;
@@ -713,7 +713,7 @@ int cFor(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal, bool
 // kontrola funkce, ocekavam token leve zavorky
 int cFunc(tokenList *token, treeNode *funcTab, treeList *tList, int noItems, bool ass)
 {
-    nodeInfCont TBSNodeCont = BSTSearch(&funcTab, token->Act->lptr->atribute->str);
+    nodeInfCont TBSNodeCont = BSTSearch(funcTab, token->Act->lptr->atribute->str);
     if (TBSNodeCont == NULL) return ERROR_UNDEFINED;
 
     // funkce existuje kontroluji argumenty
@@ -762,7 +762,7 @@ int cFunc(tokenList *token, treeNode *funcTab, treeList *tList, int noItems, boo
 
         // jdu na zacatek radku
         token->Act = token->Act->lptr;
-        while (token->Act->lptr != tEOL)
+        while (token->Act->lptr->t_type != tEOL)
         {
             token->Act = token->Act->lptr;
             if (token->Act->lptr == NULL) return ERROR_COMPILER;
@@ -778,7 +778,7 @@ int cFunc(tokenList *token, treeNode *funcTab, treeList *tList, int noItems, boo
             else
             {
                 if (token->Act->t_type != tID) return ERROR_SYNTAX;
-                type = dataSearch(&tList, token->Act->atribute->str);
+                type = dataSearch(tList, token->Act->atribute->str);
                 if (type == 101) return ERROR_UNDEFINED;
                 if (type != TBSNodeCont->paramsOut[i]) return ERROR_RETURN_VALUE;
                 token->Act = token->Act->rptr;
@@ -820,14 +820,14 @@ int cExpr(tokenList *token, treeList *tList, int *type)
             token->Act->t_type != tCOMMA &&
             token->Act->t_type != tEOF )
     {
-        DLInsertLast(&newToken, token->Act->t_type, token->Act->atribute->str);
+        DLInsertLast(&newToken, token->Act->t_type, token->Act->atribute);
         token->Act = token->Act->rptr;
     }
     if (newToken.First == NULL) {
         return ERROR_SYNTAX;
     }
 
-    result = parseExp(&newToken, &tList, &type);
+    result = parseExp(&newToken, tList, &type);
     
 
     DLDisposeList(&newToken);
@@ -839,38 +839,38 @@ void buidInFunc(treeNode *funcTab)
 {
     // inputs
     int out[2] = {tSTRING, tINT};
-    BSTInsert(&funcTab, "inputs", false, createCont(ntFunc, 0, 2, 101, out, 101));
+    BSTInsert(funcTab, "inputs", false, createCont(ntFunc, 0, 2, NULL, out, 101));
     //inputi
     int out2[2] = {tINT, tINT};
-    BSTInsert(&funcTab, "inputi", false, createCont(ntFunc, 0, 2, 101, out2, 101));
+    BSTInsert(funcTab, "inputi", false, createCont(ntFunc, 0, 2, NULL, out2, 101));
     // inputf
     int out3[2] = {tFLOAT, tINT};
-    BSTInsert(&funcTab, "inputf", false, createCont(ntFunc, 0, 2, 101, out3, 101));
+    BSTInsert(funcTab, "inputf", false, createCont(ntFunc, 0, 2, NULL, out3, 101));
     // print
-    BSTInsert(&funcTab, "print", false, createCont(ntFunc, 101, 0, 101, 101, 101));
+    BSTInsert(funcTab, "print", false, createCont(ntFunc, 101, 0, NULL, NULL, 101));
     // int2float
     int out4[1] = {tFLOAT};
     int in4[1] = {tINT};
-    BSTInsert(&funcTab, "int2float", false, createCont(ntFunc, 1, 1, in4, out4, 101));
+    BSTInsert(funcTab, "int2float", false, createCont(ntFunc, 1, 1, in4, out4, 101));
     // float2int
     int out5[1] = {tINT};
     int in5[1] = {tFLOAT};
-    BSTInsert(&funcTab, "float2int", false, createCont(ntFunc, 1, 1, in5, out5, 101));
+    BSTInsert(funcTab, "float2int", false, createCont(ntFunc, 1, 1, in5, out5, 101));
     // len
     int out6[1] = {tINT};
     int in6[1] = {tSTRING};
-    BSTInsert(&funcTab, "len", false, createCont(ntFunc, 1, 1, in6, out6, 101));
+    BSTInsert(funcTab, "len", false, createCont(ntFunc, 1, 1, in6, out6, 101));
     // substr
     int out7[2] = {tSTRING, tINT};
     int in7[3] = {tSTRING, tINT, tINT};
-    BSTInsert(&funcTab, "substr", false, createCont(ntFunc, 3, 2, in7, out7, 101));
+    BSTInsert(funcTab, "substr", false, createCont(ntFunc, 3, 2, in7, out7, 101));
     // ord
     int out8[2] = {tINT, tINT};
     int in8[2] = {tSTRING, tINT};
-    BSTInsert(&funcTab, "ord", false, createCont(ntFunc, 2, 2, in8, out8, 101));
+    BSTInsert(funcTab, "ord", false, createCont(ntFunc, 2, 2, in8, out8, 101));
     // chr
     int out9[2] = {tSTRING, tINT};
     int in9[1] = {tINT};
-    BSTInsert(&funcTab, "chr", false, createCont(ntFunc, 1, 2, in9, out9, 101));
+    BSTInsert(funcTab, "chr", false, createCont(ntFunc, 1, 2, in9, out9, 101));
 
 }
