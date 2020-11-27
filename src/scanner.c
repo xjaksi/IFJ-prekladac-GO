@@ -353,7 +353,7 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
                 }
 				else if (strcmp(p_DS->str, "main") == 0){
                     DLInsertLast(tListMainPtr, fMAIN, NULL);
-                }
+                } /*
 				else if (strcmp(p_DS->str, "inputs") == 0){
                     DLInsertLast(tListMainPtr, fINPUTS, NULL);
                 }
@@ -383,7 +383,7 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
                 }
 				else if (strcmp(p_DS->str, "chr") == 0){
                     DLInsertLast(tListMainPtr, fCHR, NULL);
-                }
+                } */
                 else // is tID
 				{
 					DLInsertLast(tListMainPtr, tID, p_DS);
