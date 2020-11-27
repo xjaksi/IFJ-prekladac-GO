@@ -1,0 +1,171 @@
+Dvousměrně vázaný lineární seznam
+=================================
+-----------------
+L:  1  ----------
+ 	       EOL
+L:  2  ----------
+ 	   package
+ 	      main
+ 	       EOL
+L:  3  ----------
+ 	      func
+ 	      main
+ 	         (
+ 	         )
+ 	         {
+ 	       EOL
+L:  4  ----------
+ 	    typ ID 	_s1
+ 	        :=
+ 	typ string 	_Toto je nejaky text
+ 	       EOL
+L:  5  ----------
+ 	    typ ID 	_s2
+ 	        :=
+ 	    typ ID 	_s1
+ 	         +
+ 	typ string 	_, ktery jeste trochu obohatime
+ 	       EOL
+L:  6  ----------
+ 	    typ ID 	_print
+ 	         (
+ 	    typ ID 	_s1
+ 	         ,
+ 	typ string 	_\n
+ 	         ,
+ 	    typ ID 	_s2
+ 	         )
+ 	       EOL
+L:  7  ----------
+ 	    typ ID 	_s1len
+ 	        :=
+ 	typ intege 	_
+
+ 	       EOL
+L:  8  ----------
+ 	    typ ID 	_s1len
+ 	         =
+ 	    typ ID 	_len
+ 	         (
+ 	    typ ID 	_s1
+ 	         )
+ 	       EOL
+L:  9  ----------
+ 	    typ ID 	_s1len
+ 	         =
+ 	    typ ID 	_s1len
+ 	         -
+ 	typ intege 	_4
+ 	       EOL
+L: 10  ----------
+ 	    typ ID 	_s1
+ 	         ,
+ 	         _
+ 	         =
+ 	    typ ID 	_substr
+ 	         (
+ 	    typ ID 	_s2
+ 	         ,
+ 	    typ ID 	_s1len
+ 	         ,
+ 	typ intege 	_4
+ 	         )
+ 	       EOL
+L: 11  ----------
+ 	    typ ID 	_s1len
+ 	         =
+ 	    typ ID 	_s1len
+ 	         +
+ 	typ intege 	_1
+ 	       EOL
+L: 12  ----------
+ 	    typ ID 	_print
+ 	         (
+ 	typ string 	_4 znaky od
+ 	         ,
+ 	    typ ID 	_s1len
+ 	         ,
+ 	typ string 	_. znaku v \
+ 	typ string 	_, s2, 
+ 	typ string 	_:
+ 	         ,
+ 	    typ ID 	_s1
+ 	         ,
+ 	typ string 	_\n
+ 	         )
+ 	       EOL
+L: 13  ----------
+ 	    typ ID 	_print
+ 	         (
+ 	typ string 	_Zadejte serazenou posloupnost vsech malych pismen a-h, 
+ 	         )
+ 	       EOL
+L: 14  ----------
+ 	    typ ID 	_print
+ 	         (
+ 	typ string 	_pricemz se pismena nesmeji v posloupnosti opakovat: 
+ 	         )
+ 	       EOL
+L: 15  ----------
+ 	    typ ID 	_err
+ 	        :=
+ 	typ intege 	_
+
+ 	       EOL
+L: 16  ----------
+ 	    typ ID 	_s1
+ 	         ,
+ 	    typ ID 	_err
+ 	         =
+ 	    typ ID 	_inputs
+ 	         (
+ 	         )
+ 	       EOL
+L: 17  ----------
+ 	        if
+ 	    typ ID 	_err
+ 	        !=
+ 	typ intege 	_1
+ 	         {
+ 	       EOL
+L: 18  ----------
+ 	       for
+ 	         ;
+ 	    typ ID 	_s1
+ 	        !=
+ 	typ string 	_abcdefgh
+ 	         ;
+ 	         {
+ 	       EOL
+L: 19  ----------
+ 	    typ ID 	_print
+ 	         (
+ 	typ string 	_\n
+ 	         ,
+ 	typ string 	_Spatne zadana posloupnost, zkuste znovu: 
+ 	         )
+ 	       EOL
+L: 20  ----------
+ 	    typ ID 	_s1
+ 	         ,
+ 	         _
+ 	         =
+ 	    typ ID 	_inputs
+ 	         (
+ 	         )
+ 	       EOL
+L: 21  ----------
+ 	         }
+ 	       EOL
+L: 22  ----------
+ 	         }
+ 	      else
+ 	         {
+ 	       EOL
+L: 23  ----------
+ 	         }
+ 	       EOL
+L: 24  ----------
+ 	         }
+ 	       EOF
+-----------------

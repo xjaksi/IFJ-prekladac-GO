@@ -1,0 +1,178 @@
+Dvousměrně vázaný lineární seznam
+=================================
+-----------------
+L:  1  ----------
+ 	       EOL
+L:  2  ----------
+ 	   package
+ 	      main
+ 	       EOL
+L:  3  ----------
+ 	      func
+ 	    typ ID 	_factorial
+ 	         (
+ 	    typ ID 	_n
+ 	       int
+ 	         )
+ 	         (
+ 	       int
+ 	         )
+ 	         {
+ 	       EOL
+L:  4  ----------
+ 	    typ ID 	_dec_n
+ 	        :=
+ 	    typ ID 	_n
+ 	         -
+ 	typ intege 	_1
+ 	       EOL
+L:  5  ----------
+ 	        if
+ 	    typ ID 	_n
+ 	         <
+ 	typ intege 	_2
+ 	         {
+ 	       EOL
+L:  6  ----------
+ 	    return
+ 	typ intege 	_1
+ 	       EOL
+L:  7  ----------
+ 	         }
+ 	      else
+ 	         {
+ 	       EOL
+L:  8  ----------
+ 	    typ ID 	_tmp
+ 	        :=
+ 	typ intege 	_
+
+ 	       EOL
+L:  9  ----------
+ 	    typ ID 	_tmp
+ 	         =
+ 	    typ ID 	_factorial
+ 	         (
+ 	    typ ID 	_dec_n
+ 	         )
+ 	       EOL
+L: 10  ----------
+ 	    return
+ 	    typ ID 	_n
+ 	         *
+ 	    typ ID 	_tmp
+ 	       EOL
+L: 11  ----------
+ 	         }
+ 	       EOL
+L: 12  ----------
+ 	         }
+ 	       EOL
+L: 13  ----------
+ 	      func
+ 	      main
+ 	         (
+ 	         )
+ 	         {
+ 	       EOL
+L: 14  ----------
+ 	    typ ID 	_print
+ 	         (
+ 	typ string 	_Zadejte cislo pro vypocet faktorialu: 
+ 	         )
+ 	       EOL
+L: 15  ----------
+ 	    typ ID 	_a
+ 	        :=
+ 	typ intege 	_
+
+ 	       EOL
+L: 16  ----------
+ 	    typ ID 	_err
+ 	        :=
+ 	typ intege 	_
+
+ 	       EOL
+L: 17  ----------
+ 	    typ ID 	_a
+ 	         ,
+ 	    typ ID 	_err
+ 	         =
+ 	    typ ID 	_inputi
+ 	         (
+ 	         )
+ 	       EOL
+L: 18  ----------
+ 	        if
+ 	    typ ID 	_err
+ 	        ==
+ 	typ intege 	_ 
+ 	         {
+ 	       EOL
+L: 19  ----------
+ 	        if
+ 	    typ ID 	_a
+ 	         <
+ 	typ intege 	_ 
+ 	         {
+ 	       EOL
+L: 20  ----------
+ 	    typ ID 	_print
+ 	         (
+ 	typ string 	_Faktorial nejde spocitat!
+ 	         ,
+ 	typ string 	_\n
+ 	         )
+ 	       EOL
+L: 21  ----------
+ 	         }
+ 	      else
+ 	         {
+ 	       EOL
+L: 22  ----------
+ 	    typ ID 	_vysl
+ 	        :=
+ 	typ intege 	_
+
+ 	       EOL
+L: 23  ----------
+ 	    typ ID 	_vysl
+ 	         =
+ 	    typ ID 	_factorial
+ 	         (
+ 	    typ ID 	_a
+ 	         )
+ 	       EOL
+L: 24  ----------
+ 	    typ ID 	_print
+ 	         (
+ 	typ string 	_Vysledek je 
+ 	         ,
+ 	    typ ID 	_vysl
+ 	         ,
+ 	typ string 	_\n
+ 	         )
+ 	       EOL
+L: 25  ----------
+ 	         }
+ 	       EOL
+L: 26  ----------
+ 	         }
+ 	      else
+ 	         {
+ 	       EOL
+L: 27  ----------
+ 	    typ ID 	_print
+ 	         (
+ 	typ string 	_Chyba pri nacitani celeho cisla!\n
+ 	         )
+ 	       EOL
+L: 28  ----------
+ 	         }
+ 	       EOL
+L: 29  ----------
+ 	         }
+ 	       EOL
+L: 30  ----------
+ 	       EOF
+-----------------
