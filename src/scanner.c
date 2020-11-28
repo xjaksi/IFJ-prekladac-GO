@@ -126,7 +126,7 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 					state = 7;
 					break;
 				}
-				else if ((c == '*') || (c == '+') || (c == '-') || (c == '/') || (c == '%') || (c == ' ') || (c == ';') || (c == ')') || (c == '\n') || (c == '\r'))
+				else if ((c == '*') || (c == '+') || (c == '-') || (c == '/') || (c == '%') || (c == ' ') || (c == ';') || (c == ',') || (c == ')') || (c == '\n') || (c == '\r'))
 				{
 					ungetc(c,stdin);
 
@@ -135,7 +135,7 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 					int DELETE;
 					p_DS = str_Init(&DELETE); //TODO nastavit errnum
 					}
-					str_Append(p_DS, c ); /// pridani c do dynStr
+					str_Append(p_DS, '0' ); /// pridani c do dynStr
 					DLInsertLast(tListMainPtr, tINT, p_DS);
 					p_DS = NULL;
 					state = SCANNER_STATE_START;								
@@ -518,7 +518,7 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 				state = 7;
 				break;
 			}
-			else if ((c == '*') || (c == '+') || (c == '-') || (c == '/') || (c == '%') || (c == ' ') || (c == ';') || (c == ')') || (c == '\n') || (c == '\r'))
+			else if ((c == '*') || (c == '+') || (c == '-') || (c == '/') || (c == '%') || (c == ' ') || (c == ';') || (c == ',') || (c == ')') || (c == '\n') || (c == '\r'))
 			{
                 ungetc(c,stdin);
 				DLInsertLast(tListMainPtr, tINT, p_DS);
@@ -563,7 +563,7 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 				state = 7;
 				break;
 			}
-			else if ((c == '*') || (c == '+') || (c == '-') || (c == '/') || (c == '%') || (c == ' ') || (c == ';') || (c == ')') || (c == '\n') || (c == '\r')) 
+			else if ((c == '*') || (c == '+') || (c == '-') || (c == '/') || (c == '%') || (c == ' ') || (c == ';') || (c == ',') || (c == ')') || (c == '\n') || (c == '\r')) 
 			{
 				ungetc(c,stdin);
 				DLInsertLast(tListMainPtr, tFLOAT, p_DS);
