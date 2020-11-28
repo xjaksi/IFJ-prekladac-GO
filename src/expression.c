@@ -51,13 +51,13 @@ ERROR_CODE parseExp(tokenList *tList, treeList *tree, int *final) {
 	}
 	reset(&input); 							// [vstup] nastaveni aktivity na prvni prvek
 	
-	fprintf(stderr, "VYRAZ: ");
+	// fprintf(stderr, "VYRAZ: ");
 	while(input.act != NULL) {
 		debug(input.act->ptType);
-		fprintf(stderr, "%s ", text);
+		// fprintf(stderr, "%s ", text);
 		next(&input);
 	}
-	fprintf(stderr, "\n");
+	// fprintf(stderr, "\n");
 	reset(&input);
 	
 	DLFirst(tList);
@@ -92,13 +92,13 @@ ERROR_CODE parseExp(tokenList *tList, treeList *tree, int *final) {
 
 					DLFirst(&output);
 
-					fprintf(stderr,"[POSFITX] posfixed output:\t");
+					// fprintf(stderr,"[POSFITX] posfixed output:\t");
 					while(output.Act != NULL) {
 						debug(tokenToPT(output.Act->t_type));
-						fprintf(stderr, "%s ", text);
+						// fprintf(stderr, "%s ", text);
 						output.Act = output.Act->rptr;
 					}
-					fprintf(stderr, "\n"); */
+					// fprintf(stderr, "\n"); */
 					return finalError;
 
 				case 'E':		// nepovolena sekvence znaku
@@ -117,7 +117,7 @@ ERROR_CODE parseExp(tokenList *tList, treeList *tree, int *final) {
 ERROR_CODE reduce() {
 	// (E) -> E redukce
 	if (opStack.act->ptType == PT_RBR) {
-		// fprintf(stderr, "[INFO] bracket reduction \n");
+		// // fprintf(stderr, "[INFO] bracket reduction \n");
 		// odstraneni zavorek ze seznamu
 		removeItem(&opStack);
 		removeItem(&opStack);
@@ -161,19 +161,19 @@ ERROR_CODE reduce() {
 					break;
 
 				default:
-					// fprintf(stderr, "OOPS NELA FUCKED UP\n");
+					// // fprintf(stderr, "OOPS NELA FUCKED UP\n");
 					return ERROR_COMPILER;
 					break;
 			}
 			debug(opStack.act->ptType);
-			fprintf(stderr, "[INFO] basic reduction E %s E \n", text);
+			// fprintf(stderr, "[INFO] basic reduction E %s E \n", text);
 
 			// KROK 4: redukce (odstraneni operatoru a jednoho z vyrazu ze seznamu)
 			removeItem(&opStack);
 			removeItem(&idStack); 
 		}
 		else {
-			fprintf(stderr, "ID typ: %d   ID prev typ: %d\n", idStack.act->dType, idStack.act->prev->dType);
+			// fprintf(stderr, "ID typ: %d   ID prev typ: %d\n", idStack.act->dType, idStack.act->prev->dType);
 			return ERROR_TYPE_COMPATIBILITY;
 		}
 	} 
@@ -184,14 +184,14 @@ ERROR_CODE reduce() {
 void shift() {
 	if (exprFlag) {
 		debug(input.act->ptType);
-		// fprintf(stderr, "[INFO] shifting %s onto idStack \n", text);
+		// // fprintf(stderr, "[INFO] shifting %s onto idStack \n", text);
 		insertItem(&idStack, input.act->ptType, input.act->dType, input.act->isZero);
 		idStack.act = idStack.act->next;
 		exprFlag = false;
 	}
 	else {
 		debug(input.act->ptType);
-		// fprintf(stderr, "[INFO] shifting %s onto opStack \n", text);
+		// // fprintf(stderr, "[INFO] shifting %s onto opStack \n", text);
 		insertItem(&opStack, input.act->ptType, input.act->dType, input.act->isZero);
 		opStack.act = opStack.act->next;
 	}	

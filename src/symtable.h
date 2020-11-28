@@ -94,7 +94,7 @@ nodeInfCont BSTSearch (treeNode *RootPtr, char* K);
 int BSTInsert (treeNode *, char *, bool, nodeInfCont);
 void BSTDispose(treeNode *);
 
-nodeInfCont createCont (nodeType nnType, int noParam, int noRet, int *arg, int *out, int ddType);
+nodeInfCont createCont (nodeType nnType, int noParam, int noRet, int arg[], int out[], int ddType);
 
 /*                Konec binarniho stromu                */
 /* ---------------------------------------------------- */

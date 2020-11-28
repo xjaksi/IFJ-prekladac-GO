@@ -1,15 +1,20 @@
-// komentar
-
-
-// komentar
+// Program 2: Vypocet faktorialu (rekurzivne)
 package main
+
 func main() {
-
-
-
-
-s1 := "Toto je nejaky text"
-s2 := s1 + ", ktery jeste trochu obohatime"
-s1len := 0
-s1len = len(s1)
+//print("Zadejte cislo pro vypocet faktorialu: ")
+a := 0
+err := 0
+a, err = inputi()
+if err == 0 {
+if a < 0 {
+//print("Faktorial nejde spocitat!", "\n")
+} else {
+vysl := 0
+//vysl = factorial(a)
+//print("Vysledek je ", vysl, "\n")
+}
+} else {
+//print("Chyba pri nacitani celeho cisla!\n")
+}
 }

@@ -150,19 +150,31 @@ void BSTDispose (treeNode *RootPtr)
  */
 nodeInfCont createCont (nodeType nnType, int noParam, int noRet, int arg[], int out[], int ddType)
 {
+	// fprintf(stderr, "hhaha\n");
     nodeInfCont data = malloc(sizeof(struct nodeCont));
-	
-	if (noParam != 0) {
-		int temp = malloc(noParam * sizeof(int));
-		temp = out;
-	}
 
+	if (noParam != 0 && arg != NULL) {
+		data->paramsIn = malloc(noParam * sizeof(int));
+		for(int i = 0; i < noParam; i++){
+            data->paramsIn[i] = arg[i];
+        }
+	}
+	
+    if (noRet != 0 && out != NULL) {
+		data->paramsOut = malloc(noRet * sizeof(int));
+		// fprintf(stderr, "hhaha noRet: %d\n", noRet);
+		for(int i = 0; i < noRet; i++){
+            data->paramsOut[i] = out[i];
+			// fprintf(stderr, "hhaha i: %d\n", i);
+        }
+		// fprintf(stderr, "hhahahahaha\n");
+	}
     data->nType = nnType;
     data->noParams = noParam;
 	data->noReturn = noRet;
     data->dType = ddType;
-	data->paramsIn = arg;
-	data->paramsOut = out;
+	//data->paramsIn = arg;
+	//data->paramsOut = out;
 
     return data;
 }

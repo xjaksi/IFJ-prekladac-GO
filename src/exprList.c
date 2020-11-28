@@ -185,18 +185,18 @@ ERROR_CODE postfix(tokenList *expr, tokenList *postfixExpr) {
             
             // pokud jde o levou zavorku, je vlozena na seznam operatoru
             case tLBRACKET:
-                // fprintf(stderr, "[debug] pushing (\n");
+                // // // // fprintf(stderr, "[debug] pushing (\n");
                 DLInsertLast(&operators, expr->Act->t_type, expr->Act->atribute);
                 break;
 
             // pokud jde o pravou zavorku, presouvaji se operatory na vysledny seznam, dokud se nenarazi na pravou zavorku
             case tRBRACKET:
                 while (operators.Last->t_type != tLBRACKET) {
-                    // fprintf(stderr, "[debug] rbracket removing %s\n", operators.Last->atribute->str);
+                    // // // // fprintf(stderr, "[debug] rbracket removing %s\n", operators.Last->atribute->str);
                     DLInsertLast(postfixExpr, operators.Last->t_type, operators.Last->atribute);
                     deleteToken(&operators);
                 }
-                // fprintf(stderr, "[debug] rbracket removing %s\n", operators.Last->atribute->str);
+                // // // // fprintf(stderr, "[debug] rbracket removing %s\n", operators.Last->atribute->str);
                     deleteToken(&operators);
             break;
 
@@ -212,10 +212,10 @@ ERROR_CODE postfix(tokenList *expr, tokenList *postfixExpr) {
                 }
 
                 // dokud je na seznamu operatoru neco s vyssi precedenci nez na vstupu
-                // // fprintf(stderr, "Input: %s prec: %d \t Operator: %s prec: %d \n",expr->Act->atribute->str, precInput, operators.Last->atribute->str,precOp);
+                // // // // // fprintf(stderr, "Input: %s prec: %d \t Operator: %s prec: %d \n",expr->Act->atribute->str, precInput, operators.Last->atribute->str,precOp);
                 while (precOp >= precInput) {
                     // presunout tento operator na vysledny seznam a zaroven jej odstranit ze seznamu operatoru
-                    // fprintf(stderr, "[debug] removing %s\n", operators.Last->atribute->str);
+                    // // // // fprintf(stderr, "[debug] removing %s\n", operators.Last->atribute->str);
                     DLInsertLast(postfixExpr, operators.Last->t_type, operators.Last->atribute);
                     deleteToken(&operators); 
                     if (operators.Last == NULL) {
@@ -226,18 +226,18 @@ ERROR_CODE postfix(tokenList *expr, tokenList *postfixExpr) {
                     }
                     
                 }
-                // fprintf(stderr, "[debug] pushing %s\n", expr->Act->atribute->str);
+                // // // // fprintf(stderr, "[debug] pushing %s\n", expr->Act->atribute->str);
                 // nakonec zkoumany operator muzeme vlozit na seznam operatoru
                 DLInsertLast(&operators, expr->Act->t_type, expr->Act->atribute);
                 break;
         }
         /* operators.Act = operators.First;
-        fprintf(stderr, "[operators]: ");
+        // // // fprintf(stderr, "[operators]: ");
         while (operators.Act != NULL) {
-            fprintf(stderr, "%s", operators.Act->atribute->str);
+            // // // fprintf(stderr, "%s", operators.Act->atribute->str);
             operators.Act = operators.Act->rptr;
         }
-        fprintf(stderr, "\n"); */
+        // // // fprintf(stderr, "\n"); */
         DLSucc(expr);
 	}
 
