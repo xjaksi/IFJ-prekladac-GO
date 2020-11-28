@@ -20,6 +20,7 @@
 #include "errors.h"
 #include "tokenList.h"
 #include "dynamicString.h"
+#include "symtable.h"
 #define PT_SIZE 8
 
 /**
@@ -43,10 +44,10 @@ typedef enum {
  * @brief datove typy 
  */
 typedef enum {
-    DT_INT,
-    DT_STRING,
-    DT_FLOAT,
     DT_NONE,
+    DT_INT,
+    DT_FLOAT,
+    DT_STRING,
     DT_BOOL,
 } DataType;
 
@@ -57,7 +58,7 @@ typedef enum {
  * @param tList seznam tokenu tvorici vyraz
  * @return ERROR_CODE navratova hodnota, OK nebo chybovy kod
  */
-ERROR_CODE parseExp(tokenList *tList, DataType *final);
+ERROR_CODE parseExp(tokenList *tList, treeList *tree, int *final);
 
 
 /**
@@ -80,7 +81,7 @@ ERROR_CODE reduce();
  * @param final ukazatel na hodnotu nesouci finalni datovy typ
  * @return ERROR_CODE chybovy kod nebo OK
  */
-ERROR_CODE accept(DataType *final);
+ERROR_CODE accept(int *final);
 
 
 /**

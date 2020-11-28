@@ -21,7 +21,6 @@
 
 
 #include "expression.h"
-#include "symtable.h"
 
 
 

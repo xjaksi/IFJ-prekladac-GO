@@ -82,7 +82,7 @@ PtType tokenToPT(TokenType tType);
  * @param tList seznam tokenu
  * @return ERROR_CODE navratova hodnota, OK nebo nejaky chybovy kod
  */
-ERROR_CODE fillMyList (exprList *l, tokenList *tList);
+ERROR_CODE fillMyList (exprList *l, tokenList *tList, treeList *tree);
 
 
 /**

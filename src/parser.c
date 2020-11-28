@@ -48,12 +48,11 @@ int parse()
 
     if (token.Act->t_type != tEOL) return ERROR_SYNTAX;
     token.Act = token.Act->rptr;
-
     // kontrola programu
     result = cScel(&token, &funcTab, &tList);
 
-    DLDisposeList(&token);
-
+    // fprintf(stderr, "final result: %d\n", result);
+    DLDisposeList(&token, 1);
     BSTDispose(&funcTab);
     treeListDestroy(&tList);
 
@@ -73,9 +72,11 @@ int cScel(tokenList *token, treeNode *funcTab, treeList *tList)
     result = funcSave(token, funcTab);
     if (result != OK) return result;
 
+    fprintf(stderr, "CHECK 1\n");
 
     token->Act = token->First->rptr->rptr->rptr;
-
+    
+    
     while (token->Act->t_type != tEOF)
     {       
         while (token->Act->t_type == tEOL)
@@ -155,7 +156,7 @@ int cScel(tokenList *token, treeNode *funcTab, treeList *tList)
             }
         }
         
-
+// fprintf(stderr, "CHECK 2\n");
 
 
         while (token->Act->t_type != tLBRACE)
@@ -168,6 +169,7 @@ int cScel(tokenList *token, treeNode *funcTab, treeList *tList)
 
         if (token->Act->t_type != tEOL) return ERROR_SYNTAX;
         result = cBody(token, funcTab, tList, retVal, &returnWas);
+        // fprintf(stderr, "cbody result: %d\n", result);
         if (result != OK) return result;
 
         if (token->Act->t_type != tRBRACE) return ERROR_SYNTAX;
@@ -210,7 +212,7 @@ int funcSave(tokenList *token, treeNode *funcTab)
                 if (token->Act->t_type != tID) return ERROR_SYNTAX;
 
                 char *idName = token->Act->atribute->str;
-
+                fprintf(stderr, "FUNC NAME: %s\n", idName);
                 int noArg = 0;
                 int noRet = 0;
                 int noComma = 0;
@@ -232,18 +234,21 @@ int funcSave(tokenList *token, treeNode *funcTab)
                         token->Act = token->Act->rptr;
                     }
                 }
+                fprintf(stderr, "noArgs: %d   noComma: %d\n", noArg, noComma);
                 if (noArg > 1 && noArg != noComma+1) return ERROR_SYNTAX;
                 if (token->Act->t_type != tRBRACKET) return ERROR_SYNTAX;
-
+                fprintf(stderr, "Prošel jsem \n");
                 int args[ noArg ];
                 // pokud existuji argumenty kontroluji je od zacatku
                 if (noArg > 0)
                 {
                     while (token->Act->lptr->t_type != tLBRACKET) token->Act = token->Act->lptr;
-                
+                    fprintf(stderr, "Došel jsem na x? %d\n", token->Act->t_type);
                     for (int i = 0; i < noArg; i++)
                     {
                         if (token->Act->t_type != tID) return ERROR_SYNTAX;
+
+                        token->Act = token->Act->rptr;
 
                         if (token->Act->t_type == kwINT)
                         {
@@ -349,6 +354,7 @@ int funcSave(tokenList *token, treeNode *funcTab)
 
 int cBody(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal, bool *returnWas)
 {
+    // fprintf(stderr, "CHECK 3\n");
     int result = OK;
     int type;
 
@@ -357,7 +363,7 @@ int cBody(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal, boo
     BSTInit(&localTab);
     treeListInsert(tList, &localTab);
 
-
+    // fprintf(stderr, "CHECK 4\n");
     while (token->Act->t_type != tRBRACE)
     {   
         if (token->Act->t_type == tEOF) return ERROR_SYNTAX;
@@ -367,14 +373,19 @@ int cBody(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal, boo
             if (token->Act->t_type == tEOF) return ERROR_SYNTAX;
             token->Act = token->Act->rptr;
         }
-        if (token->Act->t_type == tRBRACE) return result;
-        
+        fprintf(stderr, "[DEBUG] prava zavorka, result: %d \n", result);
+        if (token->Act->t_type == tRBRACE) 
+        {
+            treeListRemove(tList);
+            return result;
+        }
 
         switch (token->Act->t_type)
         {
         case tDEVNULL:
         case tID :
             result = cId(token, funcTab, tList);
+            fprintf(stderr, "[DEBUG] konec id, result: %d  token: %d\n", result, token->Act->t_type);
             if (result != OK) return result;
             break;
 
@@ -424,7 +435,7 @@ int cBody(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal, boo
         }
 
     }
-
+     fprintf(stderr, "END OF BODY \n");
     // odebrani ramce na konci tela
     treeListRemove(tList);
     
@@ -433,6 +444,7 @@ int cBody(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal, boo
 
 int cId(tokenList *token, treeNode *funcTab, treeList *tList)
 {
+    // fprintf(stderr, "CHECK 5\n");
     int cnt = 1;
     int result;
     int type;
@@ -460,9 +472,11 @@ int cId(tokenList *token, treeNode *funcTab, treeList *tList)
         break;
 
     case tASSIGN:
+        // fprintf(stderr, "CHECK 7\n"); 
         token->Act = token->Act->rptr;
         // predam ukazatel na prvni token za =
         result = cAssign(token, funcTab, tList, cnt);
+        // fprintf(stderr, "result assign: %d token: %d\n", result, token->Act->t_type);
         if (result != OK) return result;
         break;
 
@@ -470,23 +484,26 @@ int cId(tokenList *token, treeNode *funcTab, treeList *tList)
         if (cnt != 1) return ERROR_SYNTAX;
         if (token->Act->lptr->t_type != tID) return ERROR_SYNTAX;
         
-        nodeInfCont TBSNodeCont = BSTSearch(funcTab, token->Act->lptr->atribute->str);
+        nodeInfCont TBSNodeCont = BSTSearch(funcTab, token->Act->lptr->atribute->str); 
+        char* idName = token->Act->lptr->atribute->str;
         if (TBSNodeCont != NULL) return ERROR_REDEFINITION;
         token->Act = token->Act->rptr;
         result = cExpr(token, tList, &type);
+        
         if (result != OK) return result;
         // pokud je type podporovany typ ulozim
         if (type == DT_INT)
-        {
-            BSTInsert(&(tList->first->symtab), token->Act->lptr->lptr->atribute->str, true, createCont(ntVar, 101, 101, NULL, NULL, tINT));
+        { 
+            BSTInsert(&(tList->first->symtab), idName, true, createCont(ntVar, 101, 101, NULL, NULL, tINT));
+            // fprintf(stderr, "CHECK 6 %s\n", idName); 
         }
         else if (type == DT_STRING)
         {
-            BSTInsert(&(tList->first->symtab), token->Act->lptr->lptr->atribute->str, true, createCont(ntVar, 101, 101, NULL, NULL, tSTRING));
+            BSTInsert(&(tList->first->symtab), idName, true, createCont(ntVar, 101, 101, NULL, NULL, tSTRING));
         }
         else if (type == DT_FLOAT)
         {
-            BSTInsert(&(tList->first->symtab), token->Act->lptr->lptr->atribute->str, true, createCont(ntVar, 101, 101, NULL, NULL, tFLOAT));
+            BSTInsert(&(tList->first->symtab), idName, true, createCont(ntVar, 101, 101, NULL, NULL, tFLOAT));
         }
         else
         {
@@ -506,7 +523,7 @@ int cId(tokenList *token, treeNode *funcTab, treeList *tList)
 int cAssign(tokenList *token, treeNode *funcTab, treeList *tList, int item)
 {
     int result;
-
+    // fprintf(stderr, "CHECK 8\n"); 
     // prirazuji z funkce
     if (token->Act->t_type == tID && token->Act->rptr->t_type == tLBRACKET)
     {
@@ -518,10 +535,13 @@ int cAssign(tokenList *token, treeNode *funcTab, treeList *tList, int item)
     int list[ item ];
     int type;
 
+    // fprintf(stderr, "CHECK 9 %d\n", item); 
+
     // nahrani datovych typu
     for (int i = 0; i < item; i++)
     {
         result = cExpr(token, tList, &type);
+        // fprintf(stderr, "CHECK 10 %d result: %d\n", type, result); 
         if (result != OK) return result;
 
         if (type == DT_INT)
@@ -540,21 +560,23 @@ int cAssign(tokenList *token, treeNode *funcTab, treeList *tList, int item)
         {
             return ERROR_TYPE_INFERENCE;
         }
-
-        token->Act = token->Act->rptr;
+        
         if (token->Act->t_type == tCOMMA) token->Act = token->Act->rptr;
     }
+    // fprintf(stderr, "CHECK 11 %d\n", token->Act->t_type); 
 
     if (token->Act->t_type != tEOL) return ERROR_SYNTAX;
-
+    // fprintf(stderr, "CHECK 12 \n"); 
     // jinak jdu na zacatek radku a overuji
     token->Act = token->Act->lptr;
+    // fprintf(stderr, "CHECK 13 %d\n", token->Act->t_type); 
     while (token->Act->lptr->t_type != tEOL)
     {
-        if (token->Act->lptr != NULL) return ERROR_COMPILER;
+        if (token->Act->lptr == NULL) return ERROR_COMPILER;
+        // fprintf(stderr, "CHECK 14: posunujeme se zpět v čase, opoustime %d\n", token->Act->t_type); 
         token->Act = token->Act->lptr;
     }
-
+    // fprintf(stderr, "CHECK 15 %d\n", token->Act->t_type); 
     for (int i = 0; i < item; i++)
     {
         if (token->Act->t_type == tDEVNULL)
@@ -572,7 +594,12 @@ int cAssign(tokenList *token, treeNode *funcTab, treeList *tList, int item)
         }
         if (token->Act->t_type == tCOMMA) token->Act = token->Act->rptr;
     }
-    
+    while (token->Act->t_type != tEOL) 
+    {
+        token->Act = token->Act->rptr;
+        if (token->Act->t_type == tEOF) return ERROR_SYNTAX;
+        
+    }
     return OK;
 
 }
@@ -584,7 +611,8 @@ int cIf(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal, bool 
     token->Act = token->Act->rptr;
     result = cExpr(token, tList, &type);
     if (result != OK) return result;
-    if (type != DT_BOOL) return ERROR_TYPE_COMPATIBILITY;
+    fprintf(stderr, "JE TO BOOL? %d\n", type);
+    if (type != DT_BOOL) return ERROR_SEMANTICS;
 
 
     if (token->Act->t_type != tLBRACE) return ERROR_SYNTAX;
@@ -608,6 +636,7 @@ int cIf(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal, bool 
     if (token->Act->t_type != tEOL) return ERROR_SYNTAX;
     // telo else
     result = cBody(token, funcTab, tList, retVal, returnWas);
+    fprintf(stderr, "[DEBUG] konec body, result: %d \n", result);
     if (result != OK) return result;
     if (token->Act->t_type != tRBRACE) return ERROR_SYNTAX;
 
@@ -615,7 +644,7 @@ int cIf(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal, bool 
     if (token->Act->rptr->t_type == tEOF) return ERROR_SYNTAX;
 
     token->Act = token->Act->rptr->rptr;
-
+    fprintf(stderr, "[DEBUG] konec if \n");
 
     return OK;
 }
@@ -818,7 +847,8 @@ int cExpr(tokenList *token, treeList *tList, int *type)
             token->Act->t_type != tSEMICOLON &&
             token->Act->t_type != tLBRACE &&
             token->Act->t_type != tCOMMA &&
-            token->Act->t_type != tEOF )
+            token->Act->t_type != tEOF &&
+            token->Act->t_type != tRBRACE )
     {
         DLInsertLast(&newToken, token->Act->t_type, token->Act->atribute);
         token->Act = token->Act->rptr;
@@ -830,7 +860,7 @@ int cExpr(tokenList *token, treeList *tList, int *type)
     result = parseExp(&newToken, tList, type);
     
 
-    DLDisposeList(&newToken);
+    DLDisposeList(&newToken, 0);       // TO DO UPRAVIT
     return result;
 }
 
@@ -872,5 +902,4 @@ void buidInFunc(treeNode *funcTab)
     int out9[2] = {tSTRING, tINT};
     int in9[1] = {tINT};
     BSTInsert(funcTab, "chr", false, createCont(ntFunc, 1, 2, in9, out9, 101));
-
 }

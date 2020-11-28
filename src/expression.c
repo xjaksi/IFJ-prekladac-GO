@@ -34,7 +34,7 @@ bool exprFlag = false;	///< priznak pro urceni, jestli se jedna o ID nebo operat
 
 ERROR_CODE finalError;	///< navratova hodnota
 
-ERROR_CODE parseExp(tokenList *tList, DataType *final) {
+ERROR_CODE parseExp(tokenList *tList, treeList *tree, int *final) {
 	// inicializace seznamu: vstup, operatory, id/vyrazy
 	listInit(&input);
 	listInit(&opStack);
@@ -44,9 +44,22 @@ ERROR_CODE parseExp(tokenList *tList, DataType *final) {
 	insertItem(&opStack, PT_STOP, DT_NONE, false);
 	insertItem(&idStack, PT_STOP, DT_NONE, false);
 
-	DLFirst(tList);				// [token] nastaveni aktivity na prvni prvek
-	fillMyList(&input, tList);		// [token] naplneni seznamu z toknu
-	reset(&input); 					// [vstup] nastaveni aktivity na prvni prvek
+	DLFirst(tList);							// [token] nastaveni aktivity na prvni prvek
+	finalError = fillMyList(&input, tList, tree);		// [token] naplneni seznamu z toknu
+	if (finalError != OK) {
+		return finalError;
+	}
+	reset(&input); 							// [vstup] nastaveni aktivity na prvni prvek
+	
+	fprintf(stderr, "VYRAZ: ");
+	while(input.act != NULL) {
+		debug(input.act->ptType);
+		fprintf(stderr, "%s ", text);
+		next(&input);
+	}
+	fprintf(stderr, "\n");
+	reset(&input);
+	
 	DLFirst(tList);
 	while (input.act != NULL) {		// precedencni analyza - prochazeni vstupniho seznamu
 		if(input.act->ptType == PT_EXP || input.act->ptType == PT_CONST) {
@@ -72,10 +85,10 @@ ERROR_CODE parseExp(tokenList *tList, DataType *final) {
 					if (finalError != OK) {
 						return finalError;
 					}	
-					tokenList output;
+					/*tokenList output;
 					DLInitList(&output);
 
-					postfix(tList, &output);
+					 postfix(tList, &output);
 
 					DLFirst(&output);
 
@@ -85,7 +98,7 @@ ERROR_CODE parseExp(tokenList *tList, DataType *final) {
 						fprintf(stderr, "%s ", text);
 						output.Act = output.Act->rptr;
 					}
-					fprintf(stderr, "\n");
+					fprintf(stderr, "\n"); */
 					return finalError;
 
 				case 'E':		// nepovolena sekvence znaku
@@ -122,10 +135,16 @@ ERROR_CODE reduce() {
 			switch (opStack.act->ptType) {
 
 				// KROK 3: zjistit kompatibilitu typu a operace
-				case PT_ADD: case PT_CMPS:
-					if (finalType == DT_NONE || finalType == DT_BOOL) {		
+				case PT_ADD: 
+					if (finalType == DT_NONE || finalType == DT_BOOL) {	
 						return ERROR_TYPE_COMPATIBILITY;
 					}
+					break;
+				case PT_CMPS:
+					if (finalType == DT_NONE || finalType == DT_BOOL) {	
+						return ERROR_TYPE_COMPATIBILITY;
+					}
+					idStack.act->prev->dType = DT_BOOL;
 					break;
 
 				case PT_MUL: case PT_DIV: case PT_SUB: 
@@ -147,13 +166,14 @@ ERROR_CODE reduce() {
 					break;
 			}
 			debug(opStack.act->ptType);
-			// fprintf(stderr, "[INFO] basic reduction E %s E \n", text);
+			fprintf(stderr, "[INFO] basic reduction E %s E \n", text);
 
 			// KROK 4: redukce (odstraneni operatoru a jednoho z vyrazu ze seznamu)
 			removeItem(&opStack);
 			removeItem(&idStack); 
 		}
 		else {
+			fprintf(stderr, "ID typ: %d   ID prev typ: %d\n", idStack.act->dType, idStack.act->prev->dType);
 			return ERROR_TYPE_COMPATIBILITY;
 		}
 	} 
@@ -179,7 +199,7 @@ void shift() {
 }
 
 
-ERROR_CODE accept(DataType *final) {
+ERROR_CODE accept(int *final) {
 	*final = idStack.act->dType;
 	// v seznamu ID by melo zustat jen jedno E, po odstraneni by tam mel byt jen $
 	removeItem(&idStack); 

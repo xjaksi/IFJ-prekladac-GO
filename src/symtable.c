@@ -232,19 +232,19 @@ int dataSearch(treeList *l, char *k)
 {
 	// postupne projdu vsechny tabulky
 	l->act = l->first;
-	treeNode cont;
+	nodeInfCont cont;
 	while (l->act != NULL)
 	{
-		cont->TBSNodeCont = BSTSearch(&(l->act->symtab), k);
-		if (cont->TBSNodeCont != NULL) break;
+		cont = BSTSearch(&(l->act->symtab), k);
+		if (cont != NULL) break;
 		l->act = l->act->next;
 	}
-	if (cont->TBSNodeCont == NULL)
+	if (cont == NULL)
 	{
 		return 101;
 	}
 	else
 	{
-		return cont->TBSNodeCont->dType;
+		return cont->dType;
 	}
 }

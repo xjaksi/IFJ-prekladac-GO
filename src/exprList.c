@@ -75,7 +75,7 @@ void removeItem(exprList *l) {
 }
 
 // TO DO !!!!
-ERROR_CODE fillMyList (exprList *l, tokenList *tList) {
+ERROR_CODE fillMyList (exprList *l, tokenList *tList, treeList *tree) {
     int DATA;   // TO DO: odstranit
      // prochazeni celeho tokenoveho seznamu
     while (tList->Act != NULL) {
@@ -105,13 +105,10 @@ ERROR_CODE fillMyList (exprList *l, tokenList *tList) {
             break;
         
         case tID:
-            DATA = DT_INT; // TO DO: vyhledani v BS
-            /**
-             * TADY BUDE ZJISTENI JESTLI ID EXISTUJE
-             * if (bstSearch(tListkkk) == 101) {
-             *      return ERROR_UNDEFINED;
-             * }
-             */
+            DATA = dataSearch(tree, tList->Act->atribute->str);
+            if (DATA == 101) {
+                return ERROR_UNDEFINED;
+            }            
             insertItem(l, PT_EXP, DATA, false);
             break;
 
