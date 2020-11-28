@@ -115,3 +115,18 @@ void DLPred (tokenList *);
 int DLActive (tokenList *);
 
 #endif //TOKEN_LIST_H
+
+
+if (noParam != 0) {
+		data->paramsIn = malloc(noParam * sizeof(int));
+		for(int i = 0; i < noParam; i++){
+            data->paramsIn[i] = arg[i];
+        }
+	}
+
+    if (noRet != 0) {
+		data->paramsIn = malloc(noRet * sizeof(int));
+		for(int i = 0; i < noRet; i++){
+            data->paramsOut[i] = out[i];
+        }
+	}
