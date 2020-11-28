@@ -6,8 +6,7 @@
 #include <string.h>
 
 char *tokens[] = {"typ ID","typ integer","typ float","typ string","+","-","/","*",":=","=","<","<=",">",">=","==","!=","(",")","{","}",";","_",",","EOL","EOF",
-					"if","else","for","return","float64","func","string","int","package",
-					"inputs","inputi","inputf","print","int2float","float2int","len","substr","ord","chr","main"}; 
+					"if","else","for","return","float64","func","string","int","package","main"}; 
 
 // prototypy func
 void print_elements_of_list(tokenList TL);
