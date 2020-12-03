@@ -69,11 +69,12 @@ nodeInfCont BSTSearch (treeNode *RootPtr, char* K)
  *
  * Posouvam se pomoci cyklu, abych nezatezoval pamet a zasobnik
  */
-int BSTInsert (treeNode* RootPtr, char* K, bool def, nodeInfCont Content)
+int BSTInsert (treeNode* RootPtr, char* K, int def, nodeInfCont Content)
 {
 	// pokud je strom prazdny vytvorime novy
 	if (*RootPtr == NULL)
 	{
+		fprintf(stderr, "Nova funkce -%s-\n", K);
 		// alokace mista pro koren
 		*RootPtr = (treeNode) malloc(sizeof(struct BSTNode));
 		if (*RootPtr == NULL)
@@ -93,14 +94,17 @@ int BSTInsert (treeNode* RootPtr, char* K, bool def, nodeInfCont Content)
 	// pokud se klice shoduji, kontroluji zda nedeklaruji
 	else if (strcmp(K, ((*RootPtr)->Key)) == 0)
 	{
+		fprintf(stderr, "Opakovane vlozeni -%s-\n", K);
 
-		if (((*RootPtr)->TBSNodeCont->dType == Content->dType) && def == false)
+		if (((*RootPtr)->TBSNodeCont->dType == Content->dType) && (def == 0))
 		{
+			fprintf(stderr, "Vkladam content \n");
 			(*RootPtr)->TBSNodeCont = Content;
 			return OK;
 		}
 		else
 		{
+			fprintf(stderr, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
 			return ERROR_REDEFINITION;
 		}
 	}
@@ -150,7 +154,7 @@ void BSTDispose (treeNode *RootPtr)
  */
 nodeInfCont createCont (nodeType nnType, int noParam, int noRet, int arg[], int out[], int ddType)
 {
-	// fprintf(stderr, "hhaha\n");
+
     nodeInfCont data = malloc(sizeof(struct nodeCont));
 
 	if (noParam != 0 && arg != NULL) {

@@ -148,17 +148,17 @@ int cScel(tokenList *token, treeNode *funcTab, treeList *tList)
                     if (token->Act->t_type == tEOF) return ERROR_COMPILER;
                     if (token->Act->rptr->t_type == kwINT)
                     {
-                        result = BSTInsert(&(tList->first->symtab), token->Act->atribute->str, true, createCont(ntVar, 101,101,NULL,NULL, tINT));
+                        result = BSTInsert(&(tList->first->symtab), token->Act->atribute->str, 1, createCont(ntVar, 101,101,NULL,NULL, tINT));
                         if (result != OK) return result;
                     }
                     else if (token->Act->rptr->t_type == kwFLOAT64)
                     {
-                        result = BSTInsert(&(tList->first->symtab), token->Act->atribute->str, true, createCont(ntVar, 101,101,NULL,NULL, tFLOAT));
+                        result = BSTInsert(&(tList->first->symtab), token->Act->atribute->str, 1, createCont(ntVar, 101,101,NULL,NULL, tFLOAT));
                         if (result != OK) return result;
                     }
                     else if (token->Act->rptr->t_type == kwSTRING)
                     {
-                        result = BSTInsert(&(tList->first->symtab), token->Act->atribute->str, true, createCont(ntVar, 101,101,NULL,NULL, tSTRING));
+                        result = BSTInsert(&(tList->first->symtab), token->Act->atribute->str, 1, createCont(ntVar, 101,101,NULL,NULL, tSTRING));
                         if (result != OK) return result;
                     }
                     else
@@ -351,15 +351,16 @@ int funcSave(tokenList *token, treeNode *funcTab)
                     if (token->Act->t_type != tRBRACKET) return ERROR_SYNTAX;
                     token->Act = token->Act->rptr;
 
-                    result = BSTInsert(funcTab, idName, true, createCont(ntFunc, noArg, noRet, args, ret, 101));
+                    result = BSTInsert(funcTab, idName, 1, createCont(ntFunc, noArg, noRet, args, ret, 101));
                     if (result != OK) return result;
                 }
                 else
                 {
-                    result = BSTInsert(funcTab, idName, true, createCont(ntFunc, noArg, 0, args, NULL, 101));
+                    result = BSTInsert(funcTab, idName, 1, createCont(ntFunc, noArg, 0, args, NULL, 101));
                     if (result != OK) return result;
                 }
                 if (token->Act->t_type != tLBRACE) return ERROR_SYNTAX;
+                fprintf(stderr, "Prave jsem vlozil funkci %s \n", idName);
             }
             
         }
@@ -515,16 +516,18 @@ int cId(tokenList *token, treeNode *funcTab, treeList *tList)
         // pokud je type podporovany typ ulozim
         if (type == DT_INT)
         { 
-            BSTInsert(&(tList->first->symtab), idName, true, createCont(ntVar, 101, 101, NULL, NULL, tINT));
-            // // fprintf(stderr, "CHECK 6 %s\n", idName); 
+            result = BSTInsert(&(tList->first->symtab), idName, 1, createCont(ntVar, 101, 101, NULL, NULL, tINT));
+            if (result != OK) return result;
         }
         else if (type == DT_STRING)
         {
-            BSTInsert(&(tList->first->symtab), idName, true, createCont(ntVar, 101, 101, NULL, NULL, tSTRING));
+            result = BSTInsert(&(tList->first->symtab), idName, 1, createCont(ntVar, 101, 101, NULL, NULL, tSTRING));
+            if (result != OK) return result;
         }
         else if (type == DT_FLOAT)
         {
-            BSTInsert(&(tList->first->symtab), idName, true, createCont(ntVar, 101, 101, NULL, NULL, tFLOAT));
+            result = BSTInsert(&(tList->first->symtab), idName, 1, createCont(ntVar, 101, 101, NULL, NULL, tFLOAT));
+            if (result != OK) return result;
         }
         else
         {
@@ -699,20 +702,21 @@ int cFor(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal, bool
         // vlozeni do tabulky
         if (type == DT_INT)
         {
-            BSTInsert(&(tList->first->symtab), name, true, createCont(ntVar, 101, 101, NULL, NULL, tINT));
+            result = BSTInsert(&(tList->first->symtab), name, 1, createCont(ntVar, 101, 101, NULL, NULL, tINT));
         }
         else if (type == DT_STRING)
         {
-            BSTInsert(&(tList->first->symtab), name, true, createCont(ntVar, 101, 101, NULL, NULL, tSTRING));
+            result = BSTInsert(&(tList->first->symtab), name, 1, createCont(ntVar, 101, 101, NULL, NULL, tSTRING));
         }
         else if (type == DT_FLOAT)
         {
-            BSTInsert(&(tList->first->symtab), name, true, createCont(ntVar, 101, 101, NULL, NULL, tFLOAT));
+            result = BSTInsert(&(tList->first->symtab), name, 1, createCont(ntVar, 101, 101, NULL, NULL, tFLOAT));
         }
         else
         {
             return ERROR_TYPE_INFERENCE;
         }
+        if (result != OK) return result;
         
     }
     if (token->Act->t_type != tSEMICOLON) return ERROR_SYNTAX;
@@ -771,11 +775,10 @@ int cFunc(tokenList *token, treeNode *funcTab, treeList *tList, int noItems, boo
     // specialni pripad print
     if (str_Compare_char(token->Act->lptr->atribute, "print") == 0)
     {
-        fprintf(stderr, "Porovnani \n");
         token->Act = token->Act->rptr;
         while (token->Act->t_type != tRBRACKET)
         {
-            fprintf(stderr, "Print token %d \n", token->Act->t_type);
+            //fprintf(stderr, "Print token %d \n", token->Act->t_type);
             if (token->Act->t_type == tEOF) return ERROR_SYNTAX;
             if (token->Act->t_type != tID &&
                 token->Act->t_type != tINT &&
@@ -946,39 +949,39 @@ void buidInFunc(treeNode *funcTab)
 {
     // inputs
     int out[2] = {tSTRING, tINT};
-    BSTInsert(funcTab, "inputs", false, createCont(ntFunc, 0, 2, NULL, out, 101));
+    BSTInsert(funcTab, "inputs", 0, createCont(ntFunc, 0, 2, NULL, out, 101));
     //inputi
     int out2[2] = {tINT, tINT};
-    BSTInsert(funcTab, "inputi", false, createCont(ntFunc, 0, 2, NULL, out2, 101));
+    BSTInsert(funcTab, "inputi", 0, createCont(ntFunc, 0, 2, NULL, out2, 101));
     // inputf
     int out3[2] = {tFLOAT, tINT};
-    BSTInsert(funcTab, "inputf", false, createCont(ntFunc, 0, 2, NULL, out3, 101));
+    BSTInsert(funcTab, "inputf", 0, createCont(ntFunc, 0, 2, NULL, out3, 101));
     // print
-    BSTInsert(funcTab, "print", false, createCont(ntFunc, 101, 0, NULL, NULL, 101));
+    BSTInsert(funcTab, "print", 0, createCont(ntFunc, 101, 0, NULL, NULL, 101));
     // int2float
     int out4[1] = {tFLOAT};
     int in4[1] = {tINT};
-    BSTInsert(funcTab, "int2float", false, createCont(ntFunc, 1, 1, in4, out4, 101));
+    BSTInsert(funcTab, "int2float", 0, createCont(ntFunc, 1, 1, in4, out4, 101));
     // float2int
     int out5[1] = {tINT};
     int in5[1] = {tFLOAT};
-    BSTInsert(funcTab, "float2int", false, createCont(ntFunc, 1, 1, in5, out5, 101));
+    BSTInsert(funcTab, "float2int", 0, createCont(ntFunc, 1, 1, in5, out5, 101));
     // len
     int out6[1] = {tINT};
     int in6[1] = {tSTRING};
-    BSTInsert(funcTab, "len", false, createCont(ntFunc, 1, 1, in6, out6, 101));
+    BSTInsert(funcTab, "len", 0, createCont(ntFunc, 1, 1, in6, out6, 101));
    // nodeInfCont temporary = BSTSearch(funcTab, "len");
    // // fprintf(stderr, "[BUILD IN FUNC] data type: %d\n", temporary->paramsIn[0]);
     // substr
     int out7[2] = {tSTRING, tINT};
     int in7[3] = {tSTRING, tINT, tINT};
-    BSTInsert(funcTab, "substr", false, createCont(ntFunc, 3, 2, in7, out7, 101));
+    BSTInsert(funcTab, "substr", 0, createCont(ntFunc, 3, 2, in7, out7, 101));
     // ord
     int out8[2] = {tINT, tINT};
     int in8[2] = {tSTRING, tINT};
-    BSTInsert(funcTab, "ord", false, createCont(ntFunc, 2, 2, in8, out8, 101));
+    BSTInsert(funcTab, "ord", 0, createCont(ntFunc, 2, 2, in8, out8, 101));
     // chr
     int out9[2] = {tSTRING, tINT};
     int in9[1] = {tINT};
-    BSTInsert(funcTab, "chr", false, createCont(ntFunc, 1, 2, in9, out9, 101));
+    BSTInsert(funcTab, "chr", 0, createCont(ntFunc, 1, 2, in9, out9, 101));
 }

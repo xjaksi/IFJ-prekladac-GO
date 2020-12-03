@@ -91,7 +91,7 @@ void BSTInit (treeNode *RootPtr);
  * @return Obsah hledaneho uzlu
  */
 nodeInfCont BSTSearch (treeNode *RootPtr, char* K);
-int BSTInsert (treeNode *, char *, bool, nodeInfCont);
+int BSTInsert (treeNode *, char *, int, nodeInfCont);
 void BSTDispose(treeNode *);
 
 nodeInfCont createCont (nodeType nnType, int noParam, int noRet, int arg[], int out[], int ddType);
