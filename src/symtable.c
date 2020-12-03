@@ -71,6 +71,7 @@ nodeInfCont BSTSearch (treeNode *RootPtr, char* K)
  */
 int BSTInsert (treeNode* RootPtr, char* K, int def, nodeInfCont Content)
 {
+	int result;
 	// pokud je strom prazdny vytvorime novy
 	if (*RootPtr == NULL)
 	{
@@ -98,13 +99,11 @@ int BSTInsert (treeNode* RootPtr, char* K, int def, nodeInfCont Content)
 
 		if (((*RootPtr)->TBSNodeCont->dType == Content->dType) && (def == 0))
 		{
-			fprintf(stderr, "Vkladam content \n");
 			(*RootPtr)->TBSNodeCont = Content;
 			return OK;
 		}
 		else
 		{
-			fprintf(stderr, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
 			return ERROR_REDEFINITION;
 		}
 	}
@@ -115,15 +114,15 @@ int BSTInsert (treeNode* RootPtr, char* K, int def, nodeInfCont Content)
 	else if (strcmp(K, ((*RootPtr)->Key)) < 0)
 	{
 		// opetovne volam funkci pro levy podstrom
-		BSTInsert(&((*RootPtr)->LPtr), K, def, Content);
-		return OK;
+		result = BSTInsert(&((*RootPtr)->LPtr), K, def, Content);
+		return result;
 	}
 
 	// v jinem pripade jdu v pravo
 	else
 	{
-		BSTInsert(&((*RootPtr)->RPtr), K, def, Content);
-		return OK;
+		result = BSTInsert(&((*RootPtr)->RPtr), K, def, Content);
+		return result;
 	}
 }
 
