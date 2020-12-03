@@ -10,7 +10,8 @@
  * ------------------------------------------------
  * @brief struktury, definice funkci
  * -----------------------------------------------*/ 
-
+#ifndef EXPRESSION_H
+#define EXPRESSION_H
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -22,6 +23,8 @@
 #include "dynamicString.h"
 #include "symtable.h"
 #define PT_SIZE 8
+
+
 
 /**
  * @brief typy symbolu v precedencni tabulce
@@ -91,3 +94,4 @@ ERROR_CODE accept(int *final);
  */
 void debug(PtType i);
 
+#endif

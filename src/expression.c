@@ -12,7 +12,7 @@
  * -----------------------------------------------*/ 
 
 #include "exprList.h"
-
+char text[100] = " ";	///< promenna pro debugovani
 ///< precedencni tabulka
  char precTable[PT_SIZE][PT_SIZE] = {
   //  +    -    *    /   cmp   (    )    $
@@ -29,7 +29,6 @@
 exprList opStack;		///< seznam fungujici jako zasobnik pro operatory
 exprList idStack;		///< seznam fungujici jako zasobnik pro vyrazy/id
 exprList input;			///< seznam reprezentujici cely vstupni vyraz 
-char text[100] = " ";	///< promenna pro debugovani
 bool exprFlag = false;	///< priznak pro urceni, jestli se jedna o ID nebo operator (pro shift funkci)
 
 ERROR_CODE finalError;	///< navratova hodnota
@@ -43,6 +42,12 @@ ERROR_CODE parseExp(tokenList *tList, treeList *tree, int *final) {
 	// vlozeni stop symbolu na konec seznamu pro operatory a id/vyrazy
 	insertItem(&opStack, PT_STOP, DT_NONE, false);
 	insertItem(&idStack, PT_STOP, DT_NONE, false);
+
+
+		
+						
+					
+
 
 	DLFirst(tList);							// [token] nastaveni aktivity na prvni prvek
 	finalError = fillMyList(&input, tList, tree);		// [token] naplneni seznamu z toknu
@@ -85,20 +90,44 @@ ERROR_CODE parseExp(tokenList *tList, treeList *tree, int *final) {
 					if (finalError != OK) {
 						return finalError;
 					}	
-					/*tokenList output;
+					tokenList output;
 					DLInitList(&output);
+
+					DLFirst(tList);	
+		fprintf(stderr,"[TOKEN] input:\t");
+		while (tList->Act != NULL)
+		{
+			if(tList->Act->atribute == NULL) {
+				debug(tokenToPT(tList->Act->t_type));
+				fprintf(stderr, "%s ", text);
+			}
+			else {
+				fprintf(stderr, "%s ", tList->Act->atribute->str);
+			}
+			
+			tList->Act = tList->Act->rptr;
+		}
+		fprintf(stderr,"\n");
+						
+					DLFirst(tList);
 
 					 postfix(tList, &output);
 
 					DLFirst(&output);
 
-					// fprintf(stderr,"[POSFITX] posfixed output:\t");
+					 fprintf(stderr,"[POSFITX] posfixed output:\t");
 					while(output.Act != NULL) {
-						debug(tokenToPT(output.Act->t_type));
-						// fprintf(stderr, "%s ", text);
+						if(output.Act->atribute == NULL) {
+							debug(tokenToPT(output.Act->t_type));
+							fprintf(stderr, "%s ", text);
+						}
+						else {
+							fprintf(stderr, "%s ", output.Act->atribute->str);			
+						}
 						output.Act = output.Act->rptr;
 					}
-					// fprintf(stderr, "\n"); */
+					fprintf(stderr, "\n");
+					DLDisposeList(&output, 0); 
 					return finalError;
 
 				case 'E':		// nepovolena sekvence znaku
@@ -130,25 +159,28 @@ ERROR_CODE reduce() {
 		// KROK 1: zajisteni stejnych datovych typu
 		if (idStack.act->dType == idStack.act->prev->dType) {
 			finalType = idStack.act->dType;
+			if (finalType == DT_NONE) {
+				return ERROR_SYNTAX;
+			}
 			
 			// KROK 2: zjisteni operace, kterou provadime
 			switch (opStack.act->ptType) {
 
 				// KROK 3: zjistit kompatibilitu typu a operace
 				case PT_ADD: 
-					if (finalType == DT_NONE || finalType == DT_BOOL) {	
+					if (finalType == DT_BOOL) {	
 						return ERROR_TYPE_COMPATIBILITY;
 					}
 					break;
 				case PT_CMPS:
-					if (finalType == DT_NONE || finalType == DT_BOOL) {	
+					if (finalType == DT_BOOL) {	
 						return ERROR_TYPE_COMPATIBILITY;
 					}
 					idStack.act->prev->dType = DT_BOOL;
 					break;
 
 				case PT_MUL: case PT_DIV: case PT_SUB: 
-					if (finalType == DT_NONE || finalType == DT_BOOL || finalType == DT_STRING) {		
+					if (finalType == DT_BOOL || finalType == DT_STRING) {		
 						return ERROR_TYPE_COMPATIBILITY;
 					}
 
@@ -174,7 +206,13 @@ ERROR_CODE reduce() {
 		}
 		else {
 			// fprintf(stderr, "ID typ: %d   ID prev typ: %d\n", idStack.act->dType, idStack.act->prev->dType);
-			return ERROR_TYPE_COMPATIBILITY;
+			if (idStack.act->dType == DT_NONE || idStack.act->prev->dType == DT_NONE) {
+				return ERROR_SYNTAX;
+			}
+			else {
+				return ERROR_TYPE_COMPATIBILITY;
+			}
+			
 		}
 	} 
 	return OK;	

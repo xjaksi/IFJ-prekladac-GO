@@ -10,7 +10,8 @@
  * ------------------------------------------------
  * @brief funkce pro pouzivani obousmernych seznamu
  * -----------------------------------------------*/ 
-
+#ifndef EXPRLIST_H
+#define EXPRLIST_H
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -126,3 +127,8 @@ void deleteToken(tokenList *t);
  * @return int hodnota precedence
  */
 int getPrecedence(TokenType type);
+
+
+void debugg(PtType i);
+
+#endif

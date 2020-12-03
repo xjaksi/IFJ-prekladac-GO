@@ -12,8 +12,7 @@
  * -----------------------------------------------*/ 
 
 #include "exprList.h"
-
-
+char textt[100] = " ";	///< promenna pro debugovani
 
 void listInit(exprList *l) {
     l->first = NULL;
@@ -180,23 +179,24 @@ ERROR_CODE postfix(tokenList *expr, tokenList *postfixExpr) {
 
             // pokud jde o operand (ID nebo konstantu), vlozeni na vysledny seznam   
             case tID: case tFLOAT: case tSTRING: case tINT:
+          //      fprintf(stderr, "[debug] pushing %s \n", expr->Act->atribute->str);
                 DLInsertLast(postfixExpr, expr->Act->t_type, expr->Act->atribute);
                 break;
             
             // pokud jde o levou zavorku, je vlozena na seznam operatoru
             case tLBRACKET:
-                // // // // fprintf(stderr, "[debug] pushing (\n");
+            //    fprintf(stderr, "[debug] pushing (\n");
                 DLInsertLast(&operators, expr->Act->t_type, expr->Act->atribute);
                 break;
 
             // pokud jde o pravou zavorku, presouvaji se operatory na vysledny seznam, dokud se nenarazi na pravou zavorku
             case tRBRACKET:
                 while (operators.Last->t_type != tLBRACKET) {
-                    // // // // fprintf(stderr, "[debug] rbracket removing %s\n", operators.Last->atribute->str);
+                //    fprintf(stderr, "[debug] rbracket removing %s\n", operators.Last->atribute->str);
                     DLInsertLast(postfixExpr, operators.Last->t_type, operators.Last->atribute);
                     deleteToken(&operators);
                 }
-                // // // // fprintf(stderr, "[debug] rbracket removing %s\n", operators.Last->atribute->str);
+            //    fprintf(stderr, "[debug] rbracket removing %s\n", operators.Last->atribute->str);
                     deleteToken(&operators);
             break;
 
@@ -207,15 +207,16 @@ ERROR_CODE postfix(tokenList *expr, tokenList *postfixExpr) {
                         precOp = 0;
                 }
                 else {
-                    precInput = getPrecedence(expr->Act->t_type);
+                    
                     precOp = getPrecedence(operators.Last->t_type);                    
                 }
+                precInput = getPrecedence(expr->Act->t_type);
 
                 // dokud je na seznamu operatoru neco s vyssi precedenci nez na vstupu
-                // // // // // fprintf(stderr, "Input: %s prec: %d \t Operator: %s prec: %d \n",expr->Act->atribute->str, precInput, operators.Last->atribute->str,precOp);
                 while (precOp >= precInput) {
                     // presunout tento operator na vysledny seznam a zaroven jej odstranit ze seznamu operatoru
-                    // // // // fprintf(stderr, "[debug] removing %s\n", operators.Last->atribute->str);
+                    debugg(tokenToPT(operators.Last->t_type));
+                  //  fprintf(stderr, "[debug] removing %s\n", textt);
                     DLInsertLast(postfixExpr, operators.Last->t_type, operators.Last->atribute);
                     deleteToken(&operators); 
                     if (operators.Last == NULL) {
@@ -290,4 +291,52 @@ int getPrecedence(TokenType type) {
         return 0;
         break;
     }
+}
+
+
+void debugg(PtType i) {
+	switch (i) {
+		case PT_ADD:
+			strcpy(textt, "+");
+			break;
+		case PT_SUB:
+			strcpy(textt, "-");
+			break;
+
+		case PT_MUL:
+			strcpy(textt, "*");
+			break;
+
+		case PT_DIV:
+			strcpy(textt, "/");
+			break;
+
+		case PT_CMPS:
+			strcpy(textt, "CMPS");
+			break;
+
+		case PT_LBR:
+			strcpy(textt, "(");
+			break;
+
+		case PT_RBR:
+			strcpy(textt, ")");
+			break;
+
+		case PT_STOP:
+			strcpy(textt, "$");
+			break;
+
+		case PT_EXP:
+			strcpy(textt, "E");
+			break;
+
+		case PT_CONST:
+			strcpy(textt, "E");
+			break;
+
+		default:
+			strcpy(textt, "ERROR");
+			break;
+	}
 }
