@@ -356,7 +356,7 @@ int funcSave(tokenList *token, treeNode *funcTab)
                 }
                 else
                 {
-                    result = BSTInsert(funcTab, idName, true, createCont(ntFunc, noArg, noRet, 0, NULL, 101));
+                    result = BSTInsert(funcTab, idName, true, createCont(ntFunc, noArg, 0, args, NULL, 101));
                     if (result != OK) return result;
                 }
                 if (token->Act->t_type != tLBRACE) return ERROR_SYNTAX;
@@ -767,17 +767,20 @@ int cFunc(tokenList *token, treeNode *funcTab, treeList *tList, int noItems, boo
     nodeInfCont nodeCont = BSTSearch(funcTab, token->Act->lptr->atribute->str);
     if (nodeCont == NULL) return ERROR_UNDEFINED;
 
+    fprintf(stderr, "Kontrola %s \n", token->Act->lptr->atribute->str);
     // specialni pripad print
-    if (str_Compare_char(token->Act->lptr->atribute, "print"))
+    if (str_Compare_char(token->Act->lptr->atribute, "print") == 0)
     {
+        fprintf(stderr, "Porovnani \n");
         token->Act = token->Act->rptr;
-        while (token->Act->t_type != tLBRACKET)
+        while (token->Act->t_type != tRBRACKET)
         {
+            fprintf(stderr, "Print token %d \n", token->Act->t_type);
             if (token->Act->t_type == tEOF) return ERROR_SYNTAX;
-            if (token->Act->t_type != tID ||
-                token->Act->t_type != tINT ||
-                token->Act->t_type != tFLOAT ||
-                token->Act->t_type != tSTRING ||
+            if (token->Act->t_type != tID &&
+                token->Act->t_type != tINT &&
+                token->Act->t_type != tFLOAT &&
+                token->Act->t_type != tSTRING &&
                 token->Act->t_type != tCOMMA)
             {
                 return ERROR_PARAMETERS;
@@ -785,7 +788,7 @@ int cFunc(tokenList *token, treeNode *funcTab, treeList *tList, int noItems, boo
             
             token->Act = token->Act->rptr;
         }
-
+        fprintf(stderr, "print OK \n");
         token->Act = token->Act->rptr;
         if (token->Act->t_type != tEOL) return ERROR_SYNTAX;
         return OK;
