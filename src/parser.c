@@ -120,18 +120,18 @@ int cScel(tokenList *token, treeNode *funcTab, treeList *tList)
         else
         {
             // tabulka pro funkci
-            nodeInfCont TBSNodeCont = BSTSearch(funcTab, token->Act->atribute->str);
-            if (TBSNodeCont == NULL) return ERROR_COMPILER;
-            if (TBSNodeCont->noReturn != 0) 
+            nodeInfCont nodeCont = BSTSearch(funcTab, token->Act->atribute->str);
+            if (nodeCont == NULL) return ERROR_COMPILER;
+            if (nodeCont->noReturn != 0) 
             {
-                retVal = TBSNodeCont->paramsOut;
+                retVal = nodeCont->paramsOut;
             }
             else
             {
                 retVal = NULL;
             }
 
-            if (TBSNodeCont->noParams != 0)
+            if (nodeCont->noParams != 0)
             {
                 paramsIN = true;
                 // pokud ma funkce argumenty dam do tabulky
@@ -505,9 +505,9 @@ int cId(tokenList *token, treeNode *funcTab, treeList *tList)
         if (cnt != 1) return ERROR_SYNTAX;
         if (token->Act->lptr->t_type != tID) return ERROR_SYNTAX;
         
-        nodeInfCont TBSNodeCont = BSTSearch(funcTab, token->Act->lptr->atribute->str); 
+        nodeInfCont nodeCont = BSTSearch(funcTab, token->Act->lptr->atribute->str); 
         char* idName = token->Act->lptr->atribute->str;
-        if (TBSNodeCont != NULL) return ERROR_REDEFINITION;
+        if (nodeCont != NULL) return ERROR_REDEFINITION;
         token->Act = token->Act->rptr;
         result = cExpr(token, tList, &type);
         
@@ -681,8 +681,8 @@ int cFor(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal, bool
     if (token->Act->t_type == tID)
     {
         // pokud existuje jako funkce, koncim
-        nodeInfCont TBSNodeCont = BSTSearch(funcTab, token->Act->atribute->str);
-        if (TBSNodeCont != NULL) return ERROR_REDEFINITION;
+        nodeInfCont nodeCont = BSTSearch(funcTab, token->Act->atribute->str);
+        if (nodeCont != NULL) return ERROR_REDEFINITION;
         // jinal vytvorim novy ramec
         treeNode localTab;
         BSTInit(&localTab);
@@ -764,11 +764,36 @@ int cFor(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal, bool
 int cFunc(tokenList *token, treeNode *funcTab, treeList *tList, int noItems, bool ass)
 {
     
-    nodeInfCont TBSNodeCont = BSTSearch(funcTab, token->Act->lptr->atribute->str);
-    if (TBSNodeCont == NULL) return ERROR_UNDEFINED;
+    nodeInfCont nodeCont = BSTSearch(funcTab, token->Act->lptr->atribute->str);
+    if (nodeCont == NULL) return ERROR_UNDEFINED;
+
+    // specialni pripad print
+    if (str_Compare_char(token->Act->lptr->atribute, "print"))
+    {
+        token->Act = token->Act->rptr;
+        while (token->Act->t_type != tLBRACKET)
+        {
+            if (token->Act->t_type == tEOF) return ERROR_SYNTAX;
+            if (token->Act->t_type != tID ||
+                token->Act->t_type != tINT ||
+                token->Act->t_type != tFLOAT ||
+                token->Act->t_type != tSTRING ||
+                token->Act->t_type != tCOMMA)
+            {
+                return ERROR_PARAMETERS;
+            }
+            
+            token->Act = token->Act->rptr;
+        }
+
+        token->Act = token->Act->rptr;
+        if (token->Act->t_type != tEOL) return ERROR_SYNTAX;
+        return OK;
+    }
+    
 
     // funkce existuje kontroluji argumenty
-    int noParam = TBSNodeCont->noParams;
+    int noParam = nodeCont->noParams;
 // fprintf(stderr, "noParam: %d\n", noParam);
     token->Act = token->Act->rptr; // posuny se na token za (
     // funkce nema mit argument
@@ -780,17 +805,17 @@ int cFunc(tokenList *token, treeNode *funcTab, treeList *tList, int noItems, boo
     else if (noParam == 1)
     {
         int dataT;
-        // fprintf(stderr, "Node cond stuff: %d\n",TBSNodeCont->paramsIn[0]);
+        // fprintf(stderr, "Node cond stuff: %d\n",nodeCont->paramsIn[0]);
         // fprintf(stderr, "Token type: %d\n", token->Act->t_type);
         if (token->Act->t_type == tID)
         {
             dataT = dataSearch(tList, token->Act->atribute->str);
             // fprintf(stderr, "Data type: %d\n", dataT);
-            if (dataT != TBSNodeCont->paramsIn[0]) return ERROR_PARAMETERS;
+            if (dataT != nodeCont->paramsIn[0]) return ERROR_PARAMETERS;
         }
         else
         {
-            if (token->Act->t_type != TBSNodeCont->paramsIn[0]) return ERROR_PARAMETERS;
+            if (token->Act->t_type != nodeCont->paramsIn[0]) return ERROR_PARAMETERS;
         }
         token->Act = token->Act->rptr;
         if (token->Act->t_type != tRBRACKET) return ERROR_PARAMETERS;
@@ -806,11 +831,11 @@ int cFunc(tokenList *token, treeNode *funcTab, treeList *tList, int noItems, boo
             if (token->Act->t_type == tID)
             {
                 dataT = dataSearch(tList, token->Act->atribute->str);
-                if (dataT != TBSNodeCont->paramsIn[i]) return ERROR_PARAMETERS;
+                if (dataT != nodeCont->paramsIn[i]) return ERROR_PARAMETERS;
             }
             else
             {
-                if (token->Act->t_type != TBSNodeCont->paramsIn[i]) return ERROR_PARAMETERS;
+                if (token->Act->t_type != nodeCont->paramsIn[i]) return ERROR_PARAMETERS;
             }
             token->Act = token->Act->rptr;
             if (token->Act->t_type == tCOMMA) 
@@ -836,7 +861,7 @@ int cFunc(tokenList *token, treeNode *funcTab, treeList *tList, int noItems, boo
     // kontrola navratovych hodnot
     if (ass)
     {
-        if (TBSNodeCont->noReturn != noItems) return ERROR_SEMANTICS;
+        if (nodeCont->noReturn != noItems) return ERROR_SEMANTICS;
 
         // jdu na zacatek radku
         token->Act = token->Act->lptr;
@@ -858,7 +883,7 @@ int cFunc(tokenList *token, treeNode *funcTab, treeList *tList, int noItems, boo
                 if (token->Act->t_type != tID) return ERROR_SYNTAX;
                 type = dataSearch(tList, token->Act->atribute->str);
                 if (type == 101) return ERROR_UNDEFINED;
-                if (type != TBSNodeCont->paramsOut[i]) return ERROR_RETURN_VALUE;
+                if (type != nodeCont->paramsOut[i]) return ERROR_RETURN_VALUE;
                 token->Act = token->Act->rptr;
             }
             if (token->Act->t_type == tCOMMA)
@@ -877,7 +902,7 @@ int cFunc(tokenList *token, treeNode *funcTab, treeList *tList, int noItems, boo
     }
     else
     {
-        if (TBSNodeCont->noReturn != 0) return ERROR_SEMANTICS;
+        if (nodeCont->noReturn != 0) return ERROR_SEMANTICS;
     }
     
 
@@ -926,7 +951,7 @@ void buidInFunc(treeNode *funcTab)
     int out3[2] = {tFLOAT, tINT};
     BSTInsert(funcTab, "inputf", false, createCont(ntFunc, 0, 2, NULL, out3, 101));
     // print
-   //  BSTInsert(funcTab, "print", false, createCont(ntFunc, 1, 0, NULL, NULL, 101));
+    BSTInsert(funcTab, "print", false, createCont(ntFunc, 101, 0, NULL, NULL, 101));
     // int2float
     int out4[1] = {tFLOAT};
     int in4[1] = {tINT};
