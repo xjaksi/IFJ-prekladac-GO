@@ -76,10 +76,9 @@ int parse()
 int cScel(tokenList *token, treeNode *funcTab, treeList *tList)
 {
     int result;
-    int param;
     int *retVal;
     bool paramsIN = false;
-    bool returnWas = false;
+    int returnWas = 0;
 
     // deklarovani funkci pred kontrolou
     result = funcSave(token, funcTab);
@@ -196,7 +195,7 @@ int cScel(tokenList *token, treeNode *funcTab, treeList *tList)
         token->Act = token->Act->rptr;
 
         // odchazim z tela funkce
-        if (returnWas == false && retVal != NULL) return ERROR_RETURN_VALUE;
+        if (returnWas == 0 && retVal != NULL) return ERROR_RETURN_VALUE;
         if (paramsIN) treeListRemove(tList);
     }
 
@@ -321,7 +320,7 @@ int funcSave(tokenList *token, treeNode *funcTab)
                     }
                     if (noRet > 1 && noRet != noComma+1) return ERROR_SYNTAX;
                     if (token->Act->t_type != tRBRACKET) return ERROR_SYNTAX;
-
+                    
                     int ret[ noRet ];
                     if (noRet > 0)
                     {
@@ -330,11 +329,22 @@ int funcSave(tokenList *token, treeNode *funcTab)
 
                         for (int i = 0; i < noRet; i++)
                         {
-                            if (token->Act->t_type != kwINT &&
-                                token->Act->t_type != kwSTRING &&
-                                token->Act->t_type != kwFLOAT64)
-                                    return ERROR_SYNTAX;
-                            ret[i] = token->Act->t_type;
+                            if (token->Act->t_type == kwINT)
+                            {
+                                ret[i] = tINT;
+                            }
+                            else if (token->Act->t_type == kwFLOAT64)
+                            {
+                                ret[i] = tFLOAT;
+                            }
+                            else if (token->Act->t_type == kwSTRING)
+                            {
+                                ret[i] = tSTRING;
+                            }
+                            else
+                            {
+                                return ERROR_SYNTAX;
+                            }
                             token->Act = token->Act->rptr;
 
                             // za datovym typem nasleduje konec nebo dalsi
@@ -360,7 +370,6 @@ int funcSave(tokenList *token, treeNode *funcTab)
                     if (result != OK) return result;
                 }
                 if (token->Act->t_type != tLBRACE) return ERROR_SYNTAX;
-                fprintf(stderr, "Prave jsem vlozil funkci %s \n", idName);
             }
             
         }
@@ -374,7 +383,7 @@ int funcSave(tokenList *token, treeNode *funcTab)
     return OK;
 }
 
-int cBody(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal, bool *returnWas)
+int cBody(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal, int *returnWas)
 {
     // // fprintf(stderr, "CHECK 3\n");
     int result = OK;
@@ -398,6 +407,7 @@ int cBody(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal, boo
         // fprintf(stderr, "[DEBUG] prava zavorka, result: %d \n", result);
         if (token->Act->t_type == tRBRACE) 
         {
+            fprintf(stderr, "END OF BODY %d\n", result);
             treeListRemove(tList);
             return result;
         }
@@ -407,27 +417,31 @@ int cBody(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal, boo
         case tDEVNULL:
         case tID :
             result = cId(token, funcTab, tList);
-            // fprintf(stderr, "[DEBUG] konec id, result: %d  token: %d\n", result, token->Act->t_type);
+            fprintf(stderr, "[DEBUG] konec id, result: %d  token: %d\n", result, token->Act->t_type);
             if (result != OK) return result;
+
             break;
 
         case kwIF:
-            result = cIf(token, funcTab, tList, retVal, returnWas);
+            result = cIf(token, funcTab, tList, retVal, &returnWas);
             if (result != OK) return result;
             break;
 
         case kwFOR:
-            result = cFor(token, funcTab, tList, retVal, returnWas);
+            result = cFor(token, funcTab, tList, retVal, &returnWas);
             if (result != OK) return result;
             break;
 
         case kwRETURN:
-            *returnWas = true;
+        fprintf(stderr, "Remember RETURN \n");
+            *returnWas = 1;
+            fprintf(stderr, "Remember RETURN \n");
             token->Act = token->Act->rptr;
+            fprintf(stderr, "RETURN    token: %d\n", token->Act->t_type);
+            
             if (retVal != NULL)
             {
-                int type;
-                signed int cnt = 0;
+                int cnt = 0;
                 if (token->Act->t_type == tEOL) return ERROR_RETURN_VALUE;
                 while (token->Act->t_type != tEOL)
                 {
@@ -440,9 +454,16 @@ int cBody(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal, boo
                     }
                     else
                     {
-                        if (token->Act->t_type == retVal[cnt]) return ERROR_RETURN_VALUE;
+                        fprintf(stderr, "RETURN      prislo: %d\n", token->Act->t_type);
+                        fprintf(stderr, "RETURN    ocekavam: %d\n", retVal[cnt]);
+                        if (token->Act->t_type != retVal[cnt]) return ERROR_RETURN_VALUE;
+                        fprintf(stderr, "RETURN    OK\n");
                     }
+                    cnt++;
+                    token->Act = token->Act->rptr;
+                    if (token->Act->t_type == tCOMMA) token->Act = token->Act->rptr;
                 }
+                fprintf(stderr, "RETURN OK\n");
             }
             else
             {
@@ -457,7 +478,7 @@ int cBody(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal, boo
         }
 
     }
-     // fprintf(stderr, "END OF BODY \n");
+    fprintf(stderr, "END OF BODY \n");
     // odebrani ramce na konci tela
     treeListRemove(tList);
     
@@ -494,11 +515,11 @@ int cId(tokenList *token, treeNode *funcTab, treeList *tList)
         break;
 
     case tASSIGN:
-        // // fprintf(stderr, "CHECK 7\n"); 
+        fprintf(stderr, "CHECK 7\n"); 
         token->Act = token->Act->rptr;
         // predam ukazatel na prvni token za =
         result = cAssign(token, funcTab, tList, cnt);
-        // // fprintf(stderr, "result assign: %d token: %d\n", result, token->Act->t_type);
+        fprintf(stderr, "result assign: %d token: %d\n", result, token->Act->t_type);
         if (result != OK) return result;
         break;
 
@@ -628,7 +649,7 @@ int cAssign(tokenList *token, treeNode *funcTab, treeList *tList, int item)
 
 }
 
-int cIf(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal, bool *returnWas)
+int cIf(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal, int *returnWas)
 {
     int result;
     int type;
@@ -643,7 +664,7 @@ int cIf(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal, bool 
     token->Act = token->Act->rptr;
     if (token->Act->t_type != tEOL) return ERROR_SYNTAX;
     // telo if
-    result = cBody(token, funcTab, tList, retVal, returnWas);
+    result = cBody(token, funcTab, tList, retVal, &returnWas);
     if (result != OK) return result;
     if (token->Act->t_type != tRBRACE) return ERROR_SYNTAX;
     token->Act = token->Act->rptr;
@@ -659,7 +680,7 @@ int cIf(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal, bool 
     token->Act = token->Act->rptr;
     if (token->Act->t_type != tEOL) return ERROR_SYNTAX;
     // telo else
-    result = cBody(token, funcTab, tList, retVal, returnWas);
+    result = cBody(token, funcTab, tList, retVal, &returnWas);
     // fprintf(stderr, "[DEBUG] konec body, result: %d \n", result);
     if (result != OK) return result;
     if (token->Act->t_type != tRBRACE) return ERROR_SYNTAX;
@@ -673,7 +694,7 @@ int cIf(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal, bool 
     return OK;
 }
 
-int cFor(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal, bool *returnWas)
+int cFor(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal, int *returnWas)
 {
     int result;
     int type, dat;
@@ -754,7 +775,7 @@ int cFor(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal, bool
     if (token->Act->t_type != tEOL) return ERROR_SYNTAX;
 
     // telo for
-    result = cBody(token, funcTab, tList, retVal, returnWas);
+    result = cBody(token, funcTab, tList, retVal, &returnWas);
     if (result != OK) return result;
 
     // pokud jsem vytvarel hlavicku popnu
@@ -829,7 +850,6 @@ int cFunc(tokenList *token, treeNode *funcTab, treeList *tList, int noItems, boo
     // vice
     else
     {
-       
         int dataT;
         int noC = 0;
         for (int i = 0; i < noParam; i++)
@@ -841,6 +861,7 @@ int cFunc(tokenList *token, treeNode *funcTab, treeList *tList, int noItems, boo
             }
             else
             {
+
                 if (token->Act->t_type != nodeCont->paramsIn[i]) return ERROR_PARAMETERS;
             }
             token->Act = token->Act->rptr;
