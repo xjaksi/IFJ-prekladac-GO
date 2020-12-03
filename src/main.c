@@ -34,6 +34,34 @@ int main() {
         fprintf(stderr, "[ERROR] syntax error.\n");
         break;
 
+    case 3:
+        fprintf(stderr, "[ERROR] 3\n");
+        break;
+
+    case 4:
+        fprintf(stderr, "[ERROR] 4\n");
+        break;
+
+    case 5:
+        fprintf(stderr, "[ERROR] 5\n");
+        break;
+
+    case 6:
+        fprintf(stderr, "[ERROR] 6\n");
+        break;
+
+    case 7:
+        fprintf(stderr, "[ERROR] 7\n");
+        break;
+
+    case 9:
+        fprintf(stderr, "[ERROR] 9\n");
+        break;
+
+    case 99:
+        fprintf(stderr, "[ERROR] 99\n");
+        break;
+
     default:
     fprintf(stderr, "[ERROR] something went wrong.\n");
         break;

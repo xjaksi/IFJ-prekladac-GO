@@ -102,5 +102,5 @@ int str_Compare_char(tStr *p_str, char *c_arr){
     }
 
     // c funkce pro kontrolu retezcu
-    return strcmp(p_str->str, c_arr);;
+    return strcmp(p_str->str, c_arr);
 }
