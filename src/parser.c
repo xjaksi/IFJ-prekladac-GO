@@ -980,40 +980,40 @@ int cExpr(tokenList *token, treeList *tList, int *type)
 void buidInFunc(treeNode *funcTab)
 {
     // inputs
-    int out[2] = {tSTRING, tINT};
-    BSTInsert(funcTab, "inputs", 0, createCont(ntFunc, 0, 2, NULL, out, 101));
+    int out[3] = {tSTRING, tINT, 101};
+    BSTInsert(funcTab, "inputs", 0, createCont(ntFunc, 0, 3, NULL, out, 101));
     //inputi
-    int out2[2] = {tINT, tINT};
-    BSTInsert(funcTab, "inputi", 0, createCont(ntFunc, 0, 2, NULL, out2, 101));
+    int out2[3] = {tINT, tINT, 101};
+    BSTInsert(funcTab, "inputi", 0, createCont(ntFunc, 0, 3, NULL, out2, 101));
     // inputf
-    int out3[2] = {tFLOAT, tINT};
-    BSTInsert(funcTab, "inputf", 0, createCont(ntFunc, 0, 2, NULL, out3, 101));
+    int out3[3] = {tFLOAT, tINT, 101};
+    BSTInsert(funcTab, "inputf", 0, createCont(ntFunc, 0, 3, NULL, out3, 101));
     // print
     BSTInsert(funcTab, "print", 0, createCont(ntFunc, 101, 0, NULL, NULL, 101));
     // int2float
-    int out4[1] = {tFLOAT};
+    int out4[2] = {tFLOAT, 101};
     int in4[1] = {tINT};
-    BSTInsert(funcTab, "int2float", 0, createCont(ntFunc, 1, 1, in4, out4, 101));
+    BSTInsert(funcTab, "int2float", 0, createCont(ntFunc, 1, 2, in4, out4, 101));
     // float2int
-    int out5[1] = {tINT};
+    int out5[2] = {tINT, 101};
     int in5[1] = {tFLOAT};
-    BSTInsert(funcTab, "float2int", 0, createCont(ntFunc, 1, 1, in5, out5, 101));
+    BSTInsert(funcTab, "float2int", 0, createCont(ntFunc, 1, 2, in5, out5, 101));
     // len
-    int out6[1] = {tINT};
+    int out6[2] = {tINT, 101};
     int in6[1] = {tSTRING};
-    BSTInsert(funcTab, "len", 0, createCont(ntFunc, 1, 1, in6, out6, 101));
+    BSTInsert(funcTab, "len", 0, createCont(ntFunc, 1, 2, in6, out6, 101));
    // nodeInfCont temporary = BSTSearch(funcTab, "len");
    // // fprintf(stderr, "[BUILD IN FUNC] data type: %d\n", temporary->paramsIn[0]);
     // substr
-    int out7[2] = {tSTRING, tINT};
+    int out7[3] = {tSTRING, tINT, 101};
     int in7[3] = {tSTRING, tINT, tINT};
-    BSTInsert(funcTab, "substr", 0, createCont(ntFunc, 3, 2, in7, out7, 101));
+    BSTInsert(funcTab, "substr", 0, createCont(ntFunc, 3, 3, in7, out7, 101));
     // ord
-    int out8[2] = {tINT, tINT};
+    int out8[3] = {tINT, tINT, 101};
     int in8[2] = {tSTRING, tINT};
-    BSTInsert(funcTab, "ord", 0, createCont(ntFunc, 2, 2, in8, out8, 101));
+    BSTInsert(funcTab, "ord", 0, createCont(ntFunc, 2, 3, in8, out8, 101));
     // chr
-    int out9[2] = {tSTRING, tINT};
+    int out9[3] = {tSTRING, tINT, 101};
     int in9[1] = {tINT};
-    BSTInsert(funcTab, "chr", 0, createCont(ntFunc, 1, 2, in9, out9, 101));
+    BSTInsert(funcTab, "chr", 0, createCont(ntFunc, 1, 3, in9, out9, 101));
 }
