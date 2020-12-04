@@ -38,7 +38,7 @@ typedef struct nodeCont
 {
     nodeType nType;                 // jedna se o funkci nebo promennou
     int noParams;                   // pocet parametru teto funkce
-    int noReturn;                   // pocet vracenych parametru
+    int noReturn;                   // pocet vracenych parametru + 1 (101)
     int *paramsIn;                   // datovy typ argumentu
     int *paramsOut;                  // datovy typ co funkce vraci
     int dType;                 // nazev datoveho typu

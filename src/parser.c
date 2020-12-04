@@ -321,6 +321,7 @@ int funcSave(tokenList *token, treeNode *funcTab)
                     if (noRet > 1 && noRet != noComma+1) return ERROR_SYNTAX;
                     if (token->Act->t_type != tRBRACKET) return ERROR_SYNTAX;
                     
+                    if (noRet > 0) noRet++;
                     int ret[ noRet ];
                     if (noRet > 0)
                     {
@@ -350,12 +351,15 @@ int funcSave(tokenList *token, treeNode *funcTab)
                             // za datovym typem nasleduje konec nebo dalsi
                             if (token->Act->t_type == tRBRACKET)
                             {
-                                if (i+1 != noRet) return ERROR_SYNTAX; 
+                                ret[i+1] = 101;
+                                fprintf(stderr, "%d %d\n", i+1, noRet);
+                                if (i+2 != noRet) return ERROR_SYNTAX; 
                                 break;
                             }
                             if (token->Act->t_type != tCOMMA) return ERROR_SYNTAX;
                             token->Act = token->Act->rptr;
                         }
+
                     }
 
                     if (token->Act->t_type != tRBRACKET) return ERROR_SYNTAX;
@@ -433,15 +437,12 @@ int cBody(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal, int
             break;
 
         case kwRETURN:
-        fprintf(stderr, "Remember RETURN \n");
             *returnWas = 1;
-            fprintf(stderr, "Remember RETURN \n");
             token->Act = token->Act->rptr;
-            fprintf(stderr, "RETURN    token: %d\n", token->Act->t_type);
+            int cnt = 0;
             
             if (retVal != NULL)
             {
-                int cnt = 0;
                 if (token->Act->t_type == tEOL) return ERROR_RETURN_VALUE;
                 while (token->Act->t_type != tEOL)
                 {
@@ -457,18 +458,19 @@ int cBody(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal, int
                         fprintf(stderr, "RETURN      prislo: %d\n", token->Act->t_type);
                         fprintf(stderr, "RETURN    ocekavam: %d\n", retVal[cnt]);
                         if (token->Act->t_type != retVal[cnt]) return ERROR_RETURN_VALUE;
-                        fprintf(stderr, "RETURN    OK\n");
                     }
                     cnt++;
                     token->Act = token->Act->rptr;
                     if (token->Act->t_type == tCOMMA) token->Act = token->Act->rptr;
                 }
-                fprintf(stderr, "RETURN OK\n");
             }
             else
             {
                 return ERROR_RETURN_VALUE;
             }
+            fprintf(stderr, "RETURN OK %d \n", retVal[3]);
+            if (retVal[cnt] != 101) return ERROR_RETURN_VALUE;
+            fprintf(stderr, "RETURN OK %d \n", retVal[cnt]);
             
             break;
         
