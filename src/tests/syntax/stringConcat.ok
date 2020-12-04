@@ -1,0 +1,7 @@
+package main
+
+func main() {
+ a := "string"
+ b := "komplexnější string"
+ c := a + b
+}
