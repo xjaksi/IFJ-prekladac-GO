@@ -798,6 +798,9 @@ int cFunc(tokenList *token, treeNode *funcTab, treeList *tList, int noItems, boo
     // specialni pripad print
     if (str_Compare_char(token->Act->lptr->atribute, "print") == 0)
     {
+        int noComma = 0;
+        int noPrint = 0;
+
         token->Act = token->Act->rptr;
         while (token->Act->t_type != tRBRACKET)
         {
@@ -807,20 +810,27 @@ int cFunc(tokenList *token, treeNode *funcTab, treeList *tList, int noItems, boo
             {
                 result = dataSearch(tList, token->Act->atribute->str);
                 if (result == 101) return ERROR_UNDEFINED;
+                noPrint++;
             }
             else
             {
                 if (token->Act->t_type != tINT &&
                     token->Act->t_type != tFLOAT &&
-                    token->Act->t_type != tSTRING &&
-                    token->Act->t_type != tCOMMA)
+                    token->Act->t_type != tSTRING)
                 {
                     return ERROR_SYNTAX;
                 }
+                noPrint++;
             }
             
             token->Act = token->Act->rptr;
+            if (token->Act->t_type == tCOMMA) 
+            {
+                token->Act = token->Act->rptr;
+                noComma++;
+            }
         }
+        if (noPrint != noComma+1) return ERROR_SYNTAX;
         fprintf(stderr, "print OK \n");
         token->Act = token->Act->rptr;
         if (token->Act->t_type != tEOL) return ERROR_SYNTAX;
