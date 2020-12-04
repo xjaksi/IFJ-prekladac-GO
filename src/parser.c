@@ -790,7 +790,7 @@ int cFor(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal, int 
 // kontrola funkce, ocekavam token leve zavorky
 int cFunc(tokenList *token, treeNode *funcTab, treeList *tList, int noItems, bool ass)
 {
-    
+    int result;
     nodeInfCont nodeCont = BSTSearch(funcTab, token->Act->lptr->atribute->str);
     if (nodeCont == NULL) return ERROR_UNDEFINED;
 
@@ -803,13 +803,20 @@ int cFunc(tokenList *token, treeNode *funcTab, treeList *tList, int noItems, boo
         {
             //fprintf(stderr, "Print token %d \n", token->Act->t_type);
             if (token->Act->t_type == tEOF) return ERROR_SYNTAX;
-            if (token->Act->t_type != tID &&
-                token->Act->t_type != tINT &&
-                token->Act->t_type != tFLOAT &&
-                token->Act->t_type != tSTRING &&
-                token->Act->t_type != tCOMMA)
+            if (token->Act->t_type == tID)
             {
-                return ERROR_PARAMETERS;
+                result = dataSearch(tList, token->Act->atribute->str);
+                if (result == 101) return ERROR_UNDEFINED;
+            }
+            else
+            {
+                if (token->Act->t_type != tINT &&
+                    token->Act->t_type != tFLOAT &&
+                    token->Act->t_type != tSTRING &&
+                    token->Act->t_type != tCOMMA)
+                {
+                    return ERROR_SYNTAX;
+                }
             }
             
             token->Act = token->Act->rptr;
