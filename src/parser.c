@@ -890,7 +890,7 @@ int cFunc(tokenList *token, treeNode *funcTab, treeList *tList, int noItems, boo
     // kontrola navratovych hodnot
     if (ass)
     {
-        if (nodeCont->noReturn != noItems+1) return ERROR_SEMANTICS;
+        if (nodeCont->noReturn != noItems+1) return ERROR_RETURN_VALUE;
 
         // jdu na zacatek radku
         token->Act = token->Act->lptr;
@@ -917,7 +917,7 @@ int cFunc(tokenList *token, treeNode *funcTab, treeList *tList, int noItems, boo
             }
             else
             {
-                fprintf(stderr, "!!!!!!!!! %d\n", token->Act->t_type);
+                
                 if (token->Act->t_type != tID) return ERROR_SYNTAX;
                 type = dataSearch(tList, token->Act->atribute->str);
                 if (type == 101) return ERROR_UNDEFINED;
