@@ -907,10 +907,18 @@ int cFunc(tokenList *token, treeNode *funcTab, treeList *tList, int noItems, boo
             {
                 token->Act = token->Act->rptr;
             }
+            else if (token->Act->t_type == tASSIGN)
+            {
+                if (nodeCont->paramsOut[i] != 101)
+                {
+                    return ERROR_RETURN_VALUE;
+                }
+                break;
+            }
             else
             {
+                fprintf(stderr, "!!!!!!!!! %d\n", token->Act->t_type);
                 if (token->Act->t_type != tID) return ERROR_SYNTAX;
-                if (token->Act->t_type == tASSIGN && nodeCont->paramsOut[i] != 101) return ERROR_RETURN_VALUE;
                 type = dataSearch(tList, token->Act->atribute->str);
                 if (type == 101) return ERROR_UNDEFINED;
                 if (type != nodeCont->paramsOut[i]) return ERROR_RETURN_VALUE;
