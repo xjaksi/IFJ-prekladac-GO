@@ -1,8 +1,9 @@
+//compiler 2
 //
 package main
 
-func alpha (a int, b int) {
-}
-
 func main () {
+	for
+	;0!=0; {
+	}
 }

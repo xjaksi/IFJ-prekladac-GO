@@ -1,8 +1,7 @@
+//nogo
 //
 package main
 
-func alpha (a int, b int) {
-}
-
 func main () {
+	a := 36478
 }

@@ -1,8 +1,8 @@
+//compiler 3 4
 //
 package main
 
-func alpha (a int, b int) {
-}
-
 func main () {
+	a:=0
+	b:=A
 }

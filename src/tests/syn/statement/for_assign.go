@@ -1,8 +1,8 @@
 //
 package main
 
-func alpha (a int, b int) {
-}
-
 func main () {
+	a := 5
+	for ;a==0;a=3 {
+	}
 }

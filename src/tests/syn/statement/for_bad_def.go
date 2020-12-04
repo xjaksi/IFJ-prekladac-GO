@@ -1,7 +1,9 @@
+//compiler 2
 //
 package main
 
 func main () {
-	for ;0!=0; {
+	a:=0
+	for a=1;0!=0; {
 	}
 }

@@ -1,7 +1,8 @@
+//compiler 2
 //
 package main
 
-func alpha (a int, b int) {
+func alpha (parmeter) {
 }
 
 func main () {

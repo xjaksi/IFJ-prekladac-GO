@@ -1,8 +1,8 @@
 //
 package main
 
-func alpha (a int, b int) {
-}
-
 func main () {
+	if (5==5) {
+	} else {
+	}
 }

@@ -1,8 +1,7 @@
+//compiler 5
 //
 package main
 
-func alpha (a int, b int) {
-}
-
 func main () {
+	a := 5 - "string"
 }

@@ -1,8 +1,6 @@
 //
 package main
 
-func alpha (a int, b int) {
-}
-
 func main () {
+	print(5.1e+7)
 }

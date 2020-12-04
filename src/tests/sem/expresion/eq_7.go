@@ -2,6 +2,7 @@
 package main
 
 func main () {
-	for ;0!=0; {
+	if ("help"=="pleh") {
+	} else {
 	}
 }

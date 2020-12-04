@@ -1,7 +1,9 @@
+//compiler 5
 //
 package main
 
 func main () {
-	for ;0!=0; {
+	if (0.7<5) {
+	} else {
 	}
 }

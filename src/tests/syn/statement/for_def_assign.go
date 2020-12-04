@@ -1,8 +1,7 @@
 //
 package main
 
-func alpha (a int, b int) {
-}
-
 func main () {
+	for a:=0;a==0;a=2 {
+	}
 }

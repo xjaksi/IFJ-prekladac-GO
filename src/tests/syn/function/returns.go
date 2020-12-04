@@ -1,7 +1,8 @@
 //
 package main
 
-func alpha (a int, b int) {
+func alpha ()(int,int) {
+	return 0,1
 }
 
 func main () {
