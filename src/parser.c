@@ -445,7 +445,18 @@ int funcSave(tokenList *token, treeNode *funcTab)
         token->Act = token->Act->rptr;
     }
     
-    if (isMain != 1) return ERROR_UNDEFINED;
+    if (isMain != 1)
+    {
+        int super = 0;
+        token->Act = token->First;
+        while (token->Act->t_type != tEOF)
+        {
+            if (token->Act->t_type == fMAIN) super++;
+            token->Act = token->Act->rptr;
+        }
+        if (super == 2) return ERROR_SYNTAX;
+        return ERROR_UNDEFINED;
+    }
     
     return OK;
 }
