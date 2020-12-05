@@ -221,14 +221,65 @@ int funcSave(tokenList *token, treeNode *funcTab)
             {
                 // fprintf(stderr, "HELLO, MAIN \n");
                 isMain++;
-                if (token->Act->rptr->t_type != tLBRACKET && token->Act->rptr->rptr->t_type != tRBRACKET)
+                int err = 0;
+                token->Act = token->Act->rptr;
+                if (token->Act->t_type != tLBRACKET) return ERROR_SYNTAX;
+                token->Act = token->Act->rptr;
+                while (token->Act->t_type != tRBRACKET)
+                {
+                    err++;
+                    if (token->Act->t_type == tID)
+                    {
+                        token->Act = token->Act->rptr;
+                        if (token->Act->t_type != kwINT &&
+                            token->Act->t_type != kwSTRING &&
+                            token->Act->t_type != kwFLOAT64 )
+                                return ERROR_SYNTAX;
+                        token->Act = token->Act->rptr;
+                        if (token->Act->t_type == tRBRACKET)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            if (token->Act->t_type != tCOMMA) return ERROR_SYNTAX;
+                            token->Act = token->Act->rptr;
+                        }
+                    }
+                    else
+                    {
                         return ERROR_SYNTAX;
-                token->Act = token->Act->rptr->rptr->rptr;
+                    }
+                    
+                }
+                if (err > 0) return ERROR_RETURN_VALUE;
+                if (token->Act->t_type != tRBRACKET) return ERROR_SYNTAX;
+                token->Act = token->Act->rptr;
 
                 if (token->Act->t_type == tLBRACKET)
                 {
                     token->Act = token->Act->rptr;
-                    if (token->Act->t_type != tRBRACKET) return ERROR_SYNTAX;
+                    while (token->Act->t_type != tRBRACKET)
+                    {
+                        err++;
+                        if (token->Act->t_type != kwINT &&
+                            token->Act->t_type != kwSTRING &&
+                            token->Act->t_type != kwFLOAT64 )
+                                return ERROR_SYNTAX;
+                        token->Act = token->Act->rptr;
+                        if (token->Act->t_type == tRBRACKET)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            if (token->Act->t_type != tCOMMA) return ERROR_SYNTAX;
+                            token->Act = token->Act->rptr;
+                        }
+                    }
+                    if (err > 0) return ERROR_RETURN_VALUE;
+
+                    if (token->Act->t_type != tRBRACKET) return ERROR_RETURN_VALUE;
                     token->Act = token->Act->rptr;
                 }
 
@@ -392,7 +443,7 @@ int funcSave(tokenList *token, treeNode *funcTab)
         token->Act = token->Act->rptr;
     }
     
-    if (isMain != 1) return ERROR_SYNTAX;
+    if (isMain != 1) return ERROR_UNDEFINED;
     
     return OK;
 }
