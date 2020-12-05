@@ -655,6 +655,10 @@ int cAssign(tokenList *token, treeNode *funcTab, treeList *tList, int item)
     // nahrani datovych typu
     for (int i = 0; i < item; i++)
     {
+        if (i == 0)
+        {
+            if (token->Act->t_type == tEOL) return ERROR_SYNTAX;
+        }
         if (token->Act->t_type == tEOL) return ERROR_SEMANTICS;
         result = cExpr(token, tList, &type);
         // // fprintf(stderr, "CHECK 10 %d result: %d\n", type, result); 
