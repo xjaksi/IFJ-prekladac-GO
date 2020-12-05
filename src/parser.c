@@ -681,8 +681,19 @@ int cAssign(tokenList *token, treeNode *funcTab, treeList *tList, int item)
     }
     // // fprintf(stderr, "CHECK 11 %d\n", token->Act->t_type); 
 
-    if (token->Act->t_type != tEOL) return ERROR_SYNTAX;
-    // // fprintf(stderr, "CHECK 12 \n"); 
+    if (token->Act->t_type != tEOL) 
+    {
+        if (token->Act->t_type == tCOMMA)
+        {
+            if (token->Act->rptr->t_type == tID ||
+                token->Act->rptr->t_type == tSTRING ||
+                token->Act->rptr->t_type == tINT ||
+                token->Act->rptr->t_type == tFLOAT)
+                    return ERROR_SEMANTICS;
+        }
+        return ERROR_SYNTAX;
+    }
+    
     // jinak jdu na zacatek radku a overuji
     token->Act = token->Act->lptr;
     // // fprintf(stderr, "CHECK 13 %d\n", token->Act->t_type); 
