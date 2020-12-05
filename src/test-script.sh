@@ -7,9 +7,16 @@ BG='\033[48;5;241m'
 
 FAILED_TESTS=""
 
+FAILONLY=0
 TOTAL_PASSED=0
 TOTAL_FAILED=0
 TOTAL_TESTS=0
+LEXICAL_FAIL=0
+
+LEXNO=0
+
+key="$1"
+flag="$2"
 
 function result() {
     file=$1
@@ -18,16 +25,36 @@ function result() {
 
     if [ $ret -eq $exp ]
     then
-        printf "[${PASS}OK${NC}] TEST: $file \n"
-        printf "     Expected: $exp Returned: $ret \n"
-        ((TOTAL_PASSED++))
+        if [ $FAILONLY -eq 1 ]
+        then
+            ((TOTAL_PASSED++))
+        else
+            printf "[${PASS}OK${NC}] TEST: $file \n"
+            printf "     Expected: $exp Returned: $ret \n"
+            printf "\n"
+            ((TOTAL_PASSED++))
+        fi
 
     else
+        if [ $ret -eq 1 ] 
+        then
+            ((LEXICAL_FAIL++))
+            ((TOTAL_FAILED++))
+            # FAILED_TESTS+="\t $file \n"
+        elif [ $exp -eq 1 ] && [ $ret -ne 1 ]
+        then 
+            ((LEXICAL_FAIL++))
+            ((TOTAL_FAILED++))
+        else
+            ((TOTAL_FAILED++))
+        fi
+
         printf "[${FAIL}FAILED${NC}] TEST: $file \n"
         printf "         Expected: $exp Returned: $ret \n"
-        ((TOTAL_FAILED++))
-        FAILED_TESTS+="\t $file \n"
+        # FAILED_TESTS+="\t $file \n"
+        printf "\n"
     fi
+
     ((TOTAL_TESTS++))
 }
 
@@ -39,7 +66,6 @@ function syntax() {
         timeout 2s ./ifj20 <$f  2>/dev/null
         out=$?
         result "$(basename $f)" "$out" "2"
-    printf "\n"
     done
 
     for f in ./tests/syntax/*.ok
@@ -47,7 +73,6 @@ function syntax() {
         timeout 2s ./ifj20 <$f  2>/dev/null     
         out=$?
         result "$(basename $f)" "$out" "0"
-        printf "\n"
     done
 }
 
@@ -59,7 +84,6 @@ function lexical() {
         timeout 2s ./ifj20 <$f  2>/dev/null
         out=$?
         result "$(basename $f)" "$out" "1"
-        printf "\n"
     done
 
     for f in ./tests/lexical/*.ok
@@ -67,7 +91,6 @@ function lexical() {
         timeout 2s ./ifj20 <$f  2>/dev/null     
         out=$?
         result "$(basename $f)" "$out" "0"
-        printf "\n"
     done
 }
 
@@ -76,6 +99,8 @@ function semantics() {
     printf "== RUNNING SEMANTICS TESTS =========\n"
     for d in ./tests/semantics/*/
     do
+        erType=$( basename $d)
+
         for f in $d*.err
         do
             filetitle=$(basename $f)
@@ -87,22 +112,19 @@ function semantics() {
 
             timeout 2s ./ifj20 <$f  2>/dev/null
             out=$?
-            result "$filetitle" "$out" "2"
-        printf "\n"
+            result "$filetitle" "$out" "$erType"
         done
 
         for f in $d*.ok
         do
             filetitle=$(basename $f)
-            printf "$filetitle \n"
             if [ "$filetitle" = "*.ok" ]
             then   
-                break
+                continue
             else
                 timeout 2s ./ifj20 <$f  2>/dev/null     
                 out=$?
                 result "$filetitle" "$out" "0"
-                printf "\n"
             fi
         done
     done
@@ -113,44 +135,48 @@ make clean
 make
 clear
 
-key="$1"
-
-case $key in
-    -l)
+while getopts "flsxa" arg; do
+  case $arg in
+    f)
+        FAILONLY=1 
+        ;;
+    l)
         lexical
         ;;
-
-    -s)
+    s)
         semantics
         ;;
-
-    -x)
+    x) 
         syntax
         ;;
 
-    -a|*)    
+    a|*)
         lexical
         semantics
         syntax
         ;;
-esac
+  esac
+done
 
 # FINAL PRINTING 
 printf "\n"
 echo "======== FINAL TEST RESULTS ========"
-printf " [${PASS}PASSED${NC}]:  $TOTAL_PASSED\n"
-printf " [${FAIL}FAILED${NC}]:  $TOTAL_FAILED\n"
-printf " [OUT OF]:  $TOTAL_TESTS\n"
+printf " [${PASS} PASSED ${NC}]:  $TOTAL_PASSED\n"
+printf " [${FAIL} FAILED ${NC}]:  $TOTAL_FAILED\n"
+printf " [ OUT OF ]:  $TOTAL_TESTS\n"
+echo "===================================="
+printf " Lexical fails: $LEXICAL_FAIL\n"
 
-if [ $TOTAL_FAILED -ne 0 ]
-then
-    echo "===================================="
-    printf "   tests failed:\n"
-    for t in $FAILED_TESTS
-    do 
-        printf "$t"
-    done
-fi
+
+#if [ $TOTAL_FAILED -ne 0 ]
+#then
+#    echo "===================================="
+#    printf "   tests failed:\n"
+#    for t in $FAILED_TESTS
+#    do 
+#        printf "$t"
+#    done
+#fi
 
 echo "===================================="
 

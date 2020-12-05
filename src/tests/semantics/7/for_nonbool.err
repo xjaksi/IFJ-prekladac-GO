@@ -1,7 +1,8 @@
+//compiler 7
+//
 package main
 
-func alpha fff () {
-}
-
 func main () {
+	for ;5; {
+	}
 }
