@@ -227,6 +227,7 @@ int funcSave(tokenList *token, treeNode *funcTab)
                 token->Act = token->Act->rptr;
                 while (token->Act->t_type != tRBRACKET)
                 {
+                    if (token->Act->t_type == tEOF) return ERROR_SYNTAX;
                     err++;
                     if (token->Act->t_type == tID)
                     {
@@ -261,6 +262,7 @@ int funcSave(tokenList *token, treeNode *funcTab)
                     token->Act = token->Act->rptr;
                     while (token->Act->t_type != tRBRACKET)
                     {
+                        if (token->Act->t_type == tEOF) return ERROR_SYNTAX;
                         err++;
                         if (token->Act->t_type != kwINT &&
                             token->Act->t_type != kwSTRING &&
