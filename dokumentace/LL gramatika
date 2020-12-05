@@ -12,9 +12,9 @@
 <BODY>	        ->  for <FOR> EOL <BODY>
 <BODY>	        ->  id <ID> EOL <BODY>
 
-<ID>		    ->  ( <PARAMS> )
+<ID>            ->  ( <PARAMS> )
 <ID>            ->  := <EXPR_TYPE>
-<ID>		    ->  <ID_MORE> = <ID_ASSIGN>
+<ID>            ->  <ID_MORE> = <ID_ASSIGN>
 <ID_MORE>       ->  eps
 <ID_MORE>       ->  , id <ID_MORE>  
 
