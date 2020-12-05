@@ -693,6 +693,7 @@ int cAssign(tokenList *token, treeNode *funcTab, treeList *tList, int item)
         }
         return ERROR_SYNTAX;
     }
+    if (token->Act->lptr->t_type == tCOMMA) return ERROR_SYNTAX;
     
     // jinak jdu na zacatek radku a overuji
     token->Act = token->Act->lptr;
