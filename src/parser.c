@@ -19,7 +19,6 @@
 
 int returnWas;
 
-// rwar
 int parse()
 {
     
@@ -465,21 +464,7 @@ int cBody(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal)
                     fprintf(stderr, "RETURN    ocekavam: %d\n", retVal[cnt]);
                     if (type != retVal[cnt]) ERROR_RETURN_VALUE;
 
-
-                /*    if (token->Act->t_type == tID)
-                    {
-                        type = dataSearch(tList, token->Act->atribute->str);
-                        if (type == 101) return ERROR_UNDEFINED;
-                        if (type != retVal[cnt]) return ERROR_RETURN_VALUE;
-                    }
-                    else
-                    {
-                        fprintf(stderr, "RETURN      prislo: %d\n", token->Act->t_type);
-                        fprintf(stderr, "RETURN    ocekavam: %d\n", retVal[cnt]);
-                        if (token->Act->t_type != retVal[cnt]) return ERROR_RETURN_VALUE;
-                    }*/
                     cnt++;
-                    token->Act = token->Act->rptr;
                     if (token->Act->t_type == tCOMMA) token->Act = token->Act->rptr;
                 }
             }
