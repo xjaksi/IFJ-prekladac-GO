@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{myDocument}[custom presentation style]
+\ProvidesPackage{myDocument}[custom style]
 
 % PACKAGES
 \usepackage[left=2cm,top=1.5cm,text={16.5cm, 26cm}]{geometry}
@@ -23,7 +23,8 @@
 \titleformat*{\subsubsection}{\large\bfseries}
 \titleformat*{\paragraph}{\large\bfseries}
 \titlespacing*{\paragraph}{0pt}{8pt}{4pt}
-
+\titlespacing*{\subsection}{0pt}{8pt}{4pt}
+\titlespacing*{\subsubsection}{0pt}{8pt}{8pt}
 
 % example environment
 \newenvironment{example}[1][]{\medskip\begin{quote}\textbf{Příklad: #1} }{\end{quote}\medskip}
@@ -32,7 +33,7 @@
 \newenvironment{definition}[1][]{\smallskip\begin{tcolorbox}[standard jigsaw, colframe=light, opacityback=0.3, arc=0pt, colback=light] #1 }{\end{tcolorbox} \medskip}
 
 % indentation for sections
-\newenvironment{inpar}[1][]{\begin{adjustwidth}{2em}{0pt}\medskip #1 }{\end{adjustwidth} \smallskip}
+\newenvironment{inpar}[1][]{\begin{adjustwidth}{1.5em}{0pt} #1 }{\end{adjustwidth} \smallskip}
 
 % LIST DEPTH AND STYLE
 \setlistdepth{10}
