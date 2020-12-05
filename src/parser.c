@@ -921,7 +921,10 @@ int cFunc(tokenList *token, treeNode *funcTab, treeList *tList, int noItems, boo
             }
             
         }
-        if (noPrint != noComma+1) return ERROR_SYNTAX;
+        if (noPrint != 0)
+        {
+            if (noPrint != noComma+1) return ERROR_SYNTAX;
+        }
         fprintf(stderr, "print OK \n");
         token->Act = token->Act->rptr;
         if (token->Act->t_type != tEOL) return ERROR_SYNTAX;
