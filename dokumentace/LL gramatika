@@ -1,38 +1,56 @@
-<START>	    ->	package main EOL <SCEL> 
-<SCEL>	    ->	func <PROG> EOL <SCEL>
-<SCEL>      ->  EOL <SCEL>
+<START>	        ->	package main EOL <SCEL> 
+<SCEL>	        ->	func <PROG> EOL <SCEL>
+<SCEL>          ->  EOL <SCEL>
+<SCEL>          ->  EOF
 
-<PROG>	    ->	main ( ) { <BODY> } EOF
-<PROG>	    ->	id <FUNC> <FUNC> { <BODY> }
+<PROG>	        ->	id ( <PARAMS_DEF> ) <RET> { <BODY> }
 
-<BODY>	    ->	eps
-<BODY>      ->  return <EXPR>
-<BODY>	    ->	EOL <BODY>
-<BODY>	    ->	if <IF> EOL <BODY>
-<BODY>	    ->	for <FOR> EOL <BODY>
-<BODY>	    ->	id <ID> EOL <BODY>
+<BODY>	        ->	eps
+<BODY>          ->  return <VALUE_EXTRA>
+<BODY>	        ->	EOL <BODY>
+<BODY>	        ->	if <IF> EOL <BODY>
+<BODY>	        ->	for <FOR> EOL <BODY>
+<BODY>	        ->	id <ID> EOL <BODY>
 
-<ID>		->	<FUNC>
-<ID>		->	<ID_MORE> <ID_OPER>
-<ID_MORE>   ->  eps
-<ID_MORE>   ->  , id <ID_MORE>
-<ID_OPER>   ->  = <ID_TYPE>
-<ID_OPER>   ->  := <EXPR_TYPE>
-<ID_TYPE>   ->  <EXPR_TYPE>
-<ID_TYPE>   ->  <FUNC>
-<ID_TYPE>   ->  , <TYPE> <ID_TYPE>
+<ID>		    ->	( <PARAMS> )
+<ID>            ->  := <EXPR_TYPE>
+<ID>		    ->	<ID_MORE> = <ID_ASSIGN>
+<ID_MORE>       ->  eps
+<ID_MORE>       ->  , id <ID_MORE>  
 
-<EXPR_TYPE> ->  <TYPE>
-<EXPR_TYPE> ->  <EXPR>
-<TYPE>      ->  id
-<TYPE>      ->  int
-<TYPE>      ->  float
-<TYPE>      ->  string
+<EXPR_TYPE>     ->  <TYPE>
+<EXPR_TYPE>     ->  <EXPR>
+<EXPR_TYPE_M>   ->  eps
+<EXPR_TYPE_M>   ->  , <EXPR_TYPE> <EXPR_TYPE_M>
+<TYPE>          ->  id
+<TYPE>          ->  int
+<TYPE>          ->  float
+<TYPE>          ->  string
 
-<FUNC>      ->  ( <PARAMS> )
+<VALUE_EXTRA>   ->  <EXPR_TYPE> <EXPR_TYPE_M>
 
-<PARAMS>    ->  eps
-<PARAMS>    ->  <TYPE> DATA_TYPE
+<ID_ASSIGN>     ->  <VALUE_EXTRA>
+<ID_ASSIGN>     ->  id ( <PARAMS> )
 
-<IF>        ->  <EXPR> { <BODY> } else { <BODY> }
-<FOR>       ->  <EXPR_TYPE> ; <EXPR> ; <EXPR> { <BODY> }
+<DATA_TYPE>     ->  int
+<DATA_TYPE>     ->  string
+<DATA_TYPE>     ->  float64
+
+<PARAMS>        ->  eps
+<PARAMS>        ->  <TYPE> <TYPE_MORE>
+<TYPE_MORE>     ->  eps
+<TYPE_MORE>     ->  , <TYPE> <TYPE_MORE>
+
+<PARAMS_DEF>    ->  eps
+<PARAMS_DEF>    ->  id <DATA_TYPE> <PARAMS_DEF_M> 
+<PARAMS_DEF_M>  ->  eps
+<PARAMS_DEF_M>  ->  , id <DATA_TYPE> <PARAMS_DEF_M>
+<RET>           ->  eps
+<RET>           ->  ( <RET_BODY> )
+<RET_BODY>      ->  eps
+<RET_BODY>      ->  <DATA_TYPE> <RET_BODY_M>
+<RET_BODY_M>    ->  eps
+<RET_BODY_M>    ->  , <DATA_TYPE> <RET_BODY_M>
+
+<IF>            ->  <EXPR> { <BODY> } else { <BODY> }
+<FOR>           ->  <EXPR_TYPE> ; <EXPR> ; <EXPR> { <BODY> }
