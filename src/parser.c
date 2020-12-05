@@ -685,10 +685,10 @@ int cAssign(tokenList *token, treeNode *funcTab, treeList *tList, int item)
     {
         if (token->Act->lptr->t_type == tCOMMA)
         {
-            if (token->Act->rptr->t_type == tID ||
-                token->Act->rptr->t_type == tSTRING ||
-                token->Act->rptr->t_type == tINT ||
-                token->Act->rptr->t_type == tFLOAT)
+            if (token->Act->t_type == tID ||
+                token->Act->t_type == tSTRING ||
+                token->Act->t_type == tINT ||
+                token->Act->t_type == tFLOAT)
                     return ERROR_SEMANTICS;
         }
         return ERROR_SYNTAX;
