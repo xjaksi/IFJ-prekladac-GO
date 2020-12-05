@@ -807,6 +807,7 @@ int cFunc(tokenList *token, treeNode *funcTab, treeList *tList, int noItems, boo
     // specialni pripad print
     if (str_Compare_char(token->Act->lptr->atribute, "print") == 0)
     {
+        if (ass) return ERROR_RETURN_VALUE;
         int noComma = 0;
         int noPrint = 0;
 
