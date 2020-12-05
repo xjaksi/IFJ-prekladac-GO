@@ -1,0 +1,133 @@
+\documentclass[czech,a4paper,12pt]{article}[]
+
+\usepackage{myDocument}
+
+\begin{document}
+    \begin{center}
+        \LARGE{Vysoké učení technické v Brně \\
+        Fakulta informačních technologií}
+        \vfill 
+        \LARGE{Dokumentace projektu z předmětu IFJ a IAL}\\
+        \Huge{\textbf{Implementace překladače jazyka IFJ20}}\\
+        \vfill
+        \large{\textbf{Tým 101, varianta I}\\
+        \begin{tabular}{ r l c}
+            \textbf{Jakšík, Aleš} & \textbf{(\texttt{xjaksi01})} & \textbf{25\%} \\ 
+            Vlasáková, Nela & (\texttt{xvlasa14}) & 25\% \\  
+            Mráz, Filip & (\texttt{xmraz01}) & 25\% \\
+            Bělohlávek, Jan & (\texttt{xbeloh08}) & 25\% 
+        \end{tabular}
+        }\\[3em]
+        5. 12. 2020
+    \end{center}
+    \newpage
+    \tableofcontents
+    \newpage
+    \section{Úvod}
+    Zadáním projektu bylo vytvořit překladač imperativního jazyka IFJ20 a na jeho vytvoření se podíleli všichni členové týmu. Naživo jsme se viděli jen jednou, pravidelně jsme však komunikovali pomocí Messengeru a hovory jsme realizovali na společném Discordovém serveru. Práci jsme si rozdělili následovně:
+    \paragraph{Aleš Jakšík}
+    \begin{inpar}
+        Vedoucí týmu dostal na práci syntaktickou a sémantickou analýzu vyjma analýzu výrazů, navíc také implementoval tabulku symbolů.
+
+        \medskip
+        \textbf{Soubory:}
+        \begin{itemize}
+            \item \texttt{parser.c/parser.h}
+            \item \texttt{symtable.c/symtable.h}
+        \end{itemize}
+    \end{inpar}
+    \paragraph{Nela Vlasáková}
+    \begin{inpar}
+        Na práci dostala syntaktickou a sémantickou analýzu výrazů, k čemuž patří i implementace obousměrně vázaného seznamu.dokumentaci a testování kódu.
+
+        \medskip
+        \textbf{Soubory:}
+        \begin{itemize}
+            \item \texttt{expression.c/expression.h}
+            \item \texttt{exprList.c/exprList.h}
+        \end{itemize}
+    \end{inpar}    
+    \paragraph{Filip Mráz}
+        \begin{inpar}
+            Na starost dostal generování výsledného kódu a implementaci dynamického řetězce, dále se podílel na implementaci obousměrně vázaného seznamu pro lexikální analyzátor.
+    
+            \medskip
+            \textbf{Soubory:}
+            \begin{itemize}
+                \item \texttt{generator.c/generator.h}
+                \item \texttt{tokenList.c/tokenList.h}
+                \item \texttt{dynamicString.c/dynamicString.h}
+            \end{itemize}
+        \end{inpar}
+    \paragraph{Jan Bělohlávek}
+        \begin{inpar}
+            Honzovým úkolem bylo vytvořit lexikální analyzátor, také se podílel na implementaci obousměrně vázaného seznamu.
+
+            \medskip
+            \textbf{Soubory:}
+            \begin{itemize}
+                \item \texttt{scanner.c/scanner.h}
+                \item \texttt{tokenList.c/tokenList.h}
+            \end{itemize}
+        \end{inpar}
+
+    
+    \newpage
+    \section{Implementace}
+    Jako první je ze souboru \texttt{main.c} volán syntaktický/sémantický analyzátor - \texttt{parser.c}. Ten si zavolá lexikální analyzátor, který projde celý vstupní soubor, provede lexikální analýzu podle konečného automatu a vytvoří obousměrně vázaný seznam S tzv. \emph{Tokeny}. Tento seznam pak předá zpět syntaktickému/sémantickému analyzátoru, který jej projde a provede syntaktickou kontrolu podle LL gramatiky, následně pak zkontroluje sémantiku. Pokud narazí na místo, kde by se měl nacházet výraz, vytvoří z něj další obousměrně vázaný seznam a pošle jej na precedenční analýzu do \texttt{expression.c}, kde je výraz zkontrolován jak po sémantické, tak syntaktické stránce, a v případě, že je vše v pořádku, je vstupní seznam reprezentující výraz převeden na postfix a odeslán dále do generátoru výstupního kódu. 
+
+    \subsection{Lexikální analýza - \texttt{scanner.c}}
+    \begin{inpar}
+        TO DO
+    \end{inpar}
+    \subsection{Syntaktická a sémantická analýza}
+    \begin{inpar}
+        TO DO 
+        \subsubsection{Gramatika}
+        \begin{inpar}
+            TO DO
+        \end{inpar}
+    \subsubsection{Precedenční analýza výrazů}
+        \begin{inpar}
+            Hlavní funkcí analyzátoru výrazů je funkce \texttt{parseExp}. Celá precedenční analýza je řízena precedenční tabulkou. Ta je v kódu implementována jako dvourozměrné pole znaků:
+            \begin{center}
+                \begin{tabular}{|c|cc|}\hline
+                    \multirow{4}{*}{Foo} & 1 & 2 \\
+                        & 1 & 2 \\\cline{2-3}
+                        & 1 & 2 \\
+                        & 1 & 2 \\\hline
+                    \multirow{4}{*}{Bar} & 1 & 2 \\
+                        & 1 & 2 \\\cline{2-3}
+                        & 1 & 2 \\
+                        & 1 & 2 \\\hline
+                    \end{tabular}
+            \end{center}
+           Analýza pracuje se třemi seznamy - jeden, který reprezentuje vstupní výraz (\texttt{input}), druhý, kam jsou vkládány výrazy (\texttt{idStack}) a třetí, na do kterého jsou vkládány operátory
+            \begin{enumerate}
+                \item Symbol z precedenční tabulky získáme vždy zadáním "souřadnic":
+                \begin{quote}
+                    \texttt{precTable[x][y]}
+                \end{quote}
+                kde \texttt{x} reprezentuje symbol na konci seznamu \texttt{OpStack} a \texttt{y} reprezentuje symbol, na který se právě díváme ve vstupním seznamu.
+                \item Pokud dostaneme \texttt{R}, provedeme redukci
+                \item Pokud dostaneme \texttt{S}, provedeme přesunutí symbolu ze vstupu \texttt{input} na \texttt{opStack}
+                \item Pokud dostaneme \texttt{A}, kontrolujeme, konečné podmínky přijetí výrazu a pokud projdou v pořádku, výraz převádíme na postfix
+            \end{enumerate}
+            Redukce je prováděna na základě následujících pravidel:
+            \begin{center}
+                \ttfamily{ 
+                \begin{tabular}{r r l c l l l }
+                     &  & (E) & $\rightarrow$ & E & &\\
+                    E + E & $\rightarrow$ & E &  & E - E & $\rightarrow$ & E \\
+                    E / E & $\rightarrow$ & E & & E * E & $\rightarrow$ & E \\
+                    E < E & $\rightarrow$ & E & & E > E & $\rightarrow$ & E \\
+                    E >= E & $\rightarrow$ & E & & E <= E & $\rightarrow$ & E \\
+                    E == E & $\rightarrow$ & E & & E != E & $\rightarrow$ & E \\
+                \end{tabular}}
+            \end{center}
+        \end{inpar}
+    \end{inpar}
+
+    \subsection{Tabulka symbolů}
+    \subsection{Generování kódů}
+\end{document}
