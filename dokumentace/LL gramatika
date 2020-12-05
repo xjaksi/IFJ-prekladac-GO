@@ -23,7 +23,7 @@
 <EXPR_TYPE_M>   ->  eps
 <EXPR_TYPE_M>   ->  , <EXPR_TYPE> <EXPR_TYPE_M>
 <TYPE>          ->  id
-<TYPE>          ->  int
+<TYPE>          ->  integer
 <TYPE>          ->  float
 <TYPE>          ->  string
 
