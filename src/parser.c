@@ -683,7 +683,7 @@ int cAssign(tokenList *token, treeNode *funcTab, treeList *tList, int item)
 
     if (token->Act->t_type != tEOL) 
     {
-        if (token->Act->t_type == tCOMMA)
+        if (token->Act->lptr->t_type == tCOMMA)
         {
             if (token->Act->rptr->t_type == tID ||
                 token->Act->rptr->t_type == tSTRING ||
