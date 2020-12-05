@@ -1,0 +1,71 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{myDocument}[custom presentation style]
+
+% PACKAGES
+\usepackage[left=2cm,top=1.5cm,text={16.5cm, 26cm}]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[unicode]{hyperref}
+\usepackage[english, main=czech]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{myColours, indentfirst, array, multirow, graphicx, amsmath, dsfont, titlesec, xcolor, tikz, pgfplots, subcaption, tcolorbox, mathabx, changepage, tablefootnote, caption, subcaption, listings, algorithm2e, amsthm}
+\usepackage[shortlabels]{enumitem}  % custom enumerate numbering (a, i,...)
+
+% CUSTOMIZE DETAILS
+\renewcommand{\ttdefault}{lmtt}
+\renewcommand{\arraystretch}{1.2}   % spacing within tables
+\setlength\parindent{0pt}   % disable paragraph indentation
+\setcounter{tocdepth}{3}    % table of contents goes only three sections deep
+\pgfplotsset{compat=1.16}
+
+% CUSTOMIZE HEADERS
+\titleformat*{\section}{\LARGE\bfseries}
+\titleformat*{\subsection}{\Large\bfseries}
+\titleformat*{\subsubsection}{\large\bfseries}
+\titleformat*{\paragraph}{\large\bfseries}
+\titlespacing*{\paragraph}{0pt}{8pt}{4pt}
+
+
+% example environment
+\newenvironment{example}[1][]{\medskip\begin{quote}\textbf{Příklad: #1} }{\end{quote}\medskip}
+
+% definition environment
+\newenvironment{definition}[1][]{\smallskip\begin{tcolorbox}[standard jigsaw, colframe=light, opacityback=0.3, arc=0pt, colback=light] #1 }{\end{tcolorbox} \medskip}
+
+% indentation for sections
+\newenvironment{inpar}[1][]{\begin{adjustwidth}{2em}{0pt}\medskip #1 }{\end{adjustwidth} \smallskip}
+
+% LIST DEPTH AND STYLE
+\setlistdepth{10}
+
+\setlist[itemize,1]{label=$\bullet$}
+\setlist[itemize,2]{label=$\circ$}
+\setlist[itemize,3]{label=\textasteriskcentered}
+\setlist[itemize,4]{label=$\sqbullet$}
+\setlist[itemize,5]{label=\textasteriskcentered}
+\setlist[itemize,6]{label=\textasteriskcentered}
+\setlist[itemize,7]{label=\textasteriskcentered}
+\setlist[itemize,8]{label=\textasteriskcentered}
+\setlist[itemize,9]{label=\textasteriskcentered}
+\setlist[itemize,10]{label=\textasteriskcentered}
+
+\renewlist{itemize}{itemize}{10}
+
+% OPTION FOR DRAWING GRAPHS
+\DeclareOption{graphs}{
+    \usetikzlibrary{shapes.geometric,arrows,fit,matrix,positioning}
+    \tikzset{treenode/.style = {circle, draw=black, align=center, minimum size=1cm}}
+    
+    % for work with sets
+    \def\setone{(0,0) circle (2cm)}     % first set
+    \def\settwo{(0:3cm) circle (2cm)}   % second set
+
+    \colorlet{circle edge}{gray2!70}    
+    \colorlet{circle area}{gray2!30}
+
+    \tikzset{filled/.style={fill=circle area, draw=circle edge, thick},
+    outline/.style={draw=circle edge, thick}}   % filled part of sets setting
+}
+
+    \ProcessOptions\relax
+
+    \endinput

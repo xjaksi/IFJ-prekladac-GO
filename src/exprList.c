@@ -111,8 +111,12 @@ ERROR_CODE fillMyList (exprList *l, tokenList *tList, treeList *tree) {
             insertItem(l, PT_EXP, DATA, false);
             break;
 
+        case tDEVNULL:
+            return ERROR_SYNTAX;
+
         // jedna se o operator
         default:
+            if (tokenToPT(tList->Act->t_type) == 202) return ERROR_SYNTAX;
             insertItem(l, tokenToPT(tList->Act->t_type), DT_NONE, false);
             break;
         }
@@ -153,7 +157,7 @@ PtType tokenToPT(TokenType tType) {
             return PT_RBR;
 
         default:
-            return ERROR_SYNTAX;
+            return 202;
     }
 }
 
