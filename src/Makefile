@@ -1,7 +1,7 @@
 PRJ=ifj20
 #
 PROGS=$(PRJ)
-FILES = expression.c exprList.c main.c tokenList.c parser.c scanner.c dynamicString.c symtable.c
+FILES = expression.c exprList.c main.c tokenList.c parser.c scanner.c dynamicString.c symtable.c generator.c
 CC =gcc
 CFLAGS= -Wall -W -Wextra -g -std=c99 -pedantic
 
