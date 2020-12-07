@@ -97,7 +97,7 @@ int DLInsertLast(tokenList *L, TokenType param_t_type, tStr *p_atribute) {
    
     // aktualizce posledniho prvku na prvek pridavany
     L->Last = sup;
-    retun 0;
+    return 0;
 }
 
 
