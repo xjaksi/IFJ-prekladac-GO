@@ -52,56 +52,50 @@ int erno_init_DS = 0;
 		case SCANNER_STATE_START:
 			if (c == EOF)
 			{
-				if(DLInsertLast(tListMainPtr, tEOF, NULL) != 0);
-					return ERROR_COMPILER;
+				if(DLInsertLast(tListMainPtr, tEOF, NULL) != 0) return ERROR_COMPILER;
+					
 				state = SCANNER_STATE_EOF;
 				break;
 			}
 			if ((c == '\n') || (c == '\r')) //EOL
 			{
-				if(DLInsertLast(tListMainPtr, tEOL, NULL) != 0);
-					return ERROR_COMPILER;
+				if(DLInsertLast(tListMainPtr, tEOL, NULL) != 0) return ERROR_COMPILER;
+					
 				break;
 			}
 			if (c == ','){
-                if(DLInsertLast(tListMainPtr, tCOMMA, NULL) != 0);
-					return ERROR_COMPILER;
+                if(DLInsertLast(tListMainPtr, tCOMMA, NULL) != 0) return ERROR_COMPILER;
+					
                 break;
 
 			}
 			if (c == '('){
-                if(DLInsertLast(tListMainPtr, tLBRACKET, NULL) != 0);
-					return ERROR_COMPILER;
+                if(DLInsertLast(tListMainPtr, tLBRACKET, NULL) != 0) return ERROR_COMPILER;
                 break;
 
 			}
 			if (c == ')'){
-                if(DLInsertLast(tListMainPtr, tRBRACKET, NULL) != 0);
-					return ERROR_COMPILER;
+                if(DLInsertLast(tListMainPtr, tRBRACKET, NULL) != 0) return ERROR_COMPILER;
                 break;
 
 			}
 			if (c == '{'){
-                if(DLInsertLast(tListMainPtr, tLBRACE, NULL) != 0);
-					return ERROR_COMPILER;
+                if(DLInsertLast(tListMainPtr, tLBRACE, NULL) != 0) return ERROR_COMPILER;
                 break;
 
 			}
 			if (c == '}'){
-                if(DLInsertLast(tListMainPtr, tRBRACE, NULL) != 0);
-					return ERROR_COMPILER;
+                if(DLInsertLast(tListMainPtr, tRBRACE, NULL) != 0) return ERROR_COMPILER;
                 break;
 
 			}
 			if (c == ';'){
-                if(DLInsertLast(tListMainPtr, tSEMICOLON, NULL) != 0);
-					return ERROR_COMPILER;
+                if(DLInsertLast(tListMainPtr, tSEMICOLON, NULL) != 0) return ERROR_COMPILER;
                 break;
 
 			}
 			if (c == '_'){
-                if(DLInsertLast(tListMainPtr, tDEVNULL, NULL) != 0);
-					return ERROR_COMPILER;
+                if(DLInsertLast(tListMainPtr, tDEVNULL, NULL) != 0) return ERROR_COMPILER;
                 break;
 
 			}
@@ -117,14 +111,11 @@ int erno_init_DS = 0;
 				{
 					if(p_DS == NULL)
 					{
-					p_DS = str_Init(&erno_init_DS); //TODO nastavit errnum
-					if(erno_init_DS != 0);
-						return ERROR_COMPILER;
+					p_DS = str_Init(&erno_init_DS);
+					if(erno_init_DS != 0) return ERROR_COMPILER;
 					}
-					if(str_Append(p_DS, '0' ) != 0); /// pridani c do dynStr
-						return ERROR_COMPILER;
-					if(str_Append(p_DS, c ) != 0); /// pridani c do dynStr
-						return ERROR_COMPILER;
+					if(str_Append(p_DS, '0' ) != 0) return ERROR_COMPILER; /// pridani c do dynStr
+					if(str_Append(p_DS, c ) != 0) return ERROR_COMPILER; /// pridani c do dynStr
 					state = 6;
 					break;
 				}
@@ -132,14 +123,11 @@ int erno_init_DS = 0;
 				{
 					if(p_DS == NULL)
 					{
-						p_DS = str_Init(&erno_init_DS); //TODO nastavit errnum
-						if(erno_init_DS != 0);
-							return ERROR_COMPILER;
+						p_DS = str_Init(&erno_init_DS);
+						if(erno_init_DS != 0) return ERROR_COMPILER;
 					}
-					if(str_Append(p_DS, '0' ) != 0); /// pridani c do dynStr
-						return ERROR_COMPILER;
-					if(str_Append(p_DS, c ) != 0); /// pridani c do dynStr
-						return ERROR_COMPILER;
+					if(str_Append(p_DS, '0' ) != 0) return ERROR_COMPILER; /// pridani c do dynStr
+					if(str_Append(p_DS, c ) != 0) return ERROR_COMPILER; /// pridani c do dynStr
 					state = 7;
 					break;
 				}
@@ -149,14 +137,11 @@ int erno_init_DS = 0;
 
 					if(p_DS == NULL)
 					{
-					p_DS = str_Init(&erno_init_DS); //TODO nastavit errnum
-					if(erno_init_DS != 0);
-						return ERROR_COMPILER;
+					p_DS = str_Init(&erno_init_DS); 
+					if(erno_init_DS != 0) return ERROR_COMPILER;
 					}
-					if(str_Append(p_DS, '0' ) != 0); /// pridani c do dynStr
-						return ERROR_COMPILER;
-					if(DLInsertLast(tListMainPtr, tINT, p_DS) != 0);
-						return ERROR_COMPILER;
+					if(str_Append(p_DS, '0' ) != 0) return ERROR_COMPILER; /// pridani c do dynStr
+					if(DLInsertLast(tListMainPtr, tINT, p_DS) != 0) return ERROR_COMPILER;
 					p_DS = NULL;
 					state = SCANNER_STATE_START;								
 					break;	
@@ -172,12 +157,10 @@ int erno_init_DS = 0;
 			if ((isdigit(c)) && (c != '0')){
 				if(p_DS == NULL)
 				{
-					p_DS = str_Init(&erno_init_DS); //TODO nastavit errnum
-					if(erno_init_DS != 0);
-						return ERROR_COMPILER;
+					p_DS = str_Init(&erno_init_DS);
+					if(erno_init_DS != 0) return ERROR_COMPILER;
 				}
-				if(str_Append(p_DS, c ) != 0); /// pridani c do dynStr
-					return ERROR_COMPILER;
+				if(str_Append(p_DS, c ) != 0) return ERROR_COMPILER; /// pridani c do dynStr
 				state = 10;
 				break;
 
@@ -187,13 +170,11 @@ int erno_init_DS = 0;
 				state = 9;	
 
 				if(p_DS == NULL){
-					p_DS = str_Init(&erno_init_DS); //TODO nastavit errnum
-					if(erno_init_DS != 0);
-						return ERROR_COMPILER;
+					p_DS = str_Init(&erno_init_DS); 
+					if(erno_init_DS != 0) return ERROR_COMPILER;
 				}
 
-				if(str_Append(p_DS, c ) != 0); /// pridani c do dynStr
-					return ERROR_COMPILER;
+				if(str_Append(p_DS, c ) != 0) return ERROR_COMPILER; /// pridani c do dynStr
 				break;
 			}
 			if (c == ' ')
@@ -203,22 +184,19 @@ int erno_init_DS = 0;
 			}
 			if (c == '+')
 			{
-				if(DLInsertLast(tListMainPtr, tADD, NULL) != 0);
-					return ERROR_COMPILER;
+				if(DLInsertLast(tListMainPtr, tADD, NULL) != 0) return ERROR_COMPILER;
 				state = SCANNER_STATE_START;								
 				break;
 			}
 			if (c == '-')
 			{
-				if(DLInsertLast(tListMainPtr, tSUB, NULL) != 0);
-					return ERROR_COMPILER;
+				if(DLInsertLast(tListMainPtr, tSUB, NULL) != 0) return ERROR_COMPILER;
 				state = SCANNER_STATE_START;								
 				break;
 			}
 			if (c == '*')
 			{
-				if(DLInsertLast(tListMainPtr, tMUL, NULL) != 0);
-					return ERROR_COMPILER;
+				if(DLInsertLast(tListMainPtr, tMUL, NULL) != 0) return ERROR_COMPILER;
 				state = SCANNER_STATE_START;								
 				break;
 			}
@@ -238,8 +216,7 @@ int erno_init_DS = 0;
 				else
 				{
 					ungetc(c,stdin);
-					if(DLInsertLast(tListMainPtr, tDIV, NULL) != 0);
-						return ERROR_COMPILER;
+					if(DLInsertLast(tListMainPtr, tDIV, NULL) != 0) return ERROR_COMPILER;
 					state = SCANNER_STATE_START;								
 					break;	
 				}
@@ -250,16 +227,14 @@ int erno_init_DS = 0;
 				c = getc(stdin);
 				if (c == '=')
 				{
-					if(DLInsertLast(tListMainPtr, tEQ, NULL) != 0);
-						return ERROR_COMPILER;
+					if(DLInsertLast(tListMainPtr, tEQ, NULL) != 0) return ERROR_COMPILER;
 					state = SCANNER_STATE_START;								
 					break;
 				}
 				else
 				{
 					ungetc(c,stdin);
-					if(DLInsertLast(tListMainPtr, tASSIGN, NULL) != 0);
-						return ERROR_COMPILER;
+					if(DLInsertLast(tListMainPtr, tASSIGN, NULL) != 0) return ERROR_COMPILER;
 					state = SCANNER_STATE_START;								
 					break;	
 				}
@@ -270,8 +245,7 @@ int erno_init_DS = 0;
 				c = getc(stdin);
 				if (c == '=')
 				{
-					if(DLInsertLast(tListMainPtr, tDEF, NULL) != 0);
-						return ERROR_COMPILER;
+					if(DLInsertLast(tListMainPtr, tDEF, NULL) != 0) return ERROR_COMPILER;
 					state = SCANNER_STATE_START;								
 					break;
 				}
@@ -286,16 +260,14 @@ int erno_init_DS = 0;
 				c = getc(stdin);
 				if (c == '=')
 				{
-					if(DLInsertLast(tListMainPtr, tLEQ, NULL) != 0);
-						return ERROR_COMPILER;
+					if(DLInsertLast(tListMainPtr, tLEQ, NULL) != 0) return ERROR_COMPILER;
 					state = SCANNER_STATE_START;								
 					break;
 				}
 				else
 				{
 					ungetc(c,stdin);
-					if(DLInsertLast(tListMainPtr, tLT, NULL) != 0);
-						return ERROR_COMPILER;
+					if(DLInsertLast(tListMainPtr, tLT, NULL) != 0) return ERROR_COMPILER;
 					state = SCANNER_STATE_START;								
 					break;	
 				}
@@ -306,16 +278,14 @@ int erno_init_DS = 0;
 				c = getc(stdin);
 				if (c == '=')
 				{
-					if(DLInsertLast(tListMainPtr, tGEQ, NULL) != 0);
-						return ERROR_COMPILER;
+					if(DLInsertLast(tListMainPtr, tGEQ, NULL) != 0) return ERROR_COMPILER;
 					state = SCANNER_STATE_START;								
 					break;
 				}
 				else
 				{
 					ungetc(c,stdin);
-					if(DLInsertLast(tListMainPtr, tGT, NULL) != 0);
-						return ERROR_COMPILER;
+					if(DLInsertLast(tListMainPtr, tGT, NULL) != 0) return ERROR_COMPILER;
 					state = SCANNER_STATE_START;								
 					break;	
 				}
@@ -326,8 +296,7 @@ int erno_init_DS = 0;
 				c = getc(stdin);
 				if (c == '=')
 				{
-					if(DLInsertLast(tListMainPtr, tNEQ, NULL) != 0);
-						return ERROR_COMPILER;
+					if(DLInsertLast(tListMainPtr, tNEQ, NULL) != 0) return ERROR_COMPILER;
 					state = SCANNER_STATE_START;								
 					break;
 				}
@@ -355,51 +324,40 @@ int erno_init_DS = 0;
 			
 
             if(isalpha(c) || (c == '_') || (isdigit(c))){
-                if(str_Append(p_DS, c ) != 0); /// pridani c do strKwOrId
-					return ERROR_COMPILER;
+                if(str_Append(p_DS, c ) != 0) return ERROR_COMPILER; /// pridani c do strKwOrId
             }
             else {
                 ungetc(c,stdin);
                               
 				if (strcmp(p_DS->str, "if") == 0){	
-                    if(DLInsertLast(tListMainPtr, kwIF, NULL) != 0);
-						return ERROR_COMPILER;
+                    if(DLInsertLast(tListMainPtr, kwIF, NULL) != 0) return ERROR_COMPILER;
                 }
                 else if (strcmp(p_DS->str, "else") == 0){
-                    if(DLInsertLast (tListMainPtr, kwELSE, NULL) != 0);
-						return ERROR_COMPILER;
+                    if(DLInsertLast (tListMainPtr, kwELSE, NULL) != 0) return ERROR_COMPILER;
                 }
                 else if(strcmp(p_DS->str, "for") == 0){
-                    if(DLInsertLast(tListMainPtr, kwFOR, NULL) != 0);
-						return ERROR_COMPILER;
+                    if(DLInsertLast(tListMainPtr, kwFOR, NULL) != 0) return ERROR_COMPILER;
                 }
                 else if(strcmp(p_DS->str, "return") == 0){
-                    if(DLInsertLast(tListMainPtr, kwRETURN, NULL) != 0);
-						return ERROR_COMPILER;
+                    if(DLInsertLast(tListMainPtr, kwRETURN, NULL) != 0) return ERROR_COMPILER;
                 }
                 else if(strcmp(p_DS->str, "float64") == 0){
-                    if(DLInsertLast(tListMainPtr, kwFLOAT64, NULL) != 0);
-						return ERROR_COMPILER;
+                    if(DLInsertLast(tListMainPtr, kwFLOAT64, NULL) != 0) return ERROR_COMPILER;
                 }
                 else if(strcmp(p_DS->str, "func") == 0){
-                    if(DLInsertLast(tListMainPtr, kwFUNC, NULL) != 0);
-						return ERROR_COMPILER;
+                    if(DLInsertLast(tListMainPtr, kwFUNC, NULL) != 0) return ERROR_COMPILER;
                 }
 				else if(strcmp(p_DS->str, "string") == 0){
-                    if(DLInsertLast(tListMainPtr, kwSTRING, NULL) != 0);
-						return ERROR_COMPILER;
+                    if(DLInsertLast(tListMainPtr, kwSTRING, NULL) != 0) return ERROR_COMPILER;
                 }
 				else if (strcmp(p_DS->str, "int") == 0){
-                    if(DLInsertLast(tListMainPtr, kwINT, NULL) != 0);
-						return ERROR_COMPILER;
+                    if(DLInsertLast(tListMainPtr, kwINT, NULL) != 0) return ERROR_COMPILER;
                 }
 				else if(strcmp(p_DS->str, "package") == 0){
-                    if(DLInsertLast(tListMainPtr, kwPACKAGE, NULL) != 0);
-						return ERROR_COMPILER;
+                    if(DLInsertLast(tListMainPtr, kwPACKAGE, NULL) != 0) return ERROR_COMPILER;
                 }
 				else if (strcmp(p_DS->str, "main") == 0){
-                    if(DLInsertLast(tListMainPtr, fMAIN, NULL) != 0);
-						return ERROR_COMPILER;
+                    if(DLInsertLast(tListMainPtr, fMAIN, NULL) != 0) return ERROR_COMPILER;
                 } /*
 				else if (strcmp(p_DS->str, "inputs") == 0){
                     DLInsertLast(tListMainPtr, fINPUTS, NULL);
@@ -433,8 +391,7 @@ int erno_init_DS = 0;
                 } */
                 else // is tID
 				{
-					if(DLInsertLast(tListMainPtr, tID, p_DS) != 0);
-						return ERROR_COMPILER;
+					if(DLInsertLast(tListMainPtr, tID, p_DS) != 0) return ERROR_COMPILER;
 				}	
 
 				if(tListMainPtr->Last->t_type != tID){
@@ -480,8 +437,7 @@ int erno_init_DS = 0;
 			}
 			if ((c == '\n') || (c == '\r')) //EOL
 			{
-				if(DLInsertLast(tListMainPtr, tEOL, NULL) != 0);
-					return ERROR_COMPILER;
+				if(DLInsertLast(tListMainPtr, tEOL, NULL) != 0) return ERROR_COMPILER;
 				state = SCANNER_STATE_START;
 				break;
 			}		
@@ -501,8 +457,7 @@ int erno_init_DS = 0;
 			}
 			else if (c == '\'')
 			{
-				if(DLInsertLast(tListMainPtr, tSTRING, p_DS) != 0);
-					return ERROR_COMPILER;
+				if(DLInsertLast(tListMainPtr, tSTRING, p_DS) != 0) return ERROR_COMPILER;
 				p_DS = NULL;
 				state = SCANNER_STATE_START;								
 				break;
@@ -511,13 +466,11 @@ int erno_init_DS = 0;
 			{
 				if(p_DS == NULL)
 				{
-					p_DS = str_Init(&erno_init_DS); //TODO nastavit errnum
-					if(erno_init_DS != 0);
-						return ERROR_COMPILER;
+					p_DS = str_Init(&erno_init_DS); 
+					if(erno_init_DS != 0) return ERROR_COMPILER;
 				}
 
-				if(str_Append(p_DS, c ) != 0); /// pridani c do dynStr
-					return ERROR_COMPILER;
+				if(str_Append(p_DS, c ) != 0) return ERROR_COMPILER; /// pridani c do dynStr
 			}
 				
 
@@ -536,8 +489,7 @@ int erno_init_DS = 0;
 			}
 			else if (c == '\"')
 			{
-				if(DLInsertLast(tListMainPtr, tSTRING, p_DS) != 0);
-					return ERROR_COMPILER;
+				if(DLInsertLast(tListMainPtr, tSTRING, p_DS) != 0) return ERROR_COMPILER;
 				p_DS = NULL;
 				state = SCANNER_STATE_START;								
 				break;
@@ -546,13 +498,11 @@ int erno_init_DS = 0;
 			{
 				if(p_DS == NULL)
 				{
-					p_DS = str_Init(&erno_init_DS); //TODO nastavit errnum
-					if(erno_init_DS != 0);
-						return ERROR_COMPILER;
+					p_DS = str_Init(&erno_init_DS);
+					if(erno_init_DS != 0) return ERROR_COMPILER;
 				}
 
-				if(str_Append(p_DS, c ) != 0); /// pridani c do dynStr
-					return ERROR_COMPILER;
+				if(str_Append(p_DS, c ) != 0) return ERROR_COMPILER; /// pridani c do dynStr
 			}
 				
 
@@ -561,8 +511,7 @@ int erno_init_DS = 0;
 		case 10:
 			if (isdigit(c))
 			{
-				if(str_Append(p_DS, c ) != 0); /// pridani c do dynStr
-					return ERROR_COMPILER;
+				if(str_Append(p_DS, c ) != 0) return ERROR_COMPILER; /// pridani c do dynStr
 			}
 			else if (c == '.')
 			{
@@ -577,8 +526,7 @@ int erno_init_DS = 0;
 			else if ((c == '*') || (c == '+') || (c == '-') || (c == '/') || (c == '%') || (c == ' ') || (c == ';') || (c == ',') || (c == ')') || (c == '\n') || (c == '\r'))
 			{
                 ungetc(c,stdin);
-				if(DLInsertLast(tListMainPtr, tINT, p_DS) != 0);
-					return ERROR_COMPILER;
+				if(DLInsertLast(tListMainPtr, tINT, p_DS) != 0) return ERROR_COMPILER;
 				p_DS = NULL;
 				state = SCANNER_STATE_START;								
 				break;
@@ -595,8 +543,7 @@ int erno_init_DS = 0;
 		case 6:
 			if (isdigit(c))
 			{
-				if(str_Append(p_DS, c ) != 0); /// pridani c do dynStr
-					return ERROR_COMPILER;
+				if(str_Append(p_DS, c ) != 0) return ERROR_COMPILER; /// pridani c do dynStr
 				state = 11;
 				break;
 			}
@@ -612,22 +559,19 @@ int erno_init_DS = 0;
 		case 11:
 			if (isdigit(c))
 			{
-				if(str_Append(p_DS, c ) != 0); /// pridani c do dynStr
-					return ERROR_COMPILER;
+				if(str_Append(p_DS, c ) != 0) return ERROR_COMPILER; /// pridani c do dynStr
 				break;
 			}
 			else if (((c == 'E') || (c == 'e')) && (isE == 0))
 			{
-				if(str_Append(p_DS, c ) != 0); /// pridani c do dynStr
-					return ERROR_COMPILER;
+				if(str_Append(p_DS, c ) != 0) return ERROR_COMPILER; /// pridani c do dynStr
 				state = 7;
 				break;
 			}
 			else if ((c == '*') || (c == '+') || (c == '-') || (c == '/') || (c == '%') || (c == ' ') || (c == ';') || (c == ',') || (c == ')') || (c == '\n') || (c == '\r')) 
 			{
 				ungetc(c,stdin);
-				if(DLInsertLast(tListMainPtr, tFLOAT, p_DS) != 0);
-					return ERROR_COMPILER;
+				if(DLInsertLast(tListMainPtr, tFLOAT, p_DS) != 0) return ERROR_COMPILER;
 				p_DS = NULL;
 				isE = 0;
 				state = SCANNER_STATE_START;								
@@ -645,15 +589,13 @@ int erno_init_DS = 0;
 			isE = 1;
 			if (isdigit(c))
 			{
-				if(str_Append(p_DS, c ) != 0); /// pridani c do dynStr
-					return ERROR_COMPILER;
+				if(str_Append(p_DS, c ) != 0) return ERROR_COMPILER; /// pridani c do dynStr
 				state = 11;
 				break;
 			}
 			else if((c == '+') || (c == '-'))
 			{
-				if(str_Append(p_DS, c ) != 0); /// pridani c do dynStr
-					return ERROR_COMPILER;
+				if(str_Append(p_DS, c ) != 0) return ERROR_COMPILER; /// pridani c do dynStr
 				state = 8;
 				break;
 			}
@@ -668,8 +610,7 @@ int erno_init_DS = 0;
 		case 8:
 			if (isdigit(c))
 			{
-				if(str_Append(p_DS, c ) != 0); /// pridani c do dynStr
-					return ERROR_COMPILER;
+				if(str_Append(p_DS, c ) != 0) return ERROR_COMPILER; /// pridani c do dynStr
 				state = 11;
 			}
 			else
