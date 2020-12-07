@@ -20,8 +20,8 @@
 #include "dynamicString.h"
 
 
-#define FALSE 0
-#define TRUE 1
+#define FALSE 0 // DELETE
+#define TRUE 1	// DELETE
 
 
 
@@ -106,7 +106,7 @@ typedef struct {
  /* prototypy jednotlivých funkcí */
 void DLInitList (tokenList *);
 void DLDisposeList (tokenList *, int);
-void DLInsertLast(tokenList *, TokenType, tStr *);    
+int DLInsertLast(tokenList *, TokenType, tStr *);    
 void DLFirst (tokenList *);
 void DLLast (tokenList *);
 void DLCopy (tokenList *, TokenType *, tStr *);       

@@ -27,6 +27,8 @@ Popis:  jak funguje tento soubor
 int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstupu a ulozeni do seznamu , DKA
 	DLInitList (tListMainPtr); //// nastavime vsechny pointry na NULL
 	
+int erno_init_DS = 0;
+
 	int state = SCANNER_STATE_START;
 	char c; // pro načítání znaku
 	//tStr strPom;
@@ -50,47 +52,56 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 		case SCANNER_STATE_START:
 			if (c == EOF)
 			{
-				DLInsertLast(tListMainPtr, tEOF, NULL);
+				if(DLInsertLast(tListMainPtr, tEOF, NULL) != 0);
+					return ERROR_COMPILER;
 				state = SCANNER_STATE_EOF;
 				break;
 			}
 			if ((c == '\n') || (c == '\r')) //EOL
 			{
-				DLInsertLast(tListMainPtr, tEOL, NULL);
+				if(DLInsertLast(tListMainPtr, tEOL, NULL) != 0);
+					return ERROR_COMPILER;
 				break;
 			}
 			if (c == ','){
-                DLInsertLast(tListMainPtr, tCOMMA, NULL);
+                if(DLInsertLast(tListMainPtr, tCOMMA, NULL) != 0);
+					return ERROR_COMPILER;
                 break;
 
 			}
 			if (c == '('){
-                DLInsertLast(tListMainPtr, tLBRACKET, NULL);
+                if(DLInsertLast(tListMainPtr, tLBRACKET, NULL) != 0);
+					return ERROR_COMPILER;
                 break;
 
 			}
 			if (c == ')'){
-                DLInsertLast(tListMainPtr, tRBRACKET, NULL);
+                if(DLInsertLast(tListMainPtr, tRBRACKET, NULL) != 0);
+					return ERROR_COMPILER;
                 break;
 
 			}
 			if (c == '{'){
-                DLInsertLast(tListMainPtr, tLBRACE, NULL);
+                if(DLInsertLast(tListMainPtr, tLBRACE, NULL) != 0);
+					return ERROR_COMPILER;
                 break;
 
 			}
 			if (c == '}'){
-                DLInsertLast(tListMainPtr, tRBRACE, NULL);
+                if(DLInsertLast(tListMainPtr, tRBRACE, NULL) != 0);
+					return ERROR_COMPILER;
                 break;
 
 			}
 			if (c == ';'){
-                DLInsertLast(tListMainPtr, tSEMICOLON, NULL);
+                if(DLInsertLast(tListMainPtr, tSEMICOLON, NULL) != 0);
+					return ERROR_COMPILER;
                 break;
 
 			}
 			if (c == '_'){
-                DLInsertLast(tListMainPtr, tDEVNULL, NULL);
+                if(DLInsertLast(tListMainPtr, tDEVNULL, NULL) != 0);
+					return ERROR_COMPILER;
                 break;
 
 			}
@@ -106,11 +117,14 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 				{
 					if(p_DS == NULL)
 					{
-					int DELETE;
-					p_DS = str_Init(&DELETE); //TODO nastavit errnum
+					p_DS = str_Init(&erno_init_DS); //TODO nastavit errnum
+					if(erno_init_DS != 0);
+						return ERROR_COMPILER;
 					}
-					str_Append(p_DS, '0' ); /// pridani c do dynStr
-					str_Append(p_DS, c ); /// pridani c do dynStr
+					if(str_Append(p_DS, '0' ) != 0); /// pridani c do dynStr
+						return ERROR_COMPILER;
+					if(str_Append(p_DS, c ) != 0); /// pridani c do dynStr
+						return ERROR_COMPILER;
 					state = 6;
 					break;
 				}
@@ -118,11 +132,14 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 				{
 					if(p_DS == NULL)
 					{
-					int DELETE;
-					p_DS = str_Init(&DELETE); //TODO nastavit errnum
+						p_DS = str_Init(&erno_init_DS); //TODO nastavit errnum
+						if(erno_init_DS != 0);
+							return ERROR_COMPILER;
 					}
-					str_Append(p_DS, '0' ); /// pridani c do dynStr
-					str_Append(p_DS, c ); /// pridani c do dynStr
+					if(str_Append(p_DS, '0' ) != 0); /// pridani c do dynStr
+						return ERROR_COMPILER;
+					if(str_Append(p_DS, c ) != 0); /// pridani c do dynStr
+						return ERROR_COMPILER;
 					state = 7;
 					break;
 				}
@@ -132,11 +149,14 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 
 					if(p_DS == NULL)
 					{
-					int DELETE;
-					p_DS = str_Init(&DELETE); //TODO nastavit errnum
+					p_DS = str_Init(&erno_init_DS); //TODO nastavit errnum
+					if(erno_init_DS != 0);
+						return ERROR_COMPILER;
 					}
-					str_Append(p_DS, '0' ); /// pridani c do dynStr
-					DLInsertLast(tListMainPtr, tINT, p_DS);
+					if(str_Append(p_DS, '0' ) != 0); /// pridani c do dynStr
+						return ERROR_COMPILER;
+					if(DLInsertLast(tListMainPtr, tINT, p_DS) != 0);
+						return ERROR_COMPILER;
 					p_DS = NULL;
 					state = SCANNER_STATE_START;								
 					break;	
@@ -152,10 +172,12 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 			if ((isdigit(c)) && (c != '0')){
 				if(p_DS == NULL)
 				{
-					int DELETE;
-					p_DS = str_Init(&DELETE); //TODO nastavit errnum
+					p_DS = str_Init(&erno_init_DS); //TODO nastavit errnum
+					if(erno_init_DS != 0);
+						return ERROR_COMPILER;
 				}
-				str_Append(p_DS, c ); /// pridani c do dynStr
+				if(str_Append(p_DS, c ) != 0); /// pridani c do dynStr
+					return ERROR_COMPILER;
 				state = 10;
 				break;
 
@@ -165,11 +187,13 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 				state = 9;	
 
 				if(p_DS == NULL){
-					int DELETE;
-					p_DS = str_Init(&DELETE); //TODO nastavit errnum
+					p_DS = str_Init(&erno_init_DS); //TODO nastavit errnum
+					if(erno_init_DS != 0);
+						return ERROR_COMPILER;
 				}
 
-				str_Append(p_DS, c ); /// pridani c do dynStr
+				if(str_Append(p_DS, c ) != 0); /// pridani c do dynStr
+					return ERROR_COMPILER;
 				break;
 			}
 			if (c == ' ')
@@ -179,19 +203,22 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 			}
 			if (c == '+')
 			{
-				DLInsertLast(tListMainPtr, tADD, NULL);
+				if(DLInsertLast(tListMainPtr, tADD, NULL) != 0);
+					return ERROR_COMPILER;
 				state = SCANNER_STATE_START;								
 				break;
 			}
 			if (c == '-')
 			{
-				DLInsertLast(tListMainPtr, tSUB, NULL);
+				if(DLInsertLast(tListMainPtr, tSUB, NULL) != 0);
+					return ERROR_COMPILER;
 				state = SCANNER_STATE_START;								
 				break;
 			}
 			if (c == '*')
 			{
-				DLInsertLast(tListMainPtr, tMUL, NULL);
+				if(DLInsertLast(tListMainPtr, tMUL, NULL) != 0);
+					return ERROR_COMPILER;
 				state = SCANNER_STATE_START;								
 				break;
 			}
@@ -211,7 +238,8 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 				else
 				{
 					ungetc(c,stdin);
-					DLInsertLast(tListMainPtr, tDIV, NULL);
+					if(DLInsertLast(tListMainPtr, tDIV, NULL) != 0);
+						return ERROR_COMPILER;
 					state = SCANNER_STATE_START;								
 					break;	
 				}
@@ -222,14 +250,16 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 				c = getc(stdin);
 				if (c == '=')
 				{
-					DLInsertLast(tListMainPtr, tEQ, NULL);
+					if(DLInsertLast(tListMainPtr, tEQ, NULL) != 0);
+						return ERROR_COMPILER;
 					state = SCANNER_STATE_START;								
 					break;
 				}
 				else
 				{
 					ungetc(c,stdin);
-					DLInsertLast(tListMainPtr, tASSIGN, NULL);
+					if(DLInsertLast(tListMainPtr, tASSIGN, NULL) != 0);
+						return ERROR_COMPILER;
 					state = SCANNER_STATE_START;								
 					break;	
 				}
@@ -240,7 +270,8 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 				c = getc(stdin);
 				if (c == '=')
 				{
-					DLInsertLast(tListMainPtr, tDEF, NULL);
+					if(DLInsertLast(tListMainPtr, tDEF, NULL) != 0);
+						return ERROR_COMPILER;
 					state = SCANNER_STATE_START;								
 					break;
 				}
@@ -255,14 +286,16 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 				c = getc(stdin);
 				if (c == '=')
 				{
-					DLInsertLast(tListMainPtr, tLEQ, NULL);
+					if(DLInsertLast(tListMainPtr, tLEQ, NULL) != 0);
+						return ERROR_COMPILER;
 					state = SCANNER_STATE_START;								
 					break;
 				}
 				else
 				{
 					ungetc(c,stdin);
-					DLInsertLast(tListMainPtr, tLT, NULL);
+					if(DLInsertLast(tListMainPtr, tLT, NULL) != 0);
+						return ERROR_COMPILER;
 					state = SCANNER_STATE_START;								
 					break;	
 				}
@@ -273,14 +306,16 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 				c = getc(stdin);
 				if (c == '=')
 				{
-					DLInsertLast(tListMainPtr, tGEQ, NULL);
+					if(DLInsertLast(tListMainPtr, tGEQ, NULL) != 0);
+						return ERROR_COMPILER;
 					state = SCANNER_STATE_START;								
 					break;
 				}
 				else
 				{
 					ungetc(c,stdin);
-					DLInsertLast(tListMainPtr, tGT, NULL);
+					if(DLInsertLast(tListMainPtr, tGT, NULL) != 0);
+						return ERROR_COMPILER;
 					state = SCANNER_STATE_START;								
 					break;	
 				}
@@ -291,7 +326,8 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 				c = getc(stdin);
 				if (c == '=')
 				{
-					DLInsertLast(tListMainPtr, tNEQ, NULL);
+					if(DLInsertLast(tListMainPtr, tNEQ, NULL) != 0);
+						return ERROR_COMPILER;
 					state = SCANNER_STATE_START;								
 					break;
 				}
@@ -319,40 +355,51 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 			
 
             if(isalpha(c) || (c == '_') || (isdigit(c))){
-                str_Append(p_DS, c ); /// pridani c do strKwOrId
+                if(str_Append(p_DS, c ) != 0); /// pridani c do strKwOrId
+					return ERROR_COMPILER;
             }
             else {
                 ungetc(c,stdin);
                               
 				if (strcmp(p_DS->str, "if") == 0){	
-                    DLInsertLast(tListMainPtr, kwIF, NULL);
+                    if(DLInsertLast(tListMainPtr, kwIF, NULL) != 0);
+						return ERROR_COMPILER;
                 }
                 else if (strcmp(p_DS->str, "else") == 0){
-                    DLInsertLast (tListMainPtr, kwELSE, NULL);
+                    if(DLInsertLast (tListMainPtr, kwELSE, NULL) != 0);
+						return ERROR_COMPILER;
                 }
                 else if(strcmp(p_DS->str, "for") == 0){
-                    DLInsertLast(tListMainPtr, kwFOR, NULL);
+                    if(DLInsertLast(tListMainPtr, kwFOR, NULL) != 0);
+						return ERROR_COMPILER;
                 }
                 else if(strcmp(p_DS->str, "return") == 0){
-                    DLInsertLast(tListMainPtr, kwRETURN, NULL);
+                    if(DLInsertLast(tListMainPtr, kwRETURN, NULL) != 0);
+						return ERROR_COMPILER;
                 }
                 else if(strcmp(p_DS->str, "float64") == 0){
-                    DLInsertLast(tListMainPtr, kwFLOAT64, NULL);
+                    if(DLInsertLast(tListMainPtr, kwFLOAT64, NULL) != 0);
+						return ERROR_COMPILER;
                 }
                 else if(strcmp(p_DS->str, "func") == 0){
-                    DLInsertLast(tListMainPtr, kwFUNC, NULL);
+                    if(DLInsertLast(tListMainPtr, kwFUNC, NULL) != 0);
+						return ERROR_COMPILER;
                 }
 				else if(strcmp(p_DS->str, "string") == 0){
-                    DLInsertLast(tListMainPtr, kwSTRING, NULL);
+                    if(DLInsertLast(tListMainPtr, kwSTRING, NULL) != 0);
+						return ERROR_COMPILER;
                 }
 				else if (strcmp(p_DS->str, "int") == 0){
-                    DLInsertLast(tListMainPtr, kwINT, NULL);
+                    if(DLInsertLast(tListMainPtr, kwINT, NULL) != 0);
+						return ERROR_COMPILER;
                 }
 				else if(strcmp(p_DS->str, "package") == 0){
-                    DLInsertLast(tListMainPtr, kwPACKAGE, NULL);
+                    if(DLInsertLast(tListMainPtr, kwPACKAGE, NULL) != 0);
+						return ERROR_COMPILER;
                 }
 				else if (strcmp(p_DS->str, "main") == 0){
-                    DLInsertLast(tListMainPtr, fMAIN, NULL);
+                    if(DLInsertLast(tListMainPtr, fMAIN, NULL) != 0);
+						return ERROR_COMPILER;
                 } /*
 				else if (strcmp(p_DS->str, "inputs") == 0){
                     DLInsertLast(tListMainPtr, fINPUTS, NULL);
@@ -386,7 +433,8 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
                 } */
                 else // is tID
 				{
-					DLInsertLast(tListMainPtr, tID, p_DS);
+					if(DLInsertLast(tListMainPtr, tID, p_DS) != 0);
+						return ERROR_COMPILER;
 				}	
 
 				if(tListMainPtr->Last->t_type != tID){
@@ -432,7 +480,8 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 			}
 			if ((c == '\n') || (c == '\r')) //EOL
 			{
-				DLInsertLast(tListMainPtr, tEOL, NULL);
+				if(DLInsertLast(tListMainPtr, tEOL, NULL) != 0);
+					return ERROR_COMPILER;
 				state = SCANNER_STATE_START;
 				break;
 			}		
@@ -452,7 +501,8 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 			}
 			else if (c == '\'')
 			{
-				DLInsertLast(tListMainPtr, tSTRING, p_DS);
+				if(DLInsertLast(tListMainPtr, tSTRING, p_DS) != 0);
+					return ERROR_COMPILER;
 				p_DS = NULL;
 				state = SCANNER_STATE_START;								
 				break;
@@ -461,11 +511,13 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 			{
 				if(p_DS == NULL)
 				{
-					int DELETE;
-					p_DS = str_Init(&DELETE); //TODO nastavit errnum
+					p_DS = str_Init(&erno_init_DS); //TODO nastavit errnum
+					if(erno_init_DS != 0);
+						return ERROR_COMPILER;
 				}
 
-				str_Append(p_DS, c ); /// pridani c do dynStr
+				if(str_Append(p_DS, c ) != 0); /// pridani c do dynStr
+					return ERROR_COMPILER;
 			}
 				
 
@@ -484,7 +536,8 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 			}
 			else if (c == '\"')
 			{
-				DLInsertLast(tListMainPtr, tSTRING, p_DS);
+				if(DLInsertLast(tListMainPtr, tSTRING, p_DS) != 0);
+					return ERROR_COMPILER;
 				p_DS = NULL;
 				state = SCANNER_STATE_START;								
 				break;
@@ -493,11 +546,13 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 			{
 				if(p_DS == NULL)
 				{
-					int DELETE;
-					p_DS = str_Init(&DELETE); //TODO nastavit errnum
+					p_DS = str_Init(&erno_init_DS); //TODO nastavit errnum
+					if(erno_init_DS != 0);
+						return ERROR_COMPILER;
 				}
 
-				str_Append(p_DS, c ); /// pridani c do dynStr
+				if(str_Append(p_DS, c ) != 0); /// pridani c do dynStr
+					return ERROR_COMPILER;
 			}
 				
 
@@ -506,7 +561,8 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 		case 10:
 			if (isdigit(c))
 			{
-				str_Append(p_DS, c ); /// pridani c do dynStr
+				if(str_Append(p_DS, c ) != 0); /// pridani c do dynStr
+					return ERROR_COMPILER;
 			}
 			else if (c == '.')
 			{
@@ -521,7 +577,8 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 			else if ((c == '*') || (c == '+') || (c == '-') || (c == '/') || (c == '%') || (c == ' ') || (c == ';') || (c == ',') || (c == ')') || (c == '\n') || (c == '\r'))
 			{
                 ungetc(c,stdin);
-				DLInsertLast(tListMainPtr, tINT, p_DS);
+				if(DLInsertLast(tListMainPtr, tINT, p_DS) != 0);
+					return ERROR_COMPILER;
 				p_DS = NULL;
 				state = SCANNER_STATE_START;								
 				break;
@@ -538,7 +595,8 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 		case 6:
 			if (isdigit(c))
 			{
-				str_Append(p_DS, c ); /// pridani c do dynStr
+				if(str_Append(p_DS, c ) != 0); /// pridani c do dynStr
+					return ERROR_COMPILER;
 				state = 11;
 				break;
 			}
@@ -554,19 +612,22 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 		case 11:
 			if (isdigit(c))
 			{
-				str_Append(p_DS, c ); /// pridani c do dynStr
+				if(str_Append(p_DS, c ) != 0); /// pridani c do dynStr
+					return ERROR_COMPILER;
 				break;
 			}
 			else if (((c == 'E') || (c == 'e')) && (isE == 0))
 			{
-				str_Append(p_DS, c ); /// pridani c do dynStr
+				if(str_Append(p_DS, c ) != 0); /// pridani c do dynStr
+					return ERROR_COMPILER;
 				state = 7;
 				break;
 			}
 			else if ((c == '*') || (c == '+') || (c == '-') || (c == '/') || (c == '%') || (c == ' ') || (c == ';') || (c == ',') || (c == ')') || (c == '\n') || (c == '\r')) 
 			{
 				ungetc(c,stdin);
-				DLInsertLast(tListMainPtr, tFLOAT, p_DS);
+				if(DLInsertLast(tListMainPtr, tFLOAT, p_DS) != 0);
+					return ERROR_COMPILER;
 				p_DS = NULL;
 				isE = 0;
 				state = SCANNER_STATE_START;								
@@ -584,13 +645,15 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 			isE = 1;
 			if (isdigit(c))
 			{
-				str_Append(p_DS, c ); /// pridani c do dynStr
+				if(str_Append(p_DS, c ) != 0); /// pridani c do dynStr
+					return ERROR_COMPILER;
 				state = 11;
 				break;
 			}
 			else if((c == '+') || (c == '-'))
 			{
-				str_Append(p_DS, c ); /// pridani c do dynStr
+				if(str_Append(p_DS, c ) != 0); /// pridani c do dynStr
+					return ERROR_COMPILER;
 				state = 8;
 				break;
 			}
@@ -605,7 +668,8 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 		case 8:
 			if (isdigit(c))
 			{
-				str_Append(p_DS, c ); /// pridani c do dynStr
+				if(str_Append(p_DS, c ) != 0); /// pridani c do dynStr
+					return ERROR_COMPILER;
 				state = 11;
 			}
 			else

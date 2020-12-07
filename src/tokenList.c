@@ -71,15 +71,14 @@ void DLDisposeList(tokenList *L, int flag_atribute_dispose) {
 /*
 ** Vloží nový prvek na konec seznamu L
 **/
-void DLInsertLast(tokenList *L, TokenType param_t_type, tStr *p_atribute) {
+int DLInsertLast(tokenList *L, TokenType param_t_type, tStr *p_atribute) {
     
     // pomocny pointer ukazuje na prave vytvoreny novy prvek pomoci malloc()
     TokenPtr sup = malloc(sizeof(struct Token));
 
     // kontrola spravne allokace
     if(sup == NULL){
-        DLError();
-        return;
+        return 99;
     }
     
     // prirazeni hodnoty do noveho prvku
@@ -98,6 +97,7 @@ void DLInsertLast(tokenList *L, TokenType param_t_type, tStr *p_atribute) {
    
     // aktualizce posledniho prvku na prvek pridavany
     L->Last = sup;
+    retun 0;
 }
 
 
