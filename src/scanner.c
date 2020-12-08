@@ -1,23 +1,23 @@
-/* ----------------------------------------------
- 	IFJ prekladac jazyka IFJ20
-	Tým XX:
-		Jaksik, Ales (xjaksi01)
-		Vlasakova, Nela (xvlasa14)
-		Belohlavek, Jan (xbeloh8)
--------------------------------------------------
-Ucel: rozpoznani a klasifikace lexemu, reprezentace lexemu pomoci tokenu
-Popis:  jak funguje tento soubor
-----------------------------------------------*/
+/** -----------------------------------------------
+ * @file scanner.c
+ *	IFJ prekladac jazyka IFJ20
+ *	Tým 101:
+ *		@author Belohlavek, Jan <xbeloh08>
+ * ------------------------------------------------
+ *		@author Jaksik, Ales <xjaksi01>
+ *		@author Vlasakova, Nela <xvlasa14>
+ *		@author Mraz, Filip <xmrazf00>
+ * ------------------------------------------------
+ * @brief rozpoznani a klasifikace lexemu, reprezentace lexemu pomoci tokenu, dka
+ * -----------------------------------------------*/
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
 
-
-#include "dynamicString.h"
-
+#include "dynamicString.h" // prototyp dynamickeho stringu
 #include "tokenList.h" // protototypy tokenlistu, tokenu, tokentype
-#include "scanner.h"
+#include "scanner.h" // hlavickovy soubor
 #include "errors.h"
 
 #define SCANNER_STATE_EOF 100
@@ -26,26 +26,17 @@ Popis:  jak funguje tento soubor
 
 int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstupu a ulozeni do seznamu , DKA
 	DLInitList (tListMainPtr); //// nastavime vsechny pointry na NULL
+	int erno_init_DS = 0;
 	
-int erno_init_DS = 0;
-
 	int state = SCANNER_STATE_START;
 	char c; // pro načítání znaku
-	//tStr strPom;
-	//str_Init(&strPom);
-	//char tmpStr[5000] = "\0";
-	//int pos = 0;
-	
-	// Pouzije se v pripade, ze dany tokenType potrebuje ATRIBUT.
-	// Po predani do SEZNAMU nastavit vzdy na NULL
-	tStr *p_DS = NULL;	
-	int isE = 0;
+	tStr *p_DS = NULL; // Pouzije se v pripade, ze dany tokenType potrebuje ATRIBUT. Po predani do SEZNAMU nastavit vzdy na NULL.
+	int isE = 0; // bool znaci jestli ve float je již 1x E
 
 	while (state != SCANNER_STATE_EOF)
 	{
 		
 		c = getc(stdin);
-
 	
 		switch (state)
 		{
@@ -53,19 +44,16 @@ int erno_init_DS = 0;
 			if (c == EOF)
 			{
 				if(DLInsertLast(tListMainPtr, tEOF, NULL) != 0) return ERROR_COMPILER;
-					
 				state = SCANNER_STATE_EOF;
 				break;
 			}
 			if ((c == '\n') || (c == '\r')) //EOL
 			{
 				if(DLInsertLast(tListMainPtr, tEOL, NULL) != 0) return ERROR_COMPILER;
-					
 				break;
 			}
 			if (c == ','){
                 if(DLInsertLast(tListMainPtr, tCOMMA, NULL) != 0) return ERROR_COMPILER;
-					
                 break;
 
 			}
@@ -131,7 +119,7 @@ int erno_init_DS = 0;
 					state = 7;
 					break;
 				}
-				else if ((c == '*') || (c == '+') || (c == '-') || (c == '/') || (c == '%') || (c == ' ') || (c == ';') || (c == ',') || (c == ')') || (c == '\n') || (c == '\r'))
+				else
 				{
 					ungetc(c,stdin);
 
@@ -146,12 +134,6 @@ int erno_init_DS = 0;
 					state = SCANNER_STATE_START;								
 					break;	
 				}
-				else
-				{
-					state = SCANNER_STATE_EOF;
-					return ERROR_LEXICAL;
-				}
-				
 
 			}
 			if ((isdigit(c)) && (c != '0')){
@@ -306,93 +288,71 @@ int erno_init_DS = 0;
 				}
 				
 			}
-			if (c == '\'')
-			{
-				state = 4;
-				break;
-			}
 			if (c == '\"')
 			{
 				state = 5;
 				break;
 			}
-
-			
+			else
+			{
+				return ERROR_LEXICAL;
+			}			
 			
 			break;
-		case 9: // id nebo kw
-			
 
-            if(isalpha(c) || (c == '_') || (isdigit(c))){
+		case 9: // id nebo kw
+            if(isalpha(c) || (c == '_') || (isdigit(c)))
+			{
                 if(str_Append(p_DS, c ) != 0) return ERROR_COMPILER; /// pridani c do strKwOrId
             }
-            else {
+            else
+			{
                 ungetc(c,stdin);
                               
-				if (strcmp(p_DS->str, "if") == 0){	
+				if (strcmp(p_DS->str, "if") == 0)
+				{	
                     if(DLInsertLast(tListMainPtr, kwIF, NULL) != 0) return ERROR_COMPILER;
                 }
-                else if (strcmp(p_DS->str, "else") == 0){
-                    if(DLInsertLast (tListMainPtr, kwELSE, NULL) != 0) return ERROR_COMPILER;
+                else if (strcmp(p_DS->str, "else") == 0)
+				{
+                	if(DLInsertLast (tListMainPtr, kwELSE, NULL) != 0) return ERROR_COMPILER;
                 }
-                else if(strcmp(p_DS->str, "for") == 0){
+                else if(strcmp(p_DS->str, "for") == 0)
+				{
                     if(DLInsertLast(tListMainPtr, kwFOR, NULL) != 0) return ERROR_COMPILER;
                 }
-                else if(strcmp(p_DS->str, "return") == 0){
+                else if(strcmp(p_DS->str, "return") == 0)
+				{
                     if(DLInsertLast(tListMainPtr, kwRETURN, NULL) != 0) return ERROR_COMPILER;
-                }
-                else if(strcmp(p_DS->str, "float64") == 0){
+				}
+                else if(strcmp(p_DS->str, "float64") == 0)
+				{
                     if(DLInsertLast(tListMainPtr, kwFLOAT64, NULL) != 0) return ERROR_COMPILER;
                 }
-                else if(strcmp(p_DS->str, "func") == 0){
+                else if(strcmp(p_DS->str, "func") == 0)
+				{
                     if(DLInsertLast(tListMainPtr, kwFUNC, NULL) != 0) return ERROR_COMPILER;
                 }
-				else if(strcmp(p_DS->str, "string") == 0){
+				else if(strcmp(p_DS->str, "string") == 0)
+				{
                     if(DLInsertLast(tListMainPtr, kwSTRING, NULL) != 0) return ERROR_COMPILER;
                 }
-				else if (strcmp(p_DS->str, "int") == 0){
+				else if (strcmp(p_DS->str, "int") == 0)
+				{
                     if(DLInsertLast(tListMainPtr, kwINT, NULL) != 0) return ERROR_COMPILER;
                 }
-				else if(strcmp(p_DS->str, "package") == 0){
+				else if(strcmp(p_DS->str, "package") == 0)
+				{
                     if(DLInsertLast(tListMainPtr, kwPACKAGE, NULL) != 0) return ERROR_COMPILER;
                 }
-				else if (strcmp(p_DS->str, "main") == 0){
+				else if (strcmp(p_DS->str, "main") == 0)
+				{
                     if(DLInsertLast(tListMainPtr, fMAIN, NULL) != 0) return ERROR_COMPILER;
-                } /*
-				else if (strcmp(p_DS->str, "inputs") == 0){
-                    DLInsertLast(tListMainPtr, fINPUTS, NULL);
-                }
-				else if (strcmp(p_DS->str, "inputi") == 0){
-                    DLInsertLast(tListMainPtr, fINPUTI, NULL);
-                }
-				else if (strcmp(p_DS->str, "inputf") == 0){
-                    DLInsertLast(tListMainPtr, fINPUTF, NULL);
-                }
-				else if (strcmp(p_DS->str, "print") == 0){
-                    DLInsertLast(tListMainPtr, fPRINT, NULL);
-                }
-				else if (strcmp(p_DS->str, "int2float") == 0){
-                    DLInsertLast(tListMainPtr, fINT2FLOAT, NULL);
-                }
-				else if (strcmp(p_DS->str, "float2int") == 0){
-                    DLInsertLast(tListMainPtr, fFLOAT2INT, NULL);
-                }
-				else if (strcmp(p_DS->str, "len") == 0){
-                    DLInsertLast(tListMainPtr, fLEN, NULL);
-                }
-				else if (strcmp(p_DS->str, "substr") == 0){
-                    DLInsertLast(tListMainPtr, fSUBSTR, NULL);
-                }
-				else if (strcmp(p_DS->str, "ord") == 0){
-                    DLInsertLast(tListMainPtr, fORD, NULL);
-                }
-				else if (strcmp(p_DS->str, "chr") == 0){
-                    DLInsertLast(tListMainPtr, fCHR, NULL);
-                } */
+                } 
                 else // is tID
 				{
 					if(DLInsertLast(tListMainPtr, tID, p_DS) != 0) return ERROR_COMPILER;
-				}	
+				}
 
 				if(tListMainPtr->Last->t_type != tID){
 					str_Dispose(p_DS);
@@ -401,6 +361,7 @@ int erno_init_DS = 0;
                 state = SCANNER_STATE_START;                
             }
             break;
+
 		case 2:
 			if (c == '*')
 			{
@@ -428,8 +389,7 @@ int erno_init_DS = 0;
 			
 			break;
 		
-		case 1:
-			
+		case 1:			
 			if (c == EOF)
 			{
 				state = SCANNER_STATE_EOF;			
@@ -440,42 +400,9 @@ int erno_init_DS = 0;
 				if(DLInsertLast(tListMainPtr, tEOL, NULL) != 0) return ERROR_COMPILER;
 				state = SCANNER_STATE_START;
 				break;
-			}		
-			
+			}			
 			break;
-
-		case 4:
-			if (c == EOF)
-			{
-				state = SCANNER_STATE_EOF;			
-				return ERROR_LEXICAL;
-			}
-			else if ((c == '\n') || (c == '\r')) //EOL
-			{
-				state = SCANNER_STATE_EOF;			
-				return ERROR_LEXICAL;
-			}
-			else if (c == '\'')
-			{
-				if(DLInsertLast(tListMainPtr, tSTRING, p_DS) != 0) return ERROR_COMPILER;
-				p_DS = NULL;
-				state = SCANNER_STATE_START;								
-				break;
-			} 
-			else
-			{
-				if(p_DS == NULL)
-				{
-					p_DS = str_Init(&erno_init_DS); 
-					if(erno_init_DS != 0) return ERROR_COMPILER;
-				}
-
-				if(str_Append(p_DS, c ) != 0) return ERROR_COMPILER; /// pridani c do dynStr
-			}
-				
-
-			break;
-
+		
 		case 5:
 			if (c == EOF)
 			{
@@ -523,7 +450,7 @@ int erno_init_DS = 0;
 				state = 7;
 				break;
 			}
-			else if ((c == '*') || (c == '+') || (c == '-') || (c == '/') || (c == '%') || (c == ' ') || (c == ';') || (c == ',') || (c == ')') || (c == '\n') || (c == '\r'))
+			else
 			{
                 ungetc(c,stdin);
 				if(DLInsertLast(tListMainPtr, tINT, p_DS) != 0) return ERROR_COMPILER;
@@ -531,12 +458,7 @@ int erno_init_DS = 0;
 				state = SCANNER_STATE_START;								
 				break;
 			}
-			else
-			{
-				state = SCANNER_STATE_START;			
-				return ERROR_LEXICAL;
-			}
-			
+				
 			
 			break;		
 
@@ -568,7 +490,7 @@ int erno_init_DS = 0;
 				state = 7;
 				break;
 			}
-			else if ((c == '*') || (c == '+') || (c == '-') || (c == '/') || (c == '%') || (c == ' ') || (c == ';') || (c == ',') || (c == ')') || (c == '\n') || (c == '\r')) 
+			else
 			{
 				ungetc(c,stdin);
 				if(DLInsertLast(tListMainPtr, tFLOAT, p_DS) != 0) return ERROR_COMPILER;
@@ -577,12 +499,7 @@ int erno_init_DS = 0;
 				state = SCANNER_STATE_START;								
 				break;
 			}
-			else
-			{
-				state = SCANNER_STATE_EOF;
-				return ERROR_LEXICAL;
-			}
-				
+			
 			break;
 
 		case 7:
