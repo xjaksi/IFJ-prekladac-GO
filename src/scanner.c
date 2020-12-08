@@ -159,7 +159,7 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 				if(str_Append(p_DS, c ) != 0) return ERROR_COMPILER; /// pridani c do dynStr
 				break;
 			}
-			if (c == ' ')
+			if (c == ' ' || (c == '	'))
 			{
 				state = SCANNER_STATE_START;								
 				break;
