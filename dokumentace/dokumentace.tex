@@ -210,6 +210,14 @@ E == E & $\rightarrow$ & E & & E != E & $\rightarrow$ & E \\
 
 \newpage
 \subsection{Generování kódů - \texttt{generator.c}}
+První funkce generátoru, jejímž úkolem je vypsání vestavěných funkcí a funkce pomocné, je
+volána již na začátku parseru,a to hned poté co se ověří lexikální analýza. Průběžné
+vypisování kódu je uskutečněno voláním jednotlivých funkcí generátoru. Tyto funkce jsou
+zakomponovány do struktury překladače, což jim umožňuje využívat informace potřebné pro
+správnou funkci výsledného kódu. Speciálním případem je zde tisk výrazů, kdy se funkci
+předá odkaz na vrchol seznamu tokenů výrazu v postfixové notaci. ty jsou pak zpracovány
+strukturou funkce v generátoru. Díky postfixové notaci je pak značně zjednodušen tisk
+výrazů pomocí zásobníkových instrukcí.
 \newpage
 \section{Konečný automat}
 \begin{figure}[h!]
