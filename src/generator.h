@@ -50,6 +50,9 @@ void gen_func_ret_val(int);
 void gen_func_end();
 void gen_func_tf_ret(char *, int);
 
+// prirovnani do promenne
+void gen_var_assign(char *id_name);
+
 // if-then-else
 void gen_if(int);
 void gen_else(int);

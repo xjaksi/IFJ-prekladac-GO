@@ -123,6 +123,11 @@ void gen_func_tf_ret(char *id_name, int ret_cnt){
     printf("\n MOVE LF@$%s TF@_ret%d",id_name, ret_cnt);
 }
 
+// pro prirovnani do promenne
+void gen_var_assign(char *id_name){
+    printf("\n POPS LF@$%s",id_name);
+}
+
 // generovani if_else_then
 void gen_if(int if_id){
     printf("\n CALL $$get_stack_bool");

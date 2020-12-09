@@ -605,7 +605,7 @@ int cId(tokenList *token, treeNode *funcTab, treeList *tList)
 
     // GENERATOR: ukladani nazvu id pro mozne pouziti pri predavani ret_value
     char *arr_of_DS[]={ [0 ... 15] = NULL};
-    arr_of_DS[0] = token->Act->atribute->str;
+    if(token->Act->t_type == tID) arr_of_DS[0] = token->Act->atribute->str;
     int flag_func = 0;
     // GENEND
 
@@ -618,7 +618,7 @@ int cId(tokenList *token, treeNode *funcTab, treeList *tList)
             token->Act->t_type != tDEVNULL) return ERROR_SYNTAX;
 
         // GENERATOR: nacita dalsi nazvy id do pole char *
-        if(token->Act == tID) arr_of_DS[cnt] = token->Act->atribute->str;
+        if(token->Act->t_type == tID) arr_of_DS[cnt] = token->Act->atribute->str;
         // GENEND
 
         cnt++;
@@ -646,6 +646,10 @@ int cId(tokenList *token, treeNode *funcTab, treeList *tList)
         if(flag_func == 1){
             for(int i = 0; i < cnt; i++){
                 if(arr_of_DS[i] != NULL) gen_func_tf_ret(arr_of_DS[i], i);
+            }
+        }else{
+            for(int i = cnt; i >= 0; i--){
+                if(arr_of_DS[i] != NULL) gen_var_assign(arr_of_DS[i]);
             }
         }
         // GENEND
