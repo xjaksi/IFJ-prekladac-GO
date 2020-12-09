@@ -38,6 +38,9 @@ void DLInitList (tokenList *L) {
     L->First = NULL;
     L->Act = NULL;
     L->Last = NULL;
+    // globalni pocitadla id
+    L->if_cnt = 0;
+    L->for_cnt = 0;
 }
 
 /*

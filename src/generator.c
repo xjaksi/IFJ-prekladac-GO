@@ -19,13 +19,15 @@
 void inception_gen(){
     printf("\
     \n .IFJcode20\
-    \n DEFVAR GF@res\
-    \n DEFVAR GF@temp1\
-    \n DEFVAR GF@temp2\
+    \n DEFVAR GF@$$res\
+    \n DEFVAR GF@$$operand_1\
+    \n DEFVAR GF@$$operand_2\
+    \n DEFVAR GF@$$type_1\
+    \n DEFVAR GF@$$type_2\
     \n JUMP $$main\n\
     ");
     
-    
+    // generovani vestavenych funkci
     gen_print();
     gen_inputs();
     gen_itputi();
@@ -39,6 +41,8 @@ void inception_gen(){
     /*
     gen_substr();
     */
+   // generovani pomocnych funkci
+   gen_get_stack_bool();
 
 }
 
@@ -121,27 +125,29 @@ void gen_func_tf_ret(char *id_name, int ret_cnt){
 
 // generovani if_else_then
 void gen_if(int if_id){
-    printf("\n JUMPIFEQ $else_%d", if_id);
+    printf("\n CALL $$get_stack_bool");
+    printf("\n POPS GF@$$res");
+    printf("\n JUMPIFEQ $$else_%d GF@$$res bool@false", if_id);
 }
 
 void gen_else(int if_id){
-    printf("\n JUMP $if_end_%d", if_id);
-    printf("\n LABEL $else_%d", if_id);
+    printf("\n JUMP $$if_end_%d", if_id);
+    printf("\n LABEL $$else_%d", if_id);
 }
 
 void gen_else_end(int if_id){
-    printf("\n LABEL $end_if%d", if_id);
+    printf("\n LABEL $$if_end_%d", if_id);
 }
 
 // generovani for
 void gen_for(int for_id){
-    printf("\n LABEL $for_%d", for_id);
+    printf("\n LABEL $$for_%d", for_id);
     //printf("\nJUMPIFEQ $for_end_%d", for_id);
 }
 
 void gen_for_end(int for_id){
-    printf("\n LABEL $for_%d", for_id);
-    printf("\n JUMPIFEQ $for_end_%d", for_id);
+    printf("\n LABEL $$for_%d", for_id);
+    printf("\n JUMPIFEQ $$for_end_%d", for_id);
 }
 
 // generovani vyrazu
@@ -230,9 +236,9 @@ void gen_inputs(){
     \n MOVE LF@_ret2 int@0\
     \
     \n READ LF@_ret1 string\
-    \n DEFVAR LF@cret1$type\
+    \n DEFVAR LF@ret1$type\
     \n TYPE LF@ret1$type LF@_ret1\
-    \n JUMPIFNEQ $inputs$cond LF@ret1type string@nil\
+    \n JUMPIFNEQ $inputs$cond LF@ret1$type string@nil\
     \n MOVE LF@_ret2 int@1\
     \n LABEL $inputs$cond\
     \n POPFRAME\
@@ -250,9 +256,9 @@ void gen_itputi(){
     \n MOVE LF@_ret2 int@0\
     \
     \n READ LF@_ret1 int\
-    \n DEFVAR LF@cret1$type\
+    \n DEFVAR LF@ret1$type\
     \n TYPE LF@ret1$type LF@_ret1\
-    \n JUMPIFNEQ $inputi$cond LF@ret1type string@nil\
+    \n JUMPIFNEQ $inputi$cond LF@ret1$type string@nil\
     \n MOVE LF@_ret2 int@1\
     \n LABEL $inputi$cond\
     \n POPFRAME\
@@ -270,9 +276,9 @@ void gen_inputf(){
     \n MOVE LF@_ret2 int@0\
     \
     \n READ LF@_ret1 float\
-    \n DEFVAR LF@cret1$type\
+    \n DEFVAR LF@ret1$type\
     \n TYPE LF@ret1$type LF@_ret1\
-    \n JUMPIFNEQ $inputf$cond LF@ret1type string@nil\
+    \n JUMPIFNEQ $inputf$cond LF@ret1$type string@nil\
     \n MOVE LF@_ret2 int@1\
     \n LABEL $inputf$cond\
     \n POPFRAME\
@@ -568,3 +574,36 @@ int str_to_str(tStr *s){
     return 0;
 }
 */
+
+// pomocne funkce (vestavene)
+
+void gen_get_stack_bool(){
+    printf("\
+    \n LABEL $$get_stack_bool\
+    \n POPS GF@$$operand_1\
+    \n TYPE GF@$$type_1 GF@$$operand_1\
+    \n JUMPIFEQ $$operand_int GF@$$type_1 string@int\
+	\n JUMPIFEQ $$operand_float GF@$$type_1 string@float\
+	\n JUMPIFEQ $$operand_string GF@$$type_1 string@string\
+	\n JUMPIFEQ $$operand_false GF@$$type_1 string@nil\
+    \n PUSHS GF@$$operand_1\
+    \n RETURN\
+    \n LABEL $$operand_int\
+    \n JUMPIFEQ $$operand_false GF@$$operand_1 int@0\
+    \n PUSHS bool@true\
+    \n RETURN\
+    \n LABEL $$operand_float\
+    \n JUMPIFEQ $$operand_false GF@$$operand_1 float@0x0p+0\
+    \n PUSHS bool@true\
+    \n RETURN\
+    \n LABEL $$operand_string\
+    \n JUMPIFEQ $$operand_false GF@$$operand_1 string@nil\
+    \n PUSHS bool@true\
+    \n RETURN\
+    \n LABEL $$operand_false\
+    \n PUSHS bool@false\
+    \n RETURN\
+    \n");
+}
+
+

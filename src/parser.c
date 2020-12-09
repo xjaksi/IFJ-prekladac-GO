@@ -816,6 +816,10 @@ int cIf(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal)
     // fprintf(stderr, "JE TO BOOL? %d\n", type);
     if (type != DT_BOOL) return ERROR_SEMANTICS;
 
+    // GENERATOR
+    int if_id = ++token->if_cnt;
+    gen_if(if_id);
+    // GENEND
 
     if (token->Act->t_type != tLBRACE) return ERROR_SYNTAX;
     token->Act = token->Act->rptr;
@@ -830,6 +834,10 @@ int cIf(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal)
         token->Act = token->Act->rptr;
     }
 
+    // GENERATOR
+    gen_else(if_id);
+    // GENEND
+
     // prvni ok token je else
     if (token->Act->t_type != kwELSE) return ERROR_SYNTAX;
     token->Act = token->Act->rptr;
@@ -842,6 +850,9 @@ int cIf(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal)
     if (result != OK) return result;
     if (token->Act->t_type != tRBRACE) return ERROR_SYNTAX;
 
+    // GENERATOR
+    gen_else_end(if_id);
+    // GENEND
 
     if (token->Act->rptr->t_type == tEOF) return ERROR_SYNTAX;
 

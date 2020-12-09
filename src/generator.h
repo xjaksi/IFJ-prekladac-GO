@@ -50,14 +50,14 @@ void gen_func_ret_val(int);
 void gen_func_end();
 void gen_func_tf_ret(char *, int);
 
-// for 
-void gen_for(int);
-void gen_for_end(int);
-
 // if-then-else
 void gen_if(int);
 void gen_else(int);
 void gen_else_end(int);
+
+// for 
+void gen_for(int);
+void gen_for_end(int);
 
 // def
 void gen_defvar(char *);
@@ -66,5 +66,8 @@ void gen_defvar(char *);
 //int str_to_str(tStr *); DELETE
 void print_float(char *par);
 void print_string(char *par);
+
+// pomocne funkce
+void gen_get_stack_bool();
 
 #endif // GENERATOR_H

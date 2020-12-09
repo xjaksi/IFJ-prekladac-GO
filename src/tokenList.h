@@ -101,6 +101,8 @@ typedef struct {
     TokenPtr First;
     TokenPtr Act;
     TokenPtr Last;
+	int if_cnt;
+	int for_cnt;
 } tokenList;
 
  /* prototypy jednotlivých funkcí */
