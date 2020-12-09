@@ -111,7 +111,11 @@ ERROR_CODE parseExp(tokenList *tList, treeList *tree, int *final) {
 						
 					DLFirst(tList);
 
-					 postfix(tList, &output);
+					postfix(tList, &output);
+
+					// GENERATOR
+					gen_expresion(&output);
+					// GENEND
 
 					DLFirst(&output);
 

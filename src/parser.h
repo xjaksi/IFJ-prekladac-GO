@@ -30,7 +30,7 @@ int cScel(tokenList *token, treeNode *funcTab, treeList *tList);
 int funcSave(tokenList *token, treeNode *funcTab);
 int cBody(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal);
 int cId(tokenList *token, treeNode *funcTab, treeList *tList);
-int cAssign(tokenList *token, treeNode *funcTab, treeList *tList, int item);
+int cAssign(tokenList *token, treeNode *funcTab, treeList *tList, int item, int *flag_func);
 int cIf(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal);
 int cFor(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal);
 int cFunc(tokenList *token, treeNode *funcTab, treeList *tList, int noItems, bool ass);

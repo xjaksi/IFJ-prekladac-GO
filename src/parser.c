@@ -15,13 +15,14 @@
 #include "tokenList.h"
 #include "errors.h"
 #include "scanner.h"
+#include "generator.h"
 
 
 int returnWas;
 
 int parse()
 {
-    
+
     treeNode funcTab;
     treeList tList;
 
@@ -62,6 +63,10 @@ int parse()
 
     if (token.Act->t_type != tEOL) return ERROR_SYNTAX;
     token.Act = token.Act->rptr;
+
+    // GENERATOR
+    inception_gen();
+    // GENEND
 
     // kontrola programu
     result = cScel(&token, &funcTab, &tList);
@@ -114,12 +119,23 @@ int cScel(tokenList *token, treeNode *funcTab, treeList *tList)
         // pokud jsem v main neresim
         if (token->Act->t_type == fMAIN)
         {
+            
             retVal = NULL;
             paramsIN = false;
+
+            // GENERATOR
+            gen_main();
+            // GENEND
         }
         // jinak kontroluji telo funkce
         else
         {
+            // GENERATOR
+            gen_func_start(token->Act->atribute->str);
+            // pocitadlo parametru
+            int par_num = 1;
+            // GENEND
+
             // tabulka pro funkci
             nodeInfCont nodeCont = BSTSearch(funcTab, token->Act->atribute->str);
             if (nodeCont == NULL) return ERROR_COMPILER;
@@ -166,6 +182,10 @@ int cScel(tokenList *token, treeNode *funcTab, treeList *tList)
                     {
                         return ERROR_SYNTAX;
                     }
+                    // GENERATOR: generuje parametry uvnitr funkce
+                    gen_func_param(token->Act->atribute->str, par_num);
+                    par_num++;
+                    // GENEND
 
                     token->Act = token->Act->rptr->rptr;
                     if (token->Act->t_type == tCOMMA) token->Act = token->Act->rptr; 
@@ -179,9 +199,19 @@ int cScel(tokenList *token, treeNode *funcTab, treeList *tList)
         
  // fprintf(stderr, "CHECK 2\n");
 
+        // GENERATOR: pocitadlo navratovych hodnot
+        int ret_num = 1;
+        // GENEND
 
         while (token->Act->t_type != tLBRACE)
         {
+            // GENERATOR: generuje jednotlive promene ret
+            if(token->Act->t_type == kwINT || token->Act->t_type == kwFLOAT64 || token->Act->t_type == kwSTRING){
+                gen_func_ret_start(ret_num);
+                ret_num++;
+            }
+            // GENEND
+
             if (token->Act->t_type == tEOF) return ERROR_SYNTAX;
             token->Act = token->Act->rptr;
         }
@@ -207,6 +237,7 @@ int cScel(tokenList *token, treeNode *funcTab, treeList *tList)
 
 int funcSave(tokenList *token, treeNode *funcTab)
 {
+
     int isMain = 0;
     int result;
 
@@ -458,6 +489,7 @@ int funcSave(tokenList *token, treeNode *funcTab)
         return ERROR_UNDEFINED;
     }
     
+
     return OK;
 }
 
@@ -529,6 +561,11 @@ int cBody(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal)
                     if (type != retVal[cnt]) ERROR_RETURN_VALUE;
 
                     cnt++;
+
+                    // GENERATOR
+                    gen_func_ret_val(cnt);
+                    // GENEND
+
                     if (token->Act->t_type == tCOMMA) token->Act = token->Act->rptr;
                 }
             }
@@ -540,6 +577,10 @@ int cBody(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal)
             if (retVal[cnt] != 101) return ERROR_RETURN_VALUE;
             fprintf(stderr, "RETURN OK %d \n", retVal[cnt]);
             
+            // GENERATOR
+            gen_func_end();
+             // GENEND
+
             break;
         
         default:
@@ -562,6 +603,12 @@ int cId(tokenList *token, treeNode *funcTab, treeList *tList)
     int result;
     int type;
 
+    // GENERATOR: ukladani nazvu id pro mozne pouziti pri predavani ret_value
+    char *arr_of_DS[]={ [0 ... 15] = NULL};
+    arr_of_DS[0] = token->Act->atribute->str;
+    int flag_func = 0;
+    // GENEND
+
     token->Act = token->Act->rptr;
 
     while (token->Act->t_type == tCOMMA)
@@ -569,6 +616,11 @@ int cId(tokenList *token, treeNode *funcTab, treeList *tList)
         token->Act = token->Act->rptr;
         if (token->Act->t_type != tID &&
             token->Act->t_type != tDEVNULL) return ERROR_SYNTAX;
+
+        // GENERATOR: nacita dalsi nazvy id do pole char *
+        if(token->Act == tID) arr_of_DS[cnt] = token->Act->atribute->str;
+        // GENEND
+
         cnt++;
         token->Act = token->Act->rptr;
     }
@@ -588,7 +640,16 @@ int cId(tokenList *token, treeNode *funcTab, treeList *tList)
         fprintf(stderr, "CHECK 7\n"); 
         token->Act = token->Act->rptr;
         // predam ukazatel na prvni token za =
-        result = cAssign(token, funcTab, tList, cnt);
+        result = cAssign(token, funcTab, tList, cnt, &flag_func);
+
+        // GENERATOR: pokud byla volana funkce priradi se navratove hodnoty
+        if(flag_func == 1){
+            for(int i = 0; i < cnt; i++){
+                if(arr_of_DS[i] != NULL) gen_func_tf_ret(arr_of_DS[i], i);
+            }
+        }
+        // GENEND
+
         fprintf(stderr, "result assign: %d token: %d\n", result, token->Act->t_type);
         if (result != OK) return result;
         break;
@@ -602,6 +663,11 @@ int cId(tokenList *token, treeNode *funcTab, treeList *tList)
         if (nodeCont != NULL) return ERROR_REDEFINITION;
         token->Act = token->Act->rptr;
         result = cExpr(token, tList, &type);
+
+        // GENERATOR
+        printf("\n DEFVAR LF@$%s", idName);
+        printf("\n POPS LF@$%s", idName);
+        // GENEND
         
         if (result != OK) return result;
         // pokud je type podporovany typ ulozim
@@ -635,13 +701,17 @@ int cId(tokenList *token, treeNode *funcTab, treeList *tList)
 }
 
 // token za =
-int cAssign(tokenList *token, treeNode *funcTab, treeList *tList, int item)
+int cAssign(tokenList *token, treeNode *funcTab, treeList *tList, int item, int *flag_func)
 {
     int result;
     // fprintf(stderr, "CHECK 8\n"); 
     // prirazuji z funkce
     if (token->Act->t_type == tID && token->Act->rptr->t_type == tLBRACKET)
     {
+        // GENERATOR: nastavuje flag pro rozpoznani funkce po returnu
+        *flag_func = 1;
+        // GENEND   
+
         token->Act = token->Act->rptr;
         result = cFunc(token, funcTab, tList, item, true);
         return result;
@@ -884,6 +954,10 @@ int cFunc(tokenList *token, treeNode *funcTab, treeList *tList, int noItems, boo
     nodeInfCont nodeCont = BSTSearch(funcTab, token->Act->lptr->atribute->str);
     if (nodeCont == NULL) return ERROR_UNDEFINED;
 
+    // GENERATOR: ulozi nazev funkce do pomocne promenne pro pozdejsi volani
+    char *func_name = token->Act->lptr->atribute->str;
+    // GENEND
+
     fprintf(stderr, "Kontrola %s \n", token->Act->lptr->atribute->str);
     // specialni pripad print
     if (str_Compare_char(token->Act->lptr->atribute, "print") == 0)
@@ -894,13 +968,20 @@ int cFunc(tokenList *token, treeNode *funcTab, treeList *tList, int noItems, boo
 
         token->Act = token->Act->rptr;
         while (token->Act->t_type != tRBRACKET)
-        {
+        {           
+
             if (token->Act->t_type == tEOF) return ERROR_SYNTAX;
             if (token->Act->t_type == tID)
             {
                 result = dataSearch(tList, token->Act->atribute->str);
                 if (result == 101) return ERROR_UNDEFINED;
                 noPrint++;
+
+                // GENERATOR: generuje volani funkce print pro kazdy parametr
+                printf("\n CREATEFRAME");
+                gen_func_tf_var(token->Act, 0);
+                printf("\n CALL $print");
+                // GENEND TODO: mozna to spojit do jednoho
             }
             else
             {
@@ -908,8 +989,15 @@ int cFunc(tokenList *token, treeNode *funcTab, treeList *tList, int noItems, boo
                     token->Act->t_type != tFLOAT &&
                     token->Act->t_type != tSTRING)
                 {
+
                     return ERROR_SYNTAX;
                 }
+                // GENERATOR: generuje volani funkce print pro kazdy parametr
+                printf("\n CREATEFRAME");
+                gen_func_tf_var(token->Act, 0);
+                printf("\n CALL $print");
+                // GENEND
+
                 noPrint++;
             }
             
@@ -933,8 +1021,15 @@ int cFunc(tokenList *token, treeNode *funcTab, treeList *tList, int noItems, boo
         token->Act = token->Act->rptr;
         if (token->Act->t_type != tEOL) return ERROR_SYNTAX;
         return OK;
+
+        
+        
+
     }
     
+    // GENERATOR
+    printf("\n CREATEFRAME");
+    // GENEND
 
     // funkce existuje kontroluji argumenty
     int noParam = nodeCont->noParams;
@@ -961,6 +1056,11 @@ int cFunc(tokenList *token, treeNode *funcTab, treeList *tList, int noItems, boo
         {
             if (token->Act->t_type != nodeCont->paramsIn[0]) return ERROR_PARAMETERS;
         }
+
+        // GENERATOR
+        gen_func_tf_var(token->Act, 0);
+        // GENEND
+
         token->Act = token->Act->rptr;
         if (token->Act->t_type == tCOMMA) return ERROR_PARAMETERS;
         if (token->Act->t_type != tRBRACKET) return ERROR_SYNTAX;
@@ -982,6 +1082,11 @@ int cFunc(tokenList *token, treeNode *funcTab, treeList *tList, int noItems, boo
 
                 if (token->Act->t_type != nodeCont->paramsIn[i]) return ERROR_PARAMETERS;
             }
+
+            // GENERATOR
+            gen_func_tf_var(token->Act, i);
+            // GENEND
+
             token->Act = token->Act->rptr;
             if (token->Act->t_type == tCOMMA) 
             {
@@ -1004,6 +1109,10 @@ int cFunc(tokenList *token, treeNode *funcTab, treeList *tList, int noItems, boo
         if (token->Act->t_type != tRBRACKET) return ERROR_SYNTAX;
 
     }
+
+    // GENERATOR
+    gen_func_call(func_name);
+    // GENEND
 
     token->Act = token->Act->rptr;
     if (token->Act->t_type != tEOL) return ERROR_SYNTAX;
@@ -1064,7 +1173,8 @@ int cFunc(tokenList *token, treeNode *funcTab, treeList *tList, int noItems, boo
         if (nodeCont->noReturn != 0) return ERROR_SEMANTICS;
     }
     
-
+    // GENERATOR TODO
+    
     return OK;
 }
 

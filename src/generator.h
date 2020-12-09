@@ -34,10 +34,23 @@ void gen_substr();
 void gen_ord();
 void gen_chr();
 
+// main
+void gen_main();
+
 // vyrazy
 void gen_expresion(tokenList *);
 
-// for funkce
+// funkce
+void gen_func_tf_var(TokenPtr, int );
+void gen_func_call(char *);
+void gen_func_start(char *);
+void gen_func_param(char *, int);
+void gen_func_ret_start(int);
+void gen_func_ret_val(int);
+void gen_func_end();
+void gen_func_tf_ret(char *, int);
+
+// for 
 void gen_for(int);
 void gen_for_end(int);
 
@@ -48,5 +61,10 @@ void gen_else_end(int);
 
 // def
 void gen_defvar(char *);
+
+// prevod str na vystupni str
+//int str_to_str(tStr *); DELETE
+void print_float(char *par);
+void print_string(char *par);
 
 #endif // GENERATOR_H
