@@ -19,9 +19,9 @@
 <EXPR_TYPE_M>   ->  eps
 <EXPR_TYPE_M>   ->  , <EXPR_TYPE> <EXPR_TYPE_M>
 <TYPE>          ->  id
-<TYPE>          ->  integer
-<TYPE>          ->  float
-<TYPE>          ->  string
+<TYPE>          ->  INTEGER_VAL
+<TYPE>          ->  FLOAT_VAL
+<TYPE>          ->  STRING_VAL
 <VALUE_EXTRA>   ->  <EXPR_TYPE> <EXPR_TYPE_M>
 <ID_ASSIGN>     ->  <VALUE_EXTRA>
 <ID_ASSIGN>     ->  id ( <PARAMS> )
