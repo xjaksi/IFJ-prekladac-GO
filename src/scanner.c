@@ -393,7 +393,7 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 			if (c == EOF)
 			{
 				state = SCANNER_STATE_EOF;			
-				return ERROR_LEXICAL;
+				if(DLInsertLast(tListMainPtr, tEOF, NULL) != 0) return ERROR_COMPILER;
 			}
 			if ((c == '\n') || (c == '\r')) //EOL
 			{
