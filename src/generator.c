@@ -80,7 +80,7 @@ void gen_func_tf_var(TokenPtr token, int par_num){
             break;
         case tSTRING:
             printf("\n MOVE TF@*par%d ",par_num);
-            print_string(token->atribute->str);
+            if(token->atribute != NULL) print_string(token->atribute->str);
             break;
         case tID:
             printf("\n MOVE TF@*par%d LF@$%s", par_num, token->atribute->str);
