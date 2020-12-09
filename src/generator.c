@@ -174,7 +174,7 @@ void gen_expresion(tokenList *l){
     while(l->Act != NULL){
         switch(l->Act->t_type){
             case tID:
-                printf("\n PUSHS LF@$%s", l->Act->atribute->str); // TODO nejaky identifikator id
+                printf("\n PUSHS LF@$%s", l->Act->atribute->str);
                 break;
             case tINT:
                 printf("\n PUSHS int@%s", l->Act->atribute->str);
@@ -194,7 +194,23 @@ void gen_expresion(tokenList *l){
                 printf("\n SUBS");
                 break;
             case tDIV:
-                // TODO
+                printf("\n POPS GF@$$operand_1");
+                printf("\n PUSHS GF@$$operand_1");              
+                printf("\n TYPE GF@$$type_1 GF@$$operand_1");
+                printf("\n JUMPIFEQ $$idiv GF@$$type_1 string@int");
+                printf("\n JUMPIFEQ $$div GF@$$type_1 string@float");
+                printf("\n LABEL $$idiv");
+                printf("\n JUMPIFNEQ $$idiv$notnull GF@$$operand_1 int@0");
+                printf("\n EXIT int@9");
+                printf("\n LABEL $$idiv$notnull");
+                printf("\n IDIVS");
+                printf("\n JUMP $$tdiv$end");
+                printf("\n LABEL $$div");
+                printf("\n JUMPIFNEQ $$div$notnull GF@$$operand_1 float@0x0p+0");
+                printf("\n EXIT int@9");
+                printf("\n LABEL $$div$notnull");
+                printf("\n DIVS");
+                printf("\n LABEL $$tdiv$end");
                 break;
             case tMUL:
                 printf("\n MULS");
