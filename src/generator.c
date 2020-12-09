@@ -83,7 +83,7 @@ void gen_func_tf_var(TokenPtr token, int par_num){
             print_string(token->atribute->str);
             break;
         case tID:
-            printf("\n MOVE TF@*par%d LF@$%s", par_num, token->atribute->str); // TODO nejaky id pridat
+            printf("\n MOVE TF@*par%d LF@$%s", par_num, token->atribute->str);
             break;
         default:
             break;
@@ -203,26 +203,42 @@ void gen_expresion(tokenList *l){
                 printf("\n LTS");
                 break;
             case tLEQ:
-                /// TODO
+                printf("\n POPS GF@$$operand_1");
+                printf("\n POPS GF@$$operand_2");
+                printf("\n PUSHS GF@$$operand_2");
+                printf("\n PUSHS GF@$$operand_1");
+                printf("\n LTS");
+                printf("\n PUSHS GF@$$operand_2");
+                printf("\n PUSHS GF@$$operand_1");
+                printf("\n EQS");
+                printf("\n ORS");
                 break;
             case tGT:
                 printf("\n GTS");
                 break;
             case tGEQ:
-                // TODO
+                printf("\n POPS GF@$$operand_1");
+                printf("\n POPS GF@$$operand_2");
+                printf("\n PUSHS GF@$$operand_2");
+                printf("\n PUSHS GF@$$operand_1");
+                printf("\n GTS");
+                printf("\n PUSHS GF@$$operand_2");
+                printf("\n PUSHS GF@$$operand_1");
+                printf("\n EQS");
+                printf("\n ORS");
                 break;
             case tEQ:
                 printf("\n EQS");
                 break;
             case tNEQ:
-                // TODO
+                printf("\n EQS");
+                printf("\n NOTS");
                 break;
             default:
                 break;
         }
         DLSucc(l);
     }
-
 }
 
 // oddil vestavenych funkci
