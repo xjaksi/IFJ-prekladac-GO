@@ -63,5 +63,6 @@ int main() {
         break;
     }
 
+    printf("\n EXIT int@0");
     return result;
 }
