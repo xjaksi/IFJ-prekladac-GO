@@ -159,7 +159,7 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 				if(str_Append(p_DS, c ) != 0) return ERROR_COMPILER; /// pridani c do dynStr
 				break;
 			}
-			if (c == ' ')
+			if (c == ' ' || (c == '	')) // odchytava mezeru a tab
 			{
 				state = SCANNER_STATE_START;								
 				break;
@@ -414,14 +414,65 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 				state = SCANNER_STATE_EOF;			
 				return ERROR_LEXICAL;
 			}
-			else if (c == '\"')
+			else if (c == '\"') // ukonceni stringu
 			{
 				if(DLInsertLast(tListMainPtr, tSTRING, p_DS) != 0) return ERROR_COMPILER;
 				p_DS = NULL;
 				state = SCANNER_STATE_START;								
 				break;
 			} 
-			else
+			else if (c == '\\') //escape sekvence
+			{ 
+                c = getc(stdin);
+                
+				if (c == '\\')
+				{
+					if(str_Append(p_DS, '\\' ) != 0) return ERROR_COMPILER; /// pridani c do str
+                }
+                else if (c == '\"')
+				{
+					if(str_Append(p_DS, '\"' ) != 0) return ERROR_COMPILER; /// pridani c do str
+                }
+                else if (c == 'n' )
+				{
+                    if(str_Append(p_DS, '\n' ) != 0) return ERROR_COMPILER; /// pridani c do str
+                }
+                else if (c == 't')
+				{
+					if(str_Append(p_DS, '\t' ) != 0) return ERROR_COMPILER; /// pridani c do str
+                }
+				
+                else if (c == 'x') // Hexadecimal hodnota
+				{
+                    char tmp[4];
+                    tmp[0] = '0';
+                    tmp[1] = (char)c;
+                    for(int i = 2; i < 4; i++)
+					{
+                        c = getc(stdin);
+                        if (isdigit(c) || (c == 'A') || (c == 'B') || (c == 'C') || (c == 'D') || (c == 'E') || (c == 'F') || (c == 'a') || (c == 'b') || (c == 'c') || (c == 'd') || (c == 'e') || (c == 'f'))
+                    	{
+                            tmp[i] = (char)c;
+                        }
+                        else
+						{
+                            state = SCANNER_STATE_EOF;			
+							return ERROR_LEXICAL;
+                        }
+                    }
+
+                    char hex;
+                    // Convert to hex value
+                    sscanf(tmp, "%hhx", &hex);
+                    if(str_Append(p_DS, hex ) != 0) return ERROR_COMPILER; /// pridani c do str
+                }
+                else
+				{
+                    state = SCANNER_STATE_EOF;			
+					return ERROR_LEXICAL;
+                }
+			}	
+			else // pokracuje string, c se prida
 			{
 				if(p_DS == NULL)
 				{
@@ -431,8 +482,7 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 
 				if(str_Append(p_DS, c ) != 0) return ERROR_COMPILER; /// pridani c do dynStr
 			}
-				
-
+			
 			break;
 
 		case 10:
