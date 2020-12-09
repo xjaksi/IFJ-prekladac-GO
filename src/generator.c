@@ -168,19 +168,6 @@ void gen_for_end(int for_id){
 
 // generovani vyrazu
 void gen_expresion(tokenList *l){
-    
-    /* DELETE
-    DLFirst(l);
-    while(l->Act != NULL){
-        printf("\n %d", l->Act->t_type);
-        if(l->Act->atribute != NULL){
-            printf("\t\t%s", l->Act->atribute->str);
-        }
-        DLSucc(l);
-    }
-
-    */
-    printf("\n"); //DELETE
 
     DLFirst(l);
 
@@ -235,8 +222,6 @@ void gen_expresion(tokenList *l){
         }
         DLSucc(l);
     }
-
-    printf("\n"); // DELETE
 
 }
 
@@ -545,51 +530,7 @@ void print_string(char *par){
 
 }
 
-/* DELETE: udelat jinak, sak ja vim jak
-int str_to_str(tStr *s){
-    int i = 0;
-    char old_str[s->length];
-    strcpy(old_str, s->str);
-    
-    do{
-        switch(s->str[i]){
-            case '\010':
-                str_Append(s, '\\');
-                str_Append(s, '0');
-                str_Append(s, '1');
-                str_Append(s, '0');
-                i += 4;
-                break;
-            case '\032':
-                str_Append(s, '\\');
-                str_Append(s, '0');
-                str_Append(s, '3');
-                str_Append(s, '2');
-                i += 4;
-                break;
-            case '\035':
-                str_Append(s, '\\');
-                str_Append(s, '0');
-                str_Append(s, '3');
-                str_Append(s, '5');
-                i+= 4;
-                break;
-            case '\\':
-                str_Append(s, '\\');
-                str_Append(s, '0');
-                str_Append(s, '9');
-                str_Append(s, '2');
-                i += 4;
-                break;
-            default:
-                i++;
-                break;
-        }
-    }while(old_str[i] != '\0');
 
-    return 0;
-}
-*/
 
 // pomocne funkce (vestavene)
 

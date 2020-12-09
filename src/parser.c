@@ -1033,7 +1033,7 @@ int cFunc(tokenList *token, treeNode *funcTab, treeList *tList, int noItems, boo
                 printf("\n CREATEFRAME");
                 gen_func_tf_var(token->Act, 0);
                 printf("\n CALL $print");
-                // GENEND TODO: mozna to spojit do jednoho
+                // GENEND
             }
             else
             {

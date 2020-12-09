@@ -18,7 +18,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "exprList.h"
-// #include "parser.h"      TODO
 
 void inception_gen();
 
@@ -68,7 +67,6 @@ void gen_for_end(int);
 void gen_defvar(char *);
 
 // prevod str na vystupni str
-//int str_to_str(tStr *); DELETE
 void print_float(char *par);
 void print_string(char *par);
 

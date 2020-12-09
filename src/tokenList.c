@@ -22,16 +22,6 @@
 
 
 
-/*
-** Vytiskne upozornění na to, že došlo k chybě.
-**/	
-void DLError() {        // TODO: interi chyba(allokace pameti), melo by to disposnout list a vratit nejake ernum
-
-    // printf ("*ERROR* The program has performed an illegal operation.\n");
-    // errflg = TRUE;             /* globální proměnná -- příznak ošetření chyby */
-    return;
-}
-
 void DLInitList (tokenList *L) {
    
     // nastavime vsechny pointry na NULL
@@ -101,24 +91,6 @@ int DLInsertLast(tokenList *L, TokenType param_t_type, tStr *p_atribute) {
     // aktualizce posledniho prvku na prvek pridavany
     L->Last = sup;
     return 0;
-}
-
-
-
-/*
-** Prostřednictvím parametru val vrátí hodnotu aktivního prvku seznamu L.
-** Pokud seznam L není aktivní, volá funkci DLError ().
-**/
-void DLCopy (tokenList *L, TokenType *param_t_type, tStr *p_atribute) {
-	
-    // kontrola aktivitty
-    if(L->Act == NULL){
-        DLError();
-        return;
-    }	
-
-    p_atribute = L->Act->atribute;
-    *param_t_type = L->Act->t_type;
 }
 
 /*
