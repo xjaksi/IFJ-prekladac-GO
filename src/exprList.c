@@ -75,6 +75,10 @@ void removeItem(exprList *l) {
 
 // TO DO !!!!
 ERROR_CODE fillMyList (exprList *l, tokenList *tList, treeList *tree) {
+    int errorPrerun = prerunExpr(tList);
+    fprintf(stderr, "ERROR PRERUN: %d\n", errorPrerun);
+    tList->Act = tList->First;
+    if (errorPrerun != OK) return errorPrerun;
     int DATA;   // TO DO: odstranit
      // prochazeni celeho tokenoveho seznamu
     while (tList->Act != NULL) {
@@ -117,6 +121,7 @@ ERROR_CODE fillMyList (exprList *l, tokenList *tList, treeList *tree) {
         // jedna se o operator
         default:
             if (tokenToPT(tList->Act->t_type) == 202) return ERROR_SYNTAX;
+            fprintf(stderr, "TADY jsem se dostat neměl pokud jsem =. Jsem: %d\n", tList->Act->t_type);
             insertItem(l, tokenToPT(tList->Act->t_type), DT_NONE, false);
             break;
         }
@@ -295,6 +300,20 @@ int getPrecedence(TokenType type) {
         return 0;
         break;
     }
+}
+
+
+ERROR_CODE prerunExpr(tokenList *t){
+    while (t->Act != NULL) {
+        if (tokenToPT(t->Act->t_type) == 202) {
+            fprintf(stderr, "Tady to vlezlo za 202, token: %d\n", t->Act->t_type);
+            if(t->Act->t_type != tINT && t->Act->t_type != tFLOAT && t->Act->t_type != tSTRING) return ERROR_SYNTAX;
+        }
+        t->Act = t->Act->rptr;
+    }
+    return OK;
+    
+
 }
 
 

@@ -2,7 +2,7 @@
 \ProvidesPackage{myDocument}[custom style]
 
 % PACKAGES
-\usepackage[left=2cm,top=1.5cm,text={16.5cm, 26cm}]{geometry}
+\usepackage[left=1.8cm,top=1.8cm,text={17.5cm, 26cm}]{geometry}
 \usepackage[utf8]{inputenc}
 \usepackage[unicode]{hyperref}
 \usepackage[english, main=czech]{babel}
@@ -23,8 +23,6 @@
 \titleformat*{\subsubsection}{\large\bfseries}
 \titleformat*{\paragraph}{\large\bfseries}
 \titlespacing*{\paragraph}{0pt}{8pt}{4pt}
-\titlespacing*{\subsection}{0pt}{8pt}{4pt}
-\titlespacing*{\subsubsection}{0pt}{8pt}{8pt}
 
 % example environment
 \newenvironment{example}[1][]{\medskip\begin{quote}\textbf{Příklad: #1} }{\end{quote}\medskip}
@@ -53,7 +51,7 @@
 
 % OPTION FOR DRAWING GRAPHS
 \DeclareOption{graphs}{
-    \usetikzlibrary{shapes.geometric,arrows,fit,matrix,positioning}
+    \usetikzlibrary{shapes.geometric,arrows,fit,matrix,positioning,automata}
     \tikzset{treenode/.style = {circle, draw=black, align=center, minimum size=1cm}}
     
     % for work with sets

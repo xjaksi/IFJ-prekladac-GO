@@ -1,7 +1,14 @@
 \documentclass[czech,a4paper,12pt]{article}[]
 
 \usepackage{myDocument}
-
+\usetikzlibrary{positioning, automata, calc}
+\tikzstyle{accepting}=[path picture={%
+  \draw let 
+    \p1 = (path picture bounding box.east),
+    \p2 = (path picture bounding box.center)
+    in
+      (\p2) circle (\x1 - \x2 - 2pt);
+  }]
 \lstset{xleftmargin=.3\textwidth, xrightmargin=.3\textwidth}
 \renewcommand{\lstlistingname}{Kód}
 
@@ -112,20 +119,50 @@ Tento seznam pak předá zpět syntaktickému/sémantickému analyzátoru, kter�
 
 \newpage
 
-\begin{inpar}
+
 \subsection{Lexikální analýza - \texttt{scanner.c}}
 Lexikální analýza je řízena konečným automatem. Ze vstupu načte vždy jeden znak a postupně je přidává do předem připraveného řetězce, dokud nedojde do stavu, kdy může tento řetězec přijmout nebo zamítnout. Pokud jej může přijmout, vytvoří z něj \emph{Token} a přidá jej do obousměrně vázaného seznamu, který poté, co narazí na \texttt{EOF}, považuje soubor za lexikálně korektní a předá jej zpět do \texttt{parser.c}.
 
-\begin{inpar}
+\begin{center}
+    \begin{tikzpicture}[double distance=2pt,auto] 
+        % START
+        \node[state] (start)   {\texttt{START}}; 
+
+        % LT -> LEQ branch
+        \node[state, accepting] (lt) at (90:3) {\texttt{tLT}};   % LT
+        \node[state, accepting] (leq) at (90:6) {\texttt{tLEQ}};  % LEQ
+
+        % GT -> GEQ branch
+        \node[state, accepting] (gt) at (60:3) {\texttt{tGT}};     % GT
+        \node[state, accepting] (geq) at (60:6) {\texttt{tLEQ}};    % GEQ
+
+        % ASSIGN -> EQ branch
+        \node[state, accepting] (assign) at (30:3) {\texttt{tASG\footnotemark}};     % ASSIGN
+        \node[state, accepting] (eq) at (30:6) {\texttt{tEQ}};    % EQ
+        
+        % +, -, *
+        \node[state, accepting] (plus) at (0:3) {\texttt{tADD}};
+        \path[->] 
+
+        (start) edge node {$<$} (lt)
+        (lt) edge node {$=$} (leq)
+        (start) edge node {$>$} (gt)
+        (gt) edge node {$=$} (geq)
+        (start) edge node {$=$} (assign)
+        (assign) edge node {$=$} (eq);
+    \end{tikzpicture}
+\end{center}
+\footnotetext[1]{zkráceno z \texttt{tASSIGN} kvůli velikosti}
+
 \subsubsection{Dynamický řetězec}
 Práci s řetězci máme řešenou pomocí implementace vlastního dynamického řetězce.
-\end{inpar}
+
 \newpage
 
 \subsection{Syntaktická a sémantická analýza}
 Syntaktická kontrola je řízena pravidly \textbf{LL gramatiky}, informace potřebné k sémantické kontrole (existence proměnných a funkcí, datové typy a podobně) jsou uchovávány v \textbf{tabulce symbolů} implementované pomocí binárního stromu. 
 
-\begin{inpar}
+
 \subsubsection{Syntaktická analýza}
 Začátkem syntaktické analýzy je kontrola, jestli vstupní soubor obsahuje povinnou hlavičku. Následně se celý seznam, který obsahuje \emph{Tokeny} reprezentující vstupní soubor, projde poprvé. Funkce \texttt{buidInFunc} projde všechny hlavičky funkcí, uloží je do tabulky symbolů spolu s informacemi o vstupních a výstupních parametrech (počet a datový typ). Také zkontroluje, že poslední funkcí je \texttt{main}. Po provedení tohoto prvního běhu se pak celý seznam projde znova a kontrolují se těla jednotlivých funkcí. Tato kontrola se řídí pravidly LL gramatiky.
 
@@ -217,9 +254,7 @@ E == E & $\rightarrow$ & E & & E != E & $\rightarrow$ & E \\
 \end{tabular}}
 \end{center}
 
-\end{inpar}
 
 
 \subsection{Generování kódů}
-\end{inpar}
 \end{document}

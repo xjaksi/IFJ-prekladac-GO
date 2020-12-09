@@ -195,7 +195,6 @@ ERROR_CODE reduce() {
 				default:
 					// // fprintf(stderr, "OOPS NELA FUCKED UP\n");
 					return ERROR_COMPILER;
-					break;
 			}
 			debug(opStack.act->ptType);
 			// fprintf(stderr, "[INFO] basic reduction E %s E \n", text);

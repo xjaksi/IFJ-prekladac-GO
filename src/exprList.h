@@ -128,6 +128,7 @@ void deleteToken(tokenList *t);
  */
 int getPrecedence(TokenType type);
 
+ERROR_CODE prerunExpr(tokenList *t);
 
 void debugg(PtType i);
 
