@@ -1,0 +1,19 @@
+\begin{thebibliography}{1}
+\providecommand{\url}[1]{\texttt{#1}}
+\providecommand{\urlprefix}{Dostupné z: }
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi:\discretionary{}{}{}#1}\else
+  \providecommand{\doi}{doi:\discretionary{}{}{}\begingroup
+  \urlstyle{rm}\Url}\fi
+\providecommand{\selectlanguage}[1]{\relax}
+\providecommand{\eprint}[2][]{\url{#2}}
+
+\bibitem{postfix}
+academy, R.: Infix, Prefix and Postfix expressions. [online].
+\urlprefix\url{https://runestone.academy/runestone/books/published/pythonds/BasicDS/InfixPrefixandPostfixExpressions.html}
+
+\bibitem{prectable}
+Niemann, T.: Operator precedence parsing. [online].
+\urlprefix\url{https://epaperpress.com/oper/download/OperatorPrecedenceParsing.pdf}
+
+\end{thebibliography}
