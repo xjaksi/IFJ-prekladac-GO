@@ -59,7 +59,9 @@ void gen_else(int);
 void gen_else_end(int);
 
 // for 
-void gen_for(int);
+void gen_for_start(int);
+void gen_for_2(int);
+void gen_for_3(int);
 void gen_for_end(int);
 
 // def

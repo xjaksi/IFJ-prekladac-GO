@@ -873,9 +873,18 @@ int cFor(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal)
     bool head = false;
 
     token->Act = token->Act->rptr;
+
+    // GENERATOR
+    int for_id = ++token->for_cnt;
+    // GENEND
+
     //definice
     if (token->Act->t_type == tID)
     {
+        // GENERATOR
+        char *id_name = token->Act->atribute->str;           
+        // GENEND
+
         // pokud existuje jako funkce, koncim
         nodeInfCont nodeCont = BSTSearch(funcTab, token->Act->atribute->str);
         if (nodeCont != NULL) return ERROR_REDEFINITION;
@@ -892,6 +901,12 @@ int cFor(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal)
         // hodnota vyrazu
         result = cExpr(token, tList, &type);
         if (result != OK) return result;
+        
+        // GENERATOR
+        gen_defvar(id_name);        
+        gen_for_start(for_id);
+        // GENEND
+
         // vlozeni do tabulky
         if (type == DT_INT)
         {
@@ -921,6 +936,10 @@ int cFor(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal)
         result = cExpr(token, tList, &type);
         if (result != OK) return result;
         if (type != DT_BOOL) return ERROR_SEMANTICS;
+
+        // GENERATOR
+        gen_for_2(for_id);
+        // GENEND
     }
     else
     {
@@ -934,6 +953,11 @@ int cFor(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal)
     if (token->Act->t_type != tLBRACE)
     {
         if (token->Act->t_type != tID) return ERROR_SYNTAX;
+
+        // GENERATOR
+        char *id_name_assign = token->Act->atribute->str;
+        // GENEND
+
         // podivam se jestli je id definovano
         dat = dataSearch(tList, token->Act->atribute->str);
         if (dat == 101) return ERROR_UNDEFINED;
@@ -946,7 +970,16 @@ int cFor(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal)
             ((dat == tFLOAT) && (type != DT_FLOAT)) ||
             ((dat == tSTRING) && (type != DT_STRING)))
                 return ERROR_SEMANTICS;
+
+        // GENERATOR
+        gen_var_assign(id_name_assign);
+        // GENEND
     }
+
+    // GENERATOR
+    gen_for_3(for_id);
+    // GENEND
+
     if (token->Act->t_type != tLBRACE) return ERROR_SYNTAX;
     token->Act = token->Act->rptr;
     if (token->Act->t_type != tEOL) return ERROR_SYNTAX;
@@ -954,6 +987,10 @@ int cFor(tokenList *token, treeNode *funcTab, treeList *tList, int *retVal)
     // telo for
     result = cBody(token, funcTab, tList, retVal);
     if (result != OK) return result;
+
+    // GENERATOR
+    gen_for_end(for_id);
+    // GENEND
 
     // pokud jsem vytvarel hlavicku popnu
     if (head) treeListRemove(tList);
@@ -1187,8 +1224,6 @@ int cFunc(tokenList *token, treeNode *funcTab, treeList *tList, int noItems, boo
     {
         if (nodeCont->noReturn != 0) return ERROR_SEMANTICS;
     }
-    
-    // GENERATOR TODO
     
     return OK;
 }

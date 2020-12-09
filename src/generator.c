@@ -145,14 +145,25 @@ void gen_else_end(int if_id){
 }
 
 // generovani for
-void gen_for(int for_id){
-    printf("\n LABEL $$for_%d", for_id);
-    //printf("\nJUMPIFEQ $for_end_%d", for_id);
+void gen_for_start(int for_id){
+    printf("\n LABEL $$for_1_%d", for_id);
+}
+void gen_for_2(int for_id){
+    printf("\n CALL $$get_stack_bool");
+    printf("\n POPS GF@$$res");
+    printf("\n JUMP $$for_3_%d", for_id);
+    printf("\n LABEL $$for_2_%d", for_id);
+}
+
+void gen_for_3(int for_id){
+    printf("\n JUMP $$for_1_%d", for_id);
+    printf("\n LABEL $$for_3_%d", for_id);
+    printf("\n JUMPIFEQ $$for_4_%d GF@$$res bool@false", for_id);
 }
 
 void gen_for_end(int for_id){
-    printf("\n LABEL $$for_%d", for_id);
-    printf("\n JUMPIFEQ $$for_end_%d", for_id);
+    printf("\n JUMP $$for_2_%d", for_id);
+    printf("\n LABEL $$for_4_%d", for_id);
 }
 
 // generovani vyrazu
