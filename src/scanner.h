@@ -1,13 +1,15 @@
-/* ----------------------------------------------
- 	IFJ prekladac jazyka IFJ20
-	Tým XX:
-		Jaksik, Ales (xjaksi01)
-		Vlasakova, Nela (xvlasa14)
-		Belohlavek, Jan (xbeloh8)
--------------------------------------------------
-Ucel: rozpoznani a klasifikace lexemu, reprezentace lexemu pomoci tokenu
-Popis:  jak funguje tento soubor1
-----------------------------------------------*/
+/** -----------------------------------------------
+ * @file scanner.h
+ *	IFJ prekladac jazyka IFJ20
+ *	Tým 101:
+ *		@author Belohlavek, Jan <xbeloh08>
+ * ------------------------------------------------
+ *		@author Jaksik, Ales <xjaksi01>
+ *		@author Vlasakova, Nela <xvlasa14>
+ *		@author Mraz, Filip <xmrazf00>
+ * ------------------------------------------------
+ * @brief hlavickovy soubor pro scanner.c
+ * -----------------------------------------------*/
 #include <stdlib.h>
 #include "tokenList.h"
 
