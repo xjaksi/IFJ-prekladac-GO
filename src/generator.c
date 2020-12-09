@@ -185,7 +185,7 @@ void gen_expresion(tokenList *l){
                 break;
             case tSTRING:
                 printf("\n PUSHS ");
-                print_string(l->Act->atribute->str);
+                if(l->Act->atribute != NULL) print_string(l->Act->atribute->str);
                 break;
             case tADD:
                 printf("\n ADDS");
