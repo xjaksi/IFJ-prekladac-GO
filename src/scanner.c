@@ -423,6 +423,13 @@ int getTokensTo(tokenList *tListMainPtr){ //fuknce pro precteni dat ze std. vstu
 			} 
 			else if (c == '\\') //escape sekvence
 			{ 
+
+				if(p_DS == NULL)
+				{
+					p_DS = str_Init(&erno_init_DS);
+					if(erno_init_DS != 0) return ERROR_COMPILER;
+				}
+
                 c = getc(stdin);
                 
 				if (c == '\\')
